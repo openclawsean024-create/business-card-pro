@@ -40,8 +40,8 @@ export default function HomePage() {
 
   useEffect(() => {
     store.hydrate();
+    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
     setHydrated(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

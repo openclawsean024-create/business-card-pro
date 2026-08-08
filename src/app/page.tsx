@@ -63,6 +63,8 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col">
       <Header theme={store.theme} onToggleTheme={() => store.update({ theme: store.theme === "light" ? "dark" : "light" })} />
 
+      <TopNav activeTab={tab} onChange={(t) => store.updateUI({ activeTab: t })} />
+
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
         {tab === "today" && <TodayTab />}
         {tab === "queue" && <QueueTab />}
@@ -96,6 +98,43 @@ function Header({ theme, onToggleTheme }: { theme: "light" | "dark"; onToggleThe
         </button>
       </div>
     </header>
+  );
+}
+
+function TopNav({ activeTab, onChange }: { activeTab: TabId; onChange: (t: TabId) => void }) {
+  // 桌機 / tablet: header 下方水平 nav,取代缺失的 desktop UX
+  const items: Array<{ id: TabId; label: string; icon: React.ReactNode }> = useMemo(
+    () => [
+      { id: "today", label: "今日", icon: <CalendarClock className="w-4 h-4" /> },
+      { id: "queue", label: "全部", icon: <Users className="w-4 h-4" /> },
+      { id: "contacts", label: "聯絡人", icon: <Plus className="w-4 h-4" /> },
+      { id: "timeline", label: "時間線", icon: <MessageSquare className="w-4 h-4" /> },
+      { id: "settings", label: "設定", icon: <SettingsIcon className="w-4 h-4" /> },
+    ],
+    [],
+  );
+  return (
+    <nav className="hidden md:block border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 sticky top-[57px] z-20">
+      <ul className="max-w-5xl mx-auto px-4 flex gap-1 overflow-x-auto">
+        {items.map((it) => (
+          <li key={it.id}>
+            <button
+              onClick={() => onChange(it.id)}
+              aria-current={activeTab === it.id ? "page" : undefined}
+              className={clsx(
+                "inline-flex items-center gap-1.5 px-4 py-3 text-sm border-b-2 transition-colors",
+                activeTab === it.id
+                  ? "border-brand-600 text-brand-600 dark:text-brand-500"
+                  : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100",
+              )}
+            >
+              {it.icon}
+              <span>{it.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }
 

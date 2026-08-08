@@ -1,0 +1,10 @@
+{
+  "name": "名片王 Pro — 台灣業務的人脈回訪清單",
+  "short_name": "名片王 Pro",
+  "description": "以台灣 B2B 業務的小型回訪 queue 切入,交換名片只是入口,產品交付會議備註、下一步、提醒與 vCard/CSV 互通。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0284c7",
+  "icons": []
+}

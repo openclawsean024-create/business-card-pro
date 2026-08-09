@@ -54,7 +54,7 @@ export function SettingsTab() {
                 const file = e.target.files?.[0];
                 if (!file) return;
                 const text = await file.text();
-                const parsed = parseCSV(text);
+                const { contacts: parsed } = parseCSV(text);
                 importContacts(parsed);
                 alert(`匯入 ${parsed.length} 筆`);
                 e.target.value = "";

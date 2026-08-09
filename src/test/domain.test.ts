@@ -259,11 +259,29 @@ describe("AC-007: CSV 匯出包含原始欄位與最後互動日期", () => {
       followups: [],
     });
     const csv = exportCSV([c], state);
-    expect(csv).toMatch(/^# business-card-pro v3.0 export/);
-    const parsed = parseCSV(csv);
+    expect(csv).toMatch(/^# business-card-pro export/);
+    expect(csv).toMatch(/^# schema-version: 1/m);
+    expect(csv).toMatch(/^# exported-at: /m);
+    const { contacts: parsed, meta } = parseCSV(csv);
+    expect(meta.schemaVersion).toBe(1);
+    expect(meta.exportedAt).not.toBeNull();
     expect(parsed).toHaveLength(1);
     expect(parsed[0]?.payload.name).toBe("王小明");
     expect(parsed[0]?.payload.company).toBe("國泰人壽");
+  });
+
+  it("schema-version 不符時, parseCSV 仍回 data + meta 給 caller 判斷", () => {
+    // 模擬未來升級的 v2 CSV
+    const futureCsv = `# business-card-pro export
+# schema-version: 99
+# schema-doc: https://example.com/v99
+# exported-at: 2030-01-01T00:00:00.000Z
+name,company
+張三,新公司`;
+    const { contacts, meta } = parseCSV(futureCsv);
+    expect(contacts).toHaveLength(1);
+    expect(meta.schemaVersion).toBe(99);
+    // caller 可以根據 meta.schemaVersion !== EXPORT_SCHEMA_VERSION 來決定要不要 warn user
   });
 });
 

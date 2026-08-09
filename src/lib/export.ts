@@ -1,8 +1,38 @@
-// SPEC §3.1 FR-004 / AC-006 / AC-007: vCard / CSV 匯出 + CSV 匯入
+// SPEC §3.1 FR-004 / AC-006 / AC-007 / §10.5: vCard / CSV / JSON 匯出 + CSV 匯入
 // 注意: 匯出永遠可執行,免費 pilot 不擋匯出 (AC-010)
+//
+// Schema versioning policy (SPEC §10.5):
+// - 任何欄位新增 / 重新命名 / 型別變更 → EXPORT_SCHEMA_VERSION + 1
+// - EXPORT_SCHEMA_DOC 是 schema 定義文件路徑,machine-readable
+// - 解析端可以信賴 schema-version 標頭來決定欄位映射
 
 import type { Contact, Followup, Interaction } from "./types";
 import { lastInteractionDate } from "./domain";
+
+/** 當前 schema 版本。任何欄位變動都要 bump 這個常數 + 更新 EXPORT_SCHEMA_DOC。 */
+export const EXPORT_SCHEMA_VERSION = 1;
+
+/** Schema 描述文件路徑(spec-kit 風格,machine-readable) */
+export const EXPORT_SCHEMA_DOC =
+  "https://github.com/openclawsean024-create/business-card-pro/blob/main/PRD/SPEC.md#export-schema-v" +
+  EXPORT_SCHEMA_VERSION;
+
+function emptyStateStub(state: {
+  interactions: Interaction[];
+  followups: Followup[];
+}) {
+  return {
+    ...state,
+    contacts: state.interactions.length > 0 ? undefined : [],
+    cardImages: [],
+    exchanges: [],
+    consents: [],
+    ownerId: "x",
+    plan: { ownerId: "x", tier: "free" as const, maxContacts: 20, cloudSync: false },
+    theme: "light" as const,
+    ui: { searchQuery: "", activeTag: null, activeTab: "today" as const, sortMode: "dueDate" as const },
+  } as Parameters<typeof lastInteractionDate>[1];
+}
 
 /** vCard 3.0 單張名片 */
 export function buildVCard(contact: Contact, lastTouch: string | null): string {
@@ -35,17 +65,15 @@ export function exportVCards(
   state: { interactions: Interaction[]; followups: Followup[] },
 ): string {
   return contacts
-    .map((c) => buildVCard(c, lastInteractionDate(c.id, {
-      ...state,
-      contacts: [c],
-      cardImages: [],
-      exchanges: [],
-      consents: [],
-      ownerId: "x",
-      plan: { ownerId: "x", tier: "free", maxContacts: 20, cloudSync: false },
-      theme: "light",
-      ui: { searchQuery: "", activeTag: null, activeTab: "today", sortMode: "dueDate" },
-    } as Parameters<typeof lastInteractionDate>[1])))
+    .map((c) =>
+      buildVCard(
+        c,
+        lastInteractionDate(
+          c.id,
+          emptyStateStub(state) as Parameters<typeof lastInteractionDate>[1],
+        ),
+      ),
+    )
     .join("\r\n");
 }
 
@@ -63,20 +91,35 @@ export const CSV_FIELDS = [
   "lastInteraction",
 ] as const;
 
-export function exportCSV(contacts: Contact[], state: { interactions: Interaction[]; followups: Followup[] }): string {
-  const header = CSV_FIELDS.join(",");
+interface CsvExportOptions {
+  /** exported at time (ISO 8601),寫進 # meta 讓 import 端可對齊 */
+  exportedAt?: string;
+}
+
+/**
+ * CSV 匯出 — SPEC §10.5 machine-readable schema version header。
+ *
+ * Header 格式(每行都是 # 開頭的 metadata):
+ *   # business-card-pro export
+ *   # schema-version: 1
+ *   # schema-doc: <url>
+ *   # exported-at: <ISO 8601>
+ *
+ * 接著是 CSV header + rows。import 端用 grep/parse metadata line 即可知道
+ * schema 是否相容,而不需要打開文件讀內容。
+ */
+export function exportCSV(
+  contacts: Contact[],
+  state: { interactions: Interaction[]; followups: Followup[] },
+  options: CsvExportOptions = {},
+): string {
+  const exportedAt = options.exportedAt ?? new Date().toISOString();
+  const csvHeader = CSV_FIELDS.join(",");
   const rows = contacts.map((c) => {
-    const last = lastInteractionDate(c.id, {
-      ...state,
-      contacts: [c],
-      cardImages: [],
-      exchanges: [],
-      consents: [],
-      ownerId: "x",
-      plan: { ownerId: "x", tier: "free", maxContacts: 20, cloudSync: false },
-      theme: "light",
-      ui: { searchQuery: "", activeTag: null, activeTab: "today", sortMode: "dueDate" },
-    } as Parameters<typeof lastInteractionDate>[1]);
+    const last = lastInteractionDate(
+      c.id,
+      emptyStateStub(state) as Parameters<typeof lastInteractionDate>[1],
+    );
     return CSV_FIELDS.map((f) => {
       if (f === "tags") return csvCell(c.payload.tags.join("|"));
       if (f === "lastInteraction") return csvCell(last ?? "");
@@ -84,8 +127,13 @@ export function exportCSV(contacts: Contact[], state: { interactions: Interactio
       return csvCell(v ?? "");
     }).join(",");
   });
-  // schema version header (AC-007 / §10.5)
-  return `# business-card-pro v3.0 export — schema-version: 1\n${header}\n${rows.join("\n")}`;
+  const meta = [
+    `# business-card-pro export`,
+    `# schema-version: ${EXPORT_SCHEMA_VERSION}`,
+    `# schema-doc: ${EXPORT_SCHEMA_DOC}`,
+    `# exported-at: ${exportedAt}`,
+  ].join("\n");
+  return `${meta}\n${csvHeader}\n${rows.join("\n")}`;
 }
 
 function csvCell(s: string): string {
@@ -93,41 +141,68 @@ function csvCell(s: string): string {
   return s;
 }
 
-export function parseCSV(input: string): Contact[] {
-  const lines = input.split(/\r?\n/).filter((l) => !l.startsWith("#"));
-  if (lines.length < 2) return [];
-  const headerLine = lines[0];
-  if (!headerLine) return [];
+/** AC-007 + §10.5: 解析端如果看到 # schema-version != EXPORT_SCHEMA_VERSION,應該警告 */
+export function parseCSV(input: string): { contacts: Contact[]; meta: ExportMeta } {
+  const lines = input.split(/\r?\n/);
+  const meta: ExportMeta = { schemaVersion: null, schemaDoc: null, exportedAt: null };
+  let dataStart = 0;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line || !line.startsWith("#")) {
+      dataStart = i;
+      break;
+    }
+    if (line.startsWith("# schema-version:")) {
+      meta.schemaVersion = parseInt(line.slice("# schema-version:".length).trim(), 10);
+    } else if (line.startsWith("# schema-doc:")) {
+      meta.schemaDoc = line.slice("# schema-doc:".length).trim();
+    } else if (line.startsWith("# exported-at:")) {
+      meta.exportedAt = line.slice("# exported-at:".length).trim();
+    }
+  }
+  const dataLines = lines.slice(dataStart).filter((l) => l !== undefined);
+  if (dataLines.length < 2) return { contacts: [], meta };
+  const headerLine = dataLines[0];
+  if (!headerLine) return { contacts: [], meta };
   const headers = headerLine.split(",");
   const now = new Date().toISOString();
-  return lines.slice(1).map((line) => {
-    const cols = parseCsvLine(line);
-    const payload: Record<string, string | null> = {};
-    headers.forEach((h, i) => {
-      payload[h] = cols[i] ?? "";
+  const contacts = dataLines
+    .slice(1)
+    .map((line) => {
+      const cols = parseCsvLine(line);
+      const payload: Record<string, string> = {};
+      headers.forEach((h, i) => {
+        payload[h] = cols[i] ?? "";
+      });
+      return {
+        id: `csv-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+        ownerId: null,
+        status: "active" as const,
+        version: 1,
+        createdAt: now,
+        updatedAt: now,
+        payload: {
+          name: payload.name || null,
+          company: payload.company || null,
+          title: payload.title || null,
+          phone: payload.phone || null,
+          email: payload.email || null,
+          address: payload.address || null,
+          website: payload.website || null,
+          notes: payload.notes || null,
+          tags: payload.tags ? payload.tags.split("|").filter(Boolean) : [],
+          ocrConfidence: null,
+          ocrLowConfidenceFields: [],
+        },
+      } satisfies Contact;
     });
-    return {
-      id: `csv-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
-      ownerId: null,
-      status: "active",
-      version: 1,
-      createdAt: now,
-      updatedAt: now,
-      payload: {
-        name: payload.name || null,
-        company: payload.company || null,
-        title: payload.title || null,
-        phone: payload.phone || null,
-        email: payload.email || null,
-        address: payload.address || null,
-        website: payload.website || null,
-        notes: payload.notes || null,
-        tags: payload.tags ? payload.tags.split("|").filter(Boolean) : [],
-        ocrConfidence: null,
-        ocrLowConfidenceFields: [],
-      },
-    };
-  });
+  return { contacts, meta };
+}
+
+export interface ExportMeta {
+  schemaVersion: number | null;
+  schemaDoc: string | null;
+  exportedAt: string | null;
 }
 
 function parseCsvLine(line: string): string[] {

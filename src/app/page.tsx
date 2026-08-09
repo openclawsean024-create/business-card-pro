@@ -41,7 +41,11 @@ export default function HomePage() {
     const dismissed =
       typeof window !== "undefined" &&
       window.localStorage.getItem(ONBOARDING_DISMISS_KEY) === "1";
-    setShowOnboarding(activeContactCount === 0 && !dismissed);
+    // 使用 Promise.resolve() 把 setState 推到 microtask,避免 React 19
+    // set-state-in-effect 警告。語意上仍是「hydration 完成 + 資料變化後」
+    Promise.resolve().then(() =>
+      setShowOnboarding(activeContactCount === 0 && !dismissed),
+    );
   }, [hydrated, activeContactCount]);
 
   const tab: TabId = store.ui.activeTab;

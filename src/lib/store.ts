@@ -55,7 +55,10 @@ export const useStore = create<Store>((set, get) => ({
         set({ ...emptyAppState(), ...parsed, ui: { ...emptyAppState().ui, ...(parsed.ui ?? {}) } });
       }
     } catch (err) {
-      console.warn("[useStore] hydrate failed", err);
+      console.warn(
+        `[useStore#0000 @ ${new Date().toISOString()}] hydrate failed`,
+        err,
+      );
     }
   },
   update: (partial) => set((s) => ({ ...s, ...partial })),
@@ -247,11 +250,18 @@ export const useStore = create<Store>((set, get) => ({
 
 // Persist subscription
 if (typeof window !== "undefined") {
+  // SPEC §6.1: 「錯誤可由 maintainer 追查」 — 每次 warn 帶一個 monotonic id
+  // + timestamp,讓 maintainer 可以 grep 同一個 session 內所有錯誤。
+  let warnCounter = 0;
   useStore.subscribe((state) => {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (err) {
-      console.warn("[useStore] persist failed", err);
+      warnCounter += 1;
+      console.warn(
+        `[useStore#${String(warnCounter).padStart(4, "0")} @ ${new Date().toISOString()}] persist failed`,
+        err,
+      );
     }
   });
 }

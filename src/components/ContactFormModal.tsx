@@ -216,6 +216,7 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
                       type="date"
                       value={dueDate}
                       onChange={(e) => setDueDate(e.target.value)}
+                      onInput={(e) => setDueDate((e.target as HTMLInputElement).value)}
                       className="input"
                     />
                   </div>

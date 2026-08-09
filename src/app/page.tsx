@@ -39,11 +39,22 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-brand-600 focus:text-white focus:px-3 focus:py-2 focus:rounded"
+      >
+        跳到主要內容
+      </a>
+
       <Header />
 
       <TopNav activeTab={tab} onChange={(t) => store.updateUI({ activeTab: t })} />
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex-1 max-w-5xl w-full mx-auto px-4 py-6"
+      >
         {tab === "today" && <TodayTab />}
         {tab === "queue" && <QueueTab />}
         {tab === "contacts" && <ContactsTab />}

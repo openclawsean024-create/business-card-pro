@@ -15,7 +15,7 @@ export function BottomNav({ activeTab, onChange }: BottomNavProps) {
   return (
     <nav
       aria-label="主導覽"
-      className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 sticky bottom-0 z-30 md:hidden"
+      className="sticky bottom-0 z-30 md:hidden glass-card border-t border-white/10 rounded-none"
     >
       <ul className="grid grid-cols-5">
         {NAV_ITEMS.map((it) => {
@@ -27,10 +27,10 @@ export function BottomNav({ activeTab, onChange }: BottomNavProps) {
                 onClick={() => onChange(it.id)}
                 aria-current={active ? "page" : undefined}
                 className={clsx(
-                  "w-full flex flex-col items-center gap-1 py-2 text-[10px]",
+                  "w-full flex flex-col items-center gap-1 py-2 text-[10px] cursor-pointer transition-colors",
                   active
-                    ? "text-brand-600 dark:text-brand-500"
-                    : "text-slate-500 dark:text-slate-400",
+                    ? "text-accent-500"
+                    : "text-slate-300 hover:text-white",
                 )}
               >
                 <Icon className="w-4 h-4" />

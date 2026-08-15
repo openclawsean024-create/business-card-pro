@@ -12,9 +12,7 @@ interface ContactFormModalProps {
 }
 
 /**
- * 新增 / 編輯聯絡人。
- * 為什麼 default dueDate 是 +7 天:大多數 follow-up 都在一周內,
- * 縮短「建立聯絡人 → 看到 queue」路徑。
+ * 新增 / 編輯聯絡人 modal。玻璃卡片風格。
  */
 export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
   const addContact = useStore((s) => s.addContact);
@@ -28,7 +26,6 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
   const [notes, setNotes] = useState(contact?.payload.notes ?? "");
   const [tagsText, setTagsText] = useState(contact?.payload.tags.join(", ") ?? "");
 
-  // AC-002: exchange + follow-up 同時可建
   const [createFollowup, setCreateFollowup] = useState(!contact);
   const [source, setSource] = useState<Source>("名片");
   const [context, setContext] = useState<Context>("會議");
@@ -46,19 +43,23 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="contact-form-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-glass p-4"
     >
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-lg p-5 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-3">
-          <h3 id="contact-form-title" className="font-semibold">
+      <div className="w-full max-w-md glass-card p-6 max-h-[90vh] overflow-y-auto shadow-xl animate-fade-in">
+        <div className="flex items-center justify-between mb-4">
+          <h3 id="contact-form-title" className="text-xl font-heading font-bold">
             {contact ? "編輯聯絡人" : "新增聯絡人"}
           </h3>
-          <button onClick={onClose} aria-label="關閉">
-            <X className="w-4 h-4" />
+          <button
+            onClick={onClose}
+            aria-label="關閉"
+            className="p-1.5 rounded-md hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
         <form
-          className="space-y-3"
+          className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             setError(null);
@@ -163,14 +164,14 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
           </Field>
           {!contact && (
             <>
-              <fieldset className="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2">
-                <legend className="text-xs font-medium">交換情境 (選填,會記錄到時間線)</legend>
+              <fieldset className="border-t border-white/10 pt-4 space-y-2">
+                <legend className="text-xs font-medium text-slate-300">交換情境 (選填,會記錄到時間線)</legend>
                 <div className="grid grid-cols-2 gap-2">
                   <select
                     aria-label="來源"
                     value={source}
                     onChange={(e) => setSource(e.target.value as Source)}
-                    className="input"
+                    className="input cursor-pointer"
                   >
                     <option value="名片">名片</option>
                     <option value="活動">活動</option>
@@ -182,7 +183,7 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
                     aria-label="情境"
                     value={context}
                     onChange={(e) => setContext(e.target.value as Context)}
-                    className="input"
+                    className="input cursor-pointer"
                   >
                     <option value="會議">會議</option>
                     <option value="展會">展會</option>
@@ -193,12 +194,13 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
                   </select>
                 </div>
               </fieldset>
-              <fieldset className="border-t border-slate-200 dark:border-slate-700 pt-3 space-y-2">
-                <legend className="text-xs font-medium flex items-center gap-2">
+              <fieldset className="border-t border-white/10 pt-4 space-y-2">
+                <legend className="text-xs font-medium text-slate-300 flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={createFollowup}
                     onChange={(e) => setCreateFollowup(e.target.checked)}
+                    className="cursor-pointer accent-accent-500"
                   />
                   同時建立「下一步」與預計日期 (建議)
                 </legend>
@@ -217,7 +219,7 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
                       value={dueDate}
                       onChange={(e) => setDueDate(e.target.value)}
                       onInput={(e) => setDueDate((e.target as HTMLInputElement).value)}
-                      className="input"
+                      className="input cursor-pointer"
                     />
                   </div>
                 )}
@@ -225,22 +227,15 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
             </>
           )}
           {error && (
-            <p role="alert" className="text-sm text-rose-600 dark:text-rose-400">
+            <p role="alert" className="text-sm text-danger-500 bg-danger-500/10 border border-danger-500/30 rounded-md px-3 py-2">
               {error}
             </p>
           )}
           <div className="flex gap-2 pt-2">
-            <button
-              type="submit"
-              className="flex-1 px-3 py-2 rounded bg-brand-600 text-white hover:bg-brand-700"
-            >
+            <button type="submit" className="btn-primary flex-1">
               儲存
             </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-3 py-2 rounded border border-slate-200 dark:border-slate-700"
-            >
+            <button type="button" onClick={onClose} className="btn-secondary">
               取消
             </button>
           </div>

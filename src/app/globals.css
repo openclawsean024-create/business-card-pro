@@ -4,6 +4,14 @@
 
 :root {
   color-scheme: light dark;
+  /* Spacing scale (Density 6/10 = Standard) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
 }
 
 html,
@@ -11,13 +19,27 @@ body {
   height: 100%;
 }
 
+/* Dark mode 變 default(MASTER.md glassmorphism dark scheme)
+   使用者第一次訪問看到 dark;light 由 toggle button 切換 */
 body {
-  @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased;
+  @apply bg-surface-dark text-white font-body antialiased;
 }
 
-/* 焦點樣式 - accessibility (AC §5.1) */
+/* Light mode 顯式 opt-in */
+html.light body,
+html:not(.dark) body {
+  /* 留空 — body 預設就是 dark;若 html 有 .light class 就 override */
+}
+
+html.light body {
+  @apply bg-white text-slate-900;
+}
+
+/* 焦點樣式 - accessibility (AC §5.1) — 用 accent color 對比更強 */
 :focus-visible {
-  @apply outline-2 outline-offset-2 outline-brand-500 rounded;
+  outline: 2px solid theme("colors.accent.600");
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
 /* 螢幕閱讀器專用 */
@@ -33,9 +55,59 @@ body {
   border: 0;
 }
 
-/* 表單輸入元件樣式 (對齊 §5.1 a11y) */
+/* 表單輸入 — glassmorphism: 半透明背景 + 模糊 */
 @layer components {
   .input {
-    @apply w-full p-2 border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-900 text-sm outline-none focus:border-brand-500;
+    @apply w-full px-4 py-3 border border-white/10 rounded-md bg-white/5 text-white
+      placeholder:text-slate-400 text-sm outline-none
+      focus:border-accent-500 focus:bg-white/10 transition-colors duration-200;
+  }
+
+  html.light .input {
+    @apply border-slate-300 bg-white text-slate-900 placeholder:text-slate-400
+      focus:border-brand-600;
+  }
+
+  /* Glass card — 對齊 MASTER.md "Frosted glass, transparent, blurred" */
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-glass border border-white/10 rounded-lg shadow-glass;
+  }
+
+  html.light .glass-card {
+    @apply bg-white/80 backdrop-blur-glass border-slate-200 shadow-md;
+  }
+
+  /* Primary CTA — accent green on dark, brand-600 on light */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md
+      bg-accent-600 text-slate-900 font-semibold text-sm
+      hover:bg-accent-500 hover:-translate-y-px
+      transition-all duration-200 cursor-pointer;
+  }
+
+  html.light .btn-primary {
+    @apply bg-brand-600 text-white hover:bg-brand-700;
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md
+      bg-transparent border border-white/20 text-white font-semibold text-sm
+      hover:bg-white/10 hover:border-white/40
+      transition-all duration-200 cursor-pointer;
+  }
+
+  html.light .btn-secondary {
+    @apply border-brand-600 text-brand-600 hover:bg-brand-50;
+  }
+}
+
+/* prefers-reduced-motion — SPEC §6.1 a11y + MASTER.md */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

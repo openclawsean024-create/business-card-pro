@@ -1,5 +1,20 @@
 import type { Metadata } from "next";
+import { Caveat, Quicksand } from "next/font/google";
 import "./globals.css";
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-caveat",
+  display: "swap",
+});
+
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-quicksand",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "名片王 Pro — 台灣業務的人脈回訪清單",
@@ -10,8 +25,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hant" suppressHydrationWarning>
-      <body>{children}</body>
+    <html lang="zh-Hant" className={`${caveat.variable} ${quicksand.variable}`} suppressHydrationWarning>
+      <body className="font-body">{children}</body>
     </html>
   );
 }

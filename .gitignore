@@ -8,6 +8,9 @@
 !.yarn/releases
 !.yarn/versions
 
+# design system local reference (ui-ux-pro-max artifact;不污染 repo)
+/design-system
+
 # testing
 /coverage
 

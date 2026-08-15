@@ -24,9 +24,9 @@ export function SearchBar({
   onSort,
 }: SearchBarProps) {
   return (
-    <div className="flex flex-col md:flex-row gap-2">
-      <label className="flex-1 flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded px-3 py-2 bg-white dark:bg-slate-900">
-        <Search className="w-4 h-4 text-slate-400" />
+    <div className="flex flex-col md:flex-row gap-3">
+      <label className="flex-1 flex items-center gap-2 input !py-2.5">
+        <Search className="w-4 h-4 text-slate-400 shrink-0" />
         <input
           aria-label="搜尋聯絡人"
           type="search"
@@ -36,7 +36,7 @@ export function SearchBar({
           className="flex-1 bg-transparent outline-none text-sm"
         />
         {value && (
-          <button onClick={() => onChange("")} aria-label="清除搜尋">
+          <button onClick={() => onChange("")} aria-label="清除搜尋" className="cursor-pointer">
             <X className="w-4 h-4 text-slate-400" />
           </button>
         )}
@@ -45,7 +45,7 @@ export function SearchBar({
         value={sortMode}
         onChange={(e) => onSort(e.target.value as SortMode)}
         aria-label="排序方式"
-        className="text-sm border border-slate-200 dark:border-slate-700 rounded px-2 py-2 bg-white dark:bg-slate-900"
+        className="input !py-2.5 cursor-pointer"
       >
         <option value="dueDate">依下次回訪</option>
         <option value="name">依姓名</option>
@@ -57,7 +57,7 @@ export function SearchBar({
           value={tag ?? ""}
           onChange={(e) => onTag(e.target.value || null)}
           aria-label="篩選標籤"
-          className="text-sm border border-slate-200 dark:border-slate-700 rounded px-2 py-2 bg-white dark:bg-slate-900"
+          className="input !py-2.5 cursor-pointer"
         >
           <option value="">全部標籤</option>
           {tags.map((t) => (

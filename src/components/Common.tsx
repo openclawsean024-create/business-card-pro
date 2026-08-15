@@ -2,9 +2,9 @@ import type { ReactNode } from "react";
 
 export function EmptyState({ title, hint }: { title: string; hint: string }) {
   return (
-    <div className="rounded-lg border border-dashed border-slate-300 dark:border-slate-700 p-6 text-center">
-      <p className="text-sm font-medium">{title}</p>
-      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{hint}</p>
+    <div className="glass-card border-dashed border-white/20 p-8 text-center">
+      <p className="text-base font-semibold text-white">{title}</p>
+      <p className="text-sm text-slate-400 mt-2 font-body">{hint}</p>
     </div>
   );
 }
@@ -19,10 +19,10 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <label className="block text-xs space-y-1">
-      <span>
+    <label className="block text-xs space-y-1.5 text-slate-300">
+      <span className="font-medium">
         {label}
-        {required && <span className="text-rose-500 ml-0.5">*</span>}
+        {required && <span className="text-danger-500 ml-0.5">*</span>}
       </span>
       {children}
     </label>

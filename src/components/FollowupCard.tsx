@@ -24,36 +24,34 @@ export function FollowupCard({ followup, contact, onComplete }: FollowupCardProp
   return (
     <li
       className={clsx(
-        "rounded-lg border p-3",
-        overdue
-          ? "border-amber-300 bg-amber-50 dark:bg-amber-950/30"
-          : "border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800",
+        "glass-card p-4 space-y-3 animate-fade-in",
+        overdue && "border-amber-500/50 bg-amber-500/10",
       )}
       data-testid="followup-card"
     >
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <div className="font-medium">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="font-semibold text-white text-base">
             {contact.payload.name ?? contact.payload.company ?? "(無姓名)"}
             {contact.payload.company && (
-              <span className="text-slate-500 dark:text-slate-400 text-sm ml-1">
+              <span className="text-slate-400 font-normal text-sm ml-1">
                 · {contact.payload.company}
               </span>
             )}
           </div>
-          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-1">
+          <div className="text-xs text-slate-400 flex items-center gap-2 mt-1 font-body">
             <Clock className="w-3 h-3" /> {new Date(followup.dueDate).toLocaleDateString()}
             {overdue && (
-              <span className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-400">
+              <span className="inline-flex items-center gap-1 text-amber-400">
                 <AlertTriangle className="w-3 h-3" /> 逾期
               </span>
             )}
           </div>
-          <p className="mt-2 text-sm">{followup.nextStep}</p>
+          <p className="mt-2 text-sm text-slate-200">{followup.nextStep}</p>
         </div>
         <button
           onClick={() => setOpen((v) => !v)}
-          className="shrink-0 inline-flex items-center gap-1 text-sm px-2 py-1 rounded bg-brand-600 text-white hover:bg-brand-700"
+          className="btn-primary shrink-0"
           aria-label="完成回訪"
         >
           <CheckCircle2 className="w-4 h-4" /> 完成
@@ -61,7 +59,7 @@ export function FollowupCard({ followup, contact, onComplete }: FollowupCardProp
       </div>
       {open && (
         <form
-          className="mt-3 space-y-2"
+          className="space-y-2 pt-2 border-t border-white/10"
           onSubmit={(e) => {
             e.preventDefault();
             if (!summary.trim()) return;
@@ -71,37 +69,30 @@ export function FollowupCard({ followup, contact, onComplete }: FollowupCardProp
             setNext("");
           }}
         >
-          <label className="block text-xs">
+          <label className="block text-xs text-slate-300">
             這次做了什麼?
             <textarea
               required
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="w-full mt-1 p-2 border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-900"
+              className="input mt-1"
               rows={2}
             />
           </label>
-          <label className="block text-xs">
+          <label className="block text-xs text-slate-300">
             下次承諾(選填)
             <input
               type="text"
               value={next}
               onChange={(e) => setNext(e.target.value)}
-              className="w-full mt-1 p-2 border border-slate-200 dark:border-slate-700 rounded bg-white dark:bg-slate-900"
+              className="input mt-1"
             />
           </label>
           <div className="flex gap-2">
-            <button
-              type="submit"
-              className="text-sm px-3 py-1.5 rounded bg-brand-600 text-white hover:bg-brand-700"
-            >
+            <button type="submit" className="btn-primary">
               送出
             </button>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="text-sm px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700"
-            >
+            <button type="button" onClick={() => setOpen(false)} className="btn-secondary">
               取消
             </button>
           </div>

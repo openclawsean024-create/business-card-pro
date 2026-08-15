@@ -9,7 +9,6 @@ import { SearchBar, type SortMode } from "../SearchBar";
 import { EmptyState } from "../Common";
 import { Plus } from "lucide-react";
 
-/** SPEC §3.1 FR-001/006/009 + AC-001/008/009 */
 export function ContactsTab() {
   const state = useStore();
   const [creating, setCreating] = useState(false);
@@ -27,13 +26,10 @@ export function ContactsTab() {
   return (
     <section aria-labelledby="contacts-h" className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <h2 id="contacts-h" className="text-xl font-semibold">
-          聯絡人 ({filtered.length}/{state.plan.maxContacts})
+        <h2 id="contacts-h" className="font-heading text-3xl font-bold text-white">
+          聯絡人 <span className="text-slate-400 text-xl">({filtered.length}/{state.plan.maxContacts})</span>
         </h2>
-        <button
-          onClick={() => setCreating(true)}
-          className="inline-flex items-center gap-1 text-sm px-3 py-1.5 rounded bg-brand-600 text-white hover:bg-brand-700"
-        >
+        <button onClick={() => setCreating(true)} className="btn-primary">
           <Plus className="w-4 h-4" /> 新增
         </button>
       </div>
@@ -49,7 +45,7 @@ export function ContactsTab() {
       {filtered.length === 0 ? (
         <EmptyState title="沒有聯絡人" hint="點『新增』建立第一位,或匯入 CSV。" />
       ) : (
-        <ul className="space-y-2" data-testid="contact-list">
+        <ul className="space-y-3" data-testid="contact-list">
           {filtered.map((c) => (
             <ContactRow key={c.id} contact={c} />
           ))}

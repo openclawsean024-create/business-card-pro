@@ -7,7 +7,6 @@ import { FollowupCard } from "../FollowupCard";
 import { EmptyState } from "../Common";
 import { CalendarClock } from "lucide-react";
 
-/** SPEC §3.1 FR-003 + AC-003: 今日 / 逾期 queue,一鍵完成 */
 export function TodayTab() {
   const followups = useStore((s) => s.followups);
   const contacts = useStore((s) => s.contacts);
@@ -20,11 +19,14 @@ export function TodayTab() {
   return (
     <section aria-labelledby="today-h" className="space-y-4">
       <div>
-        <h2 id="today-h" className="text-xl font-semibold flex items-center gap-2">
-          <CalendarClock className="w-5 h-5" /> 今日回訪
+        <h2 id="today-h" className="font-heading text-3xl font-bold flex items-center gap-2 text-white">
+          <CalendarClock className="w-6 h-6 text-accent-500" /> 今日回訪
         </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          到期 {dueTodayCount} · 逾期 {overdueCount}
+        <p className="text-sm text-slate-400 font-body mt-1">
+          到期 <span className="text-accent-500 font-semibold">{dueTodayCount}</span> · 逾期{" "}
+          <span className={overdueCount > 0 ? "text-amber-400 font-semibold" : "font-semibold"}>
+            {overdueCount}
+          </span>
         </p>
       </div>
       {queue.length === 0 ? (
@@ -33,7 +35,7 @@ export function TodayTab() {
           hint="新增聯絡人時一併建立『下一步』與日期,就會出現在這裡。"
         />
       ) : (
-        <ul className="space-y-2" data-testid="today-queue">
+        <ul className="space-y-3" data-testid="today-queue">
           {queue.map((fu) => (
             <FollowupCard
               key={fu.id}

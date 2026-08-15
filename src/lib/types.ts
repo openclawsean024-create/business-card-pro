@@ -149,7 +149,7 @@ export function emptyAppState(): AppState {
     followups: [],
     interactions: [],
     consents: [],
-    theme: "light",
+    theme: "dark", // 配合 MASTER.md glassmorphism: dark 為 default
     ui: {
       searchQuery: "",
       activeTag: null,

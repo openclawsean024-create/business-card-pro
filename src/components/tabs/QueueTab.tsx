@@ -6,7 +6,6 @@ import { FollowupCard } from "../FollowupCard";
 import { EmptyState } from "../Common";
 import { Users } from "lucide-react";
 
-/** SPEC §3.1 FR-003 配套: 全部 pending follow-up(不限今日) */
 export function QueueTab() {
   const all = useStore((s) => s.followups);
   const contacts = useStore((s) => s.contacts);
@@ -24,13 +23,13 @@ export function QueueTab() {
 
   return (
     <section aria-labelledby="queue-h" className="space-y-4">
-      <h2 id="queue-h" className="text-xl font-semibold flex items-center gap-2">
-        <Users className="w-5 h-5" /> 全部待回訪 ({pending.length})
+      <h2 id="queue-h" className="font-heading text-3xl font-bold flex items-center gap-2 text-white">
+        <Users className="w-6 h-6 text-accent-500" /> 全部待回訪 ({pending.length})
       </h2>
       {pending.length === 0 ? (
         <EmptyState title="沒有待回訪" hint="在『聯絡人』分頁新增即可加入 queue。" />
       ) : (
-        <ul className="space-y-2" data-testid="all-queue">
+        <ul className="space-y-3" data-testid="all-queue">
           {pending.map((fu) => (
             <FollowupCard
               key={fu.id}

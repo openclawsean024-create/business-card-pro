@@ -5,7 +5,6 @@ import { exportCSV, exportVCards, parseCSV } from "@/lib/export";
 import { downloadText } from "../Common";
 import { Download, Upload, Trash2, Settings as SettingsIcon } from "lucide-react";
 
-/** SPEC §3.1 FR-004 + AC-006/007/010: 永遠可匯出,不擋資料 */
 export function SettingsTab() {
   const state = useStore();
   const reset = useStore((s) => s.reset);
@@ -15,24 +14,24 @@ export function SettingsTab() {
 
   return (
     <section aria-labelledby="settings-h" className="space-y-4">
-      <h2 id="settings-h" className="text-xl font-semibold flex items-center gap-2">
-        <SettingsIcon className="w-5 h-5" /> 設定
+      <h2 id="settings-h" className="font-heading text-3xl font-bold flex items-center gap-2 text-white">
+        <SettingsIcon className="w-6 h-6 text-accent-500" /> 設定
       </h2>
-      <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3">
+      <div className="glass-card p-5 space-y-4">
         <div>
-          <div className="text-sm font-medium">方案</div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <div className="text-sm font-medium text-white">方案</div>
+          <p className="text-xs text-slate-400 font-body mt-1">
             {state.plan.tier === "free"
               ? `免費 pilot · 上限 ${state.plan.maxContacts} 張 · ${state.plan.cloudSync ? "已啟用雲端同步" : "僅本地"}`
               : state.plan.tier}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={() =>
               downloadText(exportVCards(active, state), "contacts.vcf", "text/vcard")
             }
-            className="inline-flex items-center gap-1 text-sm px-3 py-1.5 rounded bg-brand-600 text-white hover:bg-brand-700"
+            className="btn-primary"
           >
             <Download className="w-4 h-4" /> vCard 匯出
           </button>
@@ -40,11 +39,11 @@ export function SettingsTab() {
             onClick={() =>
               downloadText(exportCSV(active, state), "contacts.csv", "text/csv")
             }
-            className="inline-flex items-center gap-1 text-sm px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700"
+            className="btn-secondary"
           >
             <Download className="w-4 h-4" /> CSV 匯出
           </button>
-          <label className="inline-flex items-center gap-1 text-sm px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700 cursor-pointer">
+          <label className="btn-secondary cursor-pointer">
             <Upload className="w-4 h-4" /> CSV 匯入
             <input
               type="file"
@@ -65,13 +64,13 @@ export function SettingsTab() {
             onClick={() => {
               if (confirm("重置會清空所有資料,確定?")) reset();
             }}
-            className="inline-flex items-center gap-1 text-sm px-3 py-1.5 rounded text-rose-600 border border-rose-200 dark:border-rose-900"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-transparent border border-danger-500/50 text-danger-500 font-semibold text-sm hover:bg-danger-500/10 hover:border-danger-500 transition-all duration-200 cursor-pointer"
           >
             <Trash2 className="w-4 h-4" /> 重置全部
           </button>
         </div>
       </div>
-      <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 text-xs text-slate-500 dark:text-slate-400 space-y-2">
+      <div className="glass-card p-4 text-xs text-slate-400 font-body space-y-1">
         <div>資料儲存在你的瀏覽器 (localStorage),不會自動上傳。</div>
         <div>SPEC §3.1 FR-009 · 個資最小化: 刪除聯絡人會一併清除照片、互動、回訪、同意紀錄。</div>
       </div>

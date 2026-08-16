@@ -14,19 +14,19 @@ export function SettingsTab() {
 
   return (
     <section aria-labelledby="settings-h" className="space-y-4">
-      <h2 id="settings-h" className="font-heading text-3xl font-bold flex items-center gap-2 text-white">
-        <SettingsIcon className="w-6 h-6 text-accent-500" /> 設定
+      <h2 id="settings-h" className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
+        <SettingsIcon className="w-5 h-5 text-brand-600" /> 設定
       </h2>
-      <div className="glass-card p-5 space-y-4">
+      <div className="card p-5 space-y-4">
         <div>
-          <div className="text-sm font-medium text-white">方案</div>
-          <p className="text-xs text-slate-400 font-body mt-1">
+          <div className="text-sm font-medium text-slate-900">方案</div>
+          <p className="text-xs text-slate-500 mt-1">
             {state.plan.tier === "free"
               ? `免費 pilot · 上限 ${state.plan.maxContacts} 張 · ${state.plan.cloudSync ? "已啟用雲端同步" : "僅本地"}`
               : state.plan.tier}
           </p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={() =>
               downloadText(exportVCards(active, state), "contacts.vcf", "text/vcard")
@@ -64,13 +64,13 @@ export function SettingsTab() {
             onClick={() => {
               if (confirm("重置會清空所有資料,確定?")) reset();
             }}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-transparent border border-danger-500/50 text-danger-500 font-semibold text-sm hover:bg-danger-500/10 hover:border-danger-500 transition-all duration-200 cursor-pointer"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-white border border-danger-300 text-danger-600 font-medium text-sm hover:bg-danger-50 hover:border-danger-400 transition-colors cursor-pointer"
           >
             <Trash2 className="w-4 h-4" /> 重置全部
           </button>
         </div>
       </div>
-      <div className="glass-card p-4 text-xs text-slate-400 font-body space-y-1">
+      <div className="card p-4 text-xs text-slate-500 space-y-1">
         <div>資料儲存在你的瀏覽器 (localStorage),不會自動上傳。</div>
         <div>SPEC §3.1 FR-009 · 個資最小化: 刪除聯絡人會一併清除照片、互動、回訪、同意紀錄。</div>
       </div>

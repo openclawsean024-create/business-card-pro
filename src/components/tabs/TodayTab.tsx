@@ -18,16 +18,18 @@ export function TodayTab() {
 
   return (
     <section aria-labelledby="today-h" className="space-y-4">
-      <div>
-        <h2 id="today-h" className="font-heading text-3xl font-bold flex items-center gap-2 text-white">
-          <CalendarClock className="w-6 h-6 text-accent-500" /> 今日回訪
+      <div className="flex items-center justify-between">
+        <h2 id="today-h" className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
+          <CalendarClock className="w-5 h-5 text-brand-600" /> 今日回訪
         </h2>
-        <p className="text-sm text-slate-400 font-body mt-1">
-          到期 <span className="text-accent-500 font-semibold">{dueTodayCount}</span> · 逾期{" "}
-          <span className={overdueCount > 0 ? "text-amber-400 font-semibold" : "font-semibold"}>
+        <div className="text-sm text-slate-500 font-mono">
+          到期 <span className="font-semibold text-brand-600">{dueTodayCount}</span>
+          {" · "}
+          逾期{" "}
+          <span className={overdueCount > 0 ? "font-semibold text-amber-600" : "font-semibold text-slate-700"}>
             {overdueCount}
           </span>
-        </p>
+        </div>
       </div>
       {queue.length === 0 ? (
         <EmptyState
@@ -35,7 +37,7 @@ export function TodayTab() {
           hint="新增聯絡人時一併建立『下一步』與日期,就會出現在這裡。"
         />
       ) : (
-        <ul className="space-y-3" data-testid="today-queue">
+        <ul className="space-y-2" data-testid="today-queue">
           {queue.map((fu) => (
             <FollowupCard
               key={fu.id}

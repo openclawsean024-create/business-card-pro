@@ -12,7 +12,8 @@ interface ContactFormModalProps {
 }
 
 /**
- * 新增 / 編輯聯絡人 modal。玻璃卡片風格。
+ * 新增 / 編輯聯絡人 modal。Minimalism 風格:
+ * 白背景 + subtle border + subtle shadow,跟 Attio / Notion 一致。
  */
 export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
   const addContact = useStore((s) => s.addContact);
@@ -43,17 +44,17 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="contact-form-title"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-glass p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
     >
-      <div className="w-full max-w-md glass-card p-6 max-h-[90vh] overflow-y-auto shadow-xl animate-fade-in">
+      <div className="w-full max-w-md card p-6 max-h-[90vh] overflow-y-auto shadow-lg">
         <div className="flex items-center justify-between mb-4">
-          <h3 id="contact-form-title" className="text-xl font-heading font-bold">
+          <h3 id="contact-form-title" className="text-lg font-semibold text-slate-900">
             {contact ? "編輯聯絡人" : "新增聯絡人"}
           </h3>
           <button
             onClick={onClose}
             aria-label="關閉"
-            className="p-1.5 rounded-md hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer"
+            className="p-1.5 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -164,8 +165,8 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
           </Field>
           {!contact && (
             <>
-              <fieldset className="border-t border-white/10 pt-4 space-y-2">
-                <legend className="text-xs font-medium text-slate-300">交換情境 (選填,會記錄到時間線)</legend>
+              <fieldset className="border-t border-slate-200 pt-4 space-y-2">
+                <legend className="text-xs font-medium text-slate-700">交換情境 (選填,會記錄到時間線)</legend>
                 <div className="grid grid-cols-2 gap-2">
                   <select
                     aria-label="來源"
@@ -194,13 +195,13 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
                   </select>
                 </div>
               </fieldset>
-              <fieldset className="border-t border-white/10 pt-4 space-y-2">
-                <legend className="text-xs font-medium text-slate-300 flex items-center gap-2">
+              <fieldset className="border-t border-slate-200 pt-4 space-y-2">
+                <legend className="text-xs font-medium text-slate-700 flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={createFollowup}
                     onChange={(e) => setCreateFollowup(e.target.checked)}
-                    className="cursor-pointer accent-accent-500"
+                    className="cursor-pointer accent-brand-600"
                   />
                   同時建立「下一步」與預計日期 (建議)
                 </legend>
@@ -227,7 +228,10 @@ export function ContactFormModal({ contact, onClose }: ContactFormModalProps) {
             </>
           )}
           {error && (
-            <p role="alert" className="text-sm text-danger-500 bg-danger-500/10 border border-danger-500/30 rounded-md px-3 py-2">
+            <p
+              role="alert"
+              className="text-sm text-danger-700 bg-danger-50 border border-danger-200 rounded-md px-3 py-2"
+            >
               {error}
             </p>
           )}

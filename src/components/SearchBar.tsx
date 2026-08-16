@@ -24,8 +24,8 @@ export function SearchBar({
   onSort,
 }: SearchBarProps) {
   return (
-    <div className="flex flex-col md:flex-row gap-3">
-      <label className="flex-1 flex items-center gap-2 input !py-2.5">
+    <div className="flex flex-col md:flex-row gap-2">
+      <div className="flex-1 flex items-center gap-2 input !py-2">
         <Search className="w-4 h-4 text-slate-400 shrink-0" />
         <input
           aria-label="搜尋聯絡人"
@@ -40,12 +40,12 @@ export function SearchBar({
             <X className="w-4 h-4 text-slate-400" />
           </button>
         )}
-      </label>
+      </div>
       <select
         value={sortMode}
         onChange={(e) => onSort(e.target.value as SortMode)}
         aria-label="排序方式"
-        className="input !py-2.5 cursor-pointer"
+        className="input !py-2 cursor-pointer"
       >
         <option value="dueDate">依下次回訪</option>
         <option value="name">依姓名</option>
@@ -57,7 +57,7 @@ export function SearchBar({
           value={tag ?? ""}
           onChange={(e) => onTag(e.target.value || null)}
           aria-label="篩選標籤"
-          className="input !py-2.5 cursor-pointer"
+          className="input !py-2 cursor-pointer"
         >
           <option value="">全部標籤</option>
           {tags.map((t) => (

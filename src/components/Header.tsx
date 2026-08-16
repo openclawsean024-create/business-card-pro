@@ -11,20 +11,20 @@ export function Header() {
   );
 
   return (
-    <header className="sticky top-0 z-30 glass-card border-b border-white/10 rounded-none">
+    <header className="sticky top-0 z-30 bg-white border-b border-slate-200">
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-heading font-bold tracking-tight">
-            名片王 <span className="text-accent-500">Pro</span>
+          <h1 className="text-lg font-semibold text-slate-900 tracking-tight">
+            名片王 Pro
           </h1>
-          <p className="text-xs text-slate-300 font-body">
+          <p className="text-xs text-slate-500 font-mono mt-0.5">
             台灣業務的人脈回訪清單 · {activeCount} 位聯絡人
           </p>
         </div>
         <button
           aria-label={theme === "dark" ? "切換淺色主題" : "切換深色主題"}
           onClick={() => update({ theme: theme === "light" ? "dark" : "light" })}
-          className="p-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer"
+          className="p-2 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
         >
           {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>

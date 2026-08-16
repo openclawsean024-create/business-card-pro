@@ -8,10 +8,12 @@ export function ContactRow({ contact }: { contact: Contact }) {
   const deleteContact = useStore((s) => s.deleteContact);
   const p = contact.payload;
   return (
-    <li className="glass-card p-4 flex items-start justify-between gap-3 animate-fade-in">
+    <li className="card p-4 flex items-start justify-between gap-3">
       <div className="min-w-0 flex-1">
-        <div className="font-semibold text-white">{p.name ?? p.company ?? "(無姓名)"}</div>
-        <div className="text-xs text-slate-400 font-body">
+        <div className="font-medium text-slate-900">
+          {p.name ?? p.company ?? "(無姓名)"}
+        </div>
+        <div className="text-xs text-slate-500 mt-0.5">
           {p.title && `${p.title} · `}
           {p.company}
         </div>
@@ -20,12 +22,15 @@ export function ContactRow({ contact }: { contact: Contact }) {
             {p.tags.map((t) => (
               <span
                 key={t}
-                className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-accent-600/20 text-accent-500 border border-accent-600/30"
+                className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200"
               >
                 <TagIcon className="w-3 h-3" /> {t}
               </span>
             ))}
           </div>
+        )}
+        {p.notes && (
+          <p className="mt-2 text-sm text-slate-600">{p.notes}</p>
         )}
       </div>
       <button
@@ -39,13 +44,10 @@ export function ContactRow({ contact }: { contact: Contact }) {
             deleteContact(contact.id);
           }
         }}
-        className="p-2 rounded-md text-slate-400 hover:text-danger-500 hover:bg-danger-500/10 transition-colors cursor-pointer"
+        className="p-2 rounded-md text-slate-400 hover:text-danger-600 hover:bg-danger-50 transition-colors cursor-pointer"
       >
         <Trash2 className="w-4 h-4" />
       </button>
-      {p.notes && (
-        <p className="mt-2 text-sm text-slate-300 col-span-full">{p.notes}</p>
-      )}
     </li>
   );
 }

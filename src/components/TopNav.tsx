@@ -9,15 +9,16 @@ interface TopNavProps {
 }
 
 /**
- * 桌機 / tablet: header 下方水平 nav,玻璃效果。
+ * 桌機 / tablet: header 下方水平 nav,Minimalism 風格。
+ * 對齊 CRM 業界 (Linear / Notion / Attio) — 用底線指示 active tab,不靠顏色塊。
  */
 export function TopNav({ activeTab, onChange }: TopNavProps) {
   return (
     <nav
-      aria-label="主導�"
-      className="hidden md:block sticky top-[73px] z-20 glass-card border-b border-white/10 rounded-none"
+      aria-label="主導覽"
+      className="hidden md:block sticky top-[57px] z-20 bg-white border-b border-slate-200"
     >
-      <ul className="max-w-5xl mx-auto px-4 flex gap-1 overflow-x-auto">
+      <ul className="max-w-5xl mx-auto px-4 flex gap-0 overflow-x-auto">
         {NAV_ITEMS.map((it) => {
           const Icon = it.icon;
           const active = activeTab === it.id;
@@ -29,8 +30,8 @@ export function TopNav({ activeTab, onChange }: TopNavProps) {
                 className={clsx(
                   "inline-flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer",
                   active
-                    ? "border-accent-500 text-accent-500"
-                    : "border-transparent text-slate-300 hover:text-white",
+                    ? "border-brand-600 text-brand-600"
+                    : "border-transparent text-slate-600 hover:text-slate-900",
                 )}
               >
                 <Icon className="w-4 h-4" />

@@ -82,11 +82,13 @@ export interface Followup {
   updatedAt: ISODate;
 }
 
-/** 互動紀錄時間線 (FR-007) */
+/** 互動紀錄時間線 (FR-007 + 2026-08-16 擴充) */
 export interface Interaction {
   id: ID;
   contactId: ID;
-  kind: "note" | "call" | "email" | "meeting";
+  /** kind 在 schema-version 2 擴充: line / wechat / dm / visit
+   *  v1 仍是 note / call / email / meeting (向下相容) */
+  kind: "note" | "call" | "email" | "meeting" | "line" | "wechat" | "dm" | "visit";
   summary: string;
   nextCommitment: string | null;
   occurredAt: ISODate;

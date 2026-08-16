@@ -9,8 +9,10 @@
 import type { Contact, Followup, Interaction } from "./types";
 import { lastInteractionDate } from "./domain";
 
-/** 當前 schema 版本。任何欄位變動都要 bump 這個常數 + 更新 EXPORT_SCHEMA_DOC。 */
-export const EXPORT_SCHEMA_VERSION = 1;
+/** 當前 schema 版本。任何欄位變動都要 bump 這個常數 + 更新 EXPORT_SCHEMA_DOC。
+ *  v2 (2026-08-16): Interaction.kind enum 擴充 line/wechat/dm/visit
+ *  v1: kind 只有 note/call/email/meeting */
+export const EXPORT_SCHEMA_VERSION = 2;
 
 /** Schema 描述文件路徑(spec-kit 風格,machine-readable) */
 export const EXPORT_SCHEMA_DOC =

@@ -18,6 +18,7 @@ import {
   exportCSV,
   parseCSV,
   CSV_FIELDS,
+  EXPORT_SCHEMA_VERSION,
 } from "@/lib/export";
 import type {
   AppState,
@@ -260,10 +261,11 @@ describe("AC-007: CSV 匯出包含原始欄位與最後互動日期", () => {
     });
     const csv = exportCSV([c], state);
     expect(csv).toMatch(/^# business-card-pro export/);
-    expect(csv).toMatch(/^# schema-version: 1/m);
+    // 動態跟著 EXPORT_SCHEMA_VERSION(2026-08-16 bump 到 2,新增 kind enum)
+    expect(csv).toMatch(new RegExp(`^# schema-version: ${EXPORT_SCHEMA_VERSION}$`, "m"));
     expect(csv).toMatch(/^# exported-at: /m);
     const { contacts: parsed, meta } = parseCSV(csv);
-    expect(meta.schemaVersion).toBe(1);
+    expect(meta.schemaVersion).toBe(EXPORT_SCHEMA_VERSION);
     expect(meta.exportedAt).not.toBeNull();
     expect(parsed).toHaveLength(1);
     expect(parsed[0]?.payload.name).toBe("王小明");

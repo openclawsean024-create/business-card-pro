@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Caveat, Quicksand } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const caveat = Caveat({
+// Inter (UI) + JetBrains Mono (numeric IDs) — industry CRM standard.
+// ui-ux-pro-max MASTER.md v2 推薦 Cormorant Garamond (學術風格),
+// 我們 override — CRM niche 用 Inter (Linear / Notion / Attio 都用 Inter)。
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-caveat",
+  variable: "--font-inter",
   display: "swap",
 });
 
-const quicksand = Quicksand({
+const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-quicksand",
+  variable: "--font-jetbrains",
   display: "swap",
 });
 
@@ -25,8 +26,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hant" className={`${caveat.variable} ${quicksand.variable}`} suppressHydrationWarning>
-      <body className="font-body">{children}</body>
+    <html
+      lang="zh-Hant"
+      className={`${inter.variable} ${jetbrains.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="font-sans">{children}</body>
     </html>
   );
 }

@@ -55,3 +55,13 @@ GitHub HEAD = 本地 HEAD = Vercel production SHA = Notion 進度欄位 SHA
 - `src/lib/store.ts` — Zustand + persist
 - `src/test/domain.test.ts` — §3.4 AC 對應 24 條
 - `src/test/store.test.ts` — §3.1 FR 整合 7 條
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

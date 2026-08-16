@@ -1,20 +1,35 @@
 import type { Config } from "tailwindcss";
 
-// 名片王 Pro design system tokens (來自 ui-ux-pro-max MASTER.md)
-// Design dials: Variance 4/10 | Motion 3/10 | Density 6/10
-// Style: Glassmorphism | Pattern: Product Demo + Features
+// 名片王 Pro design system v2 — CRM-specific
+// Re-searched with ui-ux-pro-max query "CRM contact management dashboard
+// table list density" + competitor audit (Attio / Clay / folk / Monica).
 //
-// Color roles per MASTER.md:
-//   Primary  = Trust blue   #1E40AF
-//   Secondary = Sky blue    #3B82F6
-//   Accent    = Profit green #059669  (CTA)
-//   Background = #0F172A (dark default) | #FFFFFF (light)
-//   Foreground = white       | slate-900
-//   Card     = #192134       | white
-//   Muted    = #101A34       | slate-50
-//   Border   = rgba white 0.08 | slate-200
-//   Destructive = #DC2626
-//   Ring     = white         | brand-600
+// Design dials: Variance 3/10 (Centered/Minimal) | Motion 2/10 (Subtle)
+//   | Density 8/10 (Dense/Dashboard)
+// Style: Minimalism & Swiss (clean, spacious, functional, sans-serif, grid)
+// Pattern: Product Demo + Features
+//
+// Typography OVERRIDE: MASTER.md suggested Cormorant Garamond (academic);
+//   for a B2B CRM we use Inter (UI) + JetBrains Mono (numeric IDs).
+//   This is the industry standard (Linear, Notion, Attio, Vercel all use Inter).
+//
+// Color roles (MASTER.md v2):
+//   Primary       = #2563EB (Professional blue)
+//   Secondary     = #3B82F6
+//   Accent/CTA    = #059669 (Deal green)
+//   Background    = #F8FAFC (light, slate-50 — DEFAULT)
+//   Foreground    = #0F172A (slate-900)
+//   Card          = #FFFFFF
+//   Muted         = #F1F5FD
+//   Border        = #E4ECFC
+//   Destructive  = #DC2626
+//   Ring          = #2563EB
+//
+// Dark mode (secondary):
+//   Background    = #0F172A
+//   Card          = #1E293B (slate-800)
+//   Border        = #334155 (slate-700)
+//   Foreground    = #F1F5F9 (slate-100)
 
 const config: Config = {
   darkMode: "class",
@@ -22,64 +37,63 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // 取代舊 brand-* (sky-600)
+        // Primary brand: #2563EB (professional blue)
         brand: {
           50: "#EFF6FF",
           100: "#DBEAFE",
+          200: "#BFDBFE",
           500: "#3B82F6",
-          600: "#1E40AF", // primary
-          700: "#1E3A8A",
-          900: "#172554",
+          600: "#2563EB", // PRIMARY
+          700: "#1D4ED8",
+          900: "#1E3A8A",
         },
+        // Accent: deal-green for CTA (per MASTER.md)
         accent: {
+          50: "#ECFDF5",
+          100: "#D1FAE5",
           500: "#10B981",
           600: "#059669", // CTA
           700: "#047857",
         },
-        surface: {
-          dark: "#0F172A", // bg
-          card: "#192134", // card
-          muted: "#101A34", // muted
-        },
+        // Destructive (errors)
         danger: {
           500: "#EF4444",
           600: "#DC2626",
         },
-      },
-      fontFamily: {
-        // Caveat + Quicksand 由 next/font/google 提供 CSS variables
-        heading: ["var(--font-caveat)", "cursive"],
-        body: ["var(--font-quicksand)", "system-ui", "sans-serif"],
-      },
-      fontSize: {
-        // 強制 base 16px / line-height 1.5 (MASTER.md typography rule)
-        base: ["1rem", { lineHeight: "1.5" }],
-      },
-      borderRadius: {
-        sm: "6px",
-        md: "8px",
-        lg: "12px",
-        xl: "16px",
-      },
-      boxShadow: {
-        // MASTER.md Shadow Depths
-        sm: "0 1px 2px rgba(0,0,0,0.05)",
-        md: "0 4px 6px rgba(0,0,0,0.1)",
-        lg: "0 10px 15px rgba(0,0,0,0.1)",
-        xl: "0 20px 25px rgba(0,0,0,0.15)",
-        glass: "0 8px 32px rgba(0,0,0,0.18)",
-      },
-      backdropBlur: {
-        glass: "12px",
-      },
-      keyframes: {
-        "fade-in": {
-          "0%": { opacity: "0", transform: "translateY(8px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
+        // Surfaces for dark mode (CRM night shift use)
+        surface: {
+          dark: "#0F172A",
+          card: "#1E293B",
+          muted: "#334155",
         },
       },
-      animation: {
-        "fade-in": "fade-in 0.3s ease-out forwards",
+      fontFamily: {
+        // Inter (UI) + JetBrains Mono (numeric IDs / hashes) — industry CRM standard
+        sans: [
+          "var(--font-inter)",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "sans-serif",
+        ],
+        mono: ["var(--font-jetbrains)", "ui-monospace", "monospace"],
+      },
+      fontSize: {
+        base: ["1rem", { lineHeight: "1.5" }],
+        xs: ["0.75rem", { lineHeight: "1.5" }],
+      },
+      borderRadius: {
+        // MASTER.md spacing density 8/10 = tighter
+        sm: "4px",
+        md: "6px",
+        lg: "8px",
+        xl: "12px",
+      },
+      boxShadow: {
+        sm: "0 1px 2px rgba(15,23,42,0.04)",
+        DEFAULT: "0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04)",
+        md: "0 4px 6px rgba(15,23,42,0.07), 0 2px 4px rgba(15,23,42,0.04)",
+        lg: "0 10px 15px rgba(15,23,42,0.1)",
       },
     },
   },

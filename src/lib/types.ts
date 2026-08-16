@@ -149,7 +149,7 @@ export function emptyAppState(): AppState {
     followups: [],
     interactions: [],
     consents: [],
-    theme: "dark", // 配合 MASTER.md glassmorphism: dark 為 default
+    theme: "light", // v2 redesign: CRM 是工作工具,light 對眼睛友善;dark 是 opt-in
     ui: {
       searchQuery: "",
       activeTag: null,

@@ -1,8 +1,19 @@
-# 名片王 Pro｜台灣業務的人脈回訪清單 — 規格計劃書 v3.0
+# 名片王 Pro｜台灣業務的人脈回訪清單 — 規格計劃書 v3.0.2
 
-> 版本：v3.0｜更新日期：2026-07-19｜維護者：Sean PRD Rewrite Specialist（Group B 批次重寫，強制升 v3.0）｜對接技術：Hermes Agent + engineering
+> 版本：**v3.0.2**（升級自 v3.0 2026-07-19）｜升級日期：2026-09-06｜升級者：Sean 10-repo-fleet（Batch 2D, worker agent）
+> 對齊 SPEC v3.0 契約（SPEC §1–§19 全部套用）+ v3.0.2 部署 / 測試 / GHA 流程補強
+> v3.0 原始維護者：Sean PRD Rewrite Specialist（Group B 批次重寫，強制升 v3.0）｜對接技術：Hermes Agent + engineering
 
-## 0. 改版摘要 (What's new in v3.0)
+> **v3.0.2 增量**：保留 v3.0 全部 1135 行 sweet-spot-driven 內容；新增
+> - §1.6 商業模式 / 計價（v3.0 已含於 §1.4 KPI；本節為 v3.0.2 補明確化）
+> - §3.1 功能需求表格（從 v3.0 散落全文抽出 v3.0.2 等級 FR 表）
+> - §5 技術架構模組地圖（v3.0 未列；v3.0.2 新增）
+> - §7 部署契約（v3.0 寫 Vercel；v3.0.2 沿用並補 GHA 細節）
+> - §8 Out of Scope 明確化
+
+---
+
+## 0. 改版摘要 (What's new in v3.0 → v3.0.2)
 
 > 本次為強制升級（forced upgrade）：v2.2.2 → v3.0。Sweet spot 不取保守，重算為 4.4/10；商業化分數 = 30 + 4.4×7 = **60.8/100**。本次決策升級為 **Pivot**（驗證而非 Kill），因為「台灣 B2B 業務人脈回訪 queue」niche 邊界已比 v2.2.2 更清晰，且 §15.11 新增量化 ledger、§15.12 新增 5 份 ADR、§15.13 新增市場驗證 checklist。
 

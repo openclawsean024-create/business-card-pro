@@ -113,4 +113,4 @@
 - `Sidebar.tsx` 中的 nav icon type re-export 為了壓 lint warning 留有 `SIDEBAR_ICON_REFS` 常數,無功能影響。
 - vitest 在 Node 26 會出現 `ExperimentalWarning: localStorage is not available ...` 訊息,屬於 Node 26 內建實驗功能提示,jsdom 已正確運作,可忽略。
 - `app-shell` 是 inline grid 樣式,若日後新增多頁需共用 layout,考慮抽到 `src/app/layout-shell.tsx`。
-- 未提交、未推送、未部署;待 Sean 在審核後人工 commit + 觸發 Vercel。
+- ✅ 2026-09-22 release evidence: v3.1 已 commit `bfbc56c6298ef68d92db6103a7581a5eaa7a8517`、push `main`、Vercel production READY；60 秒 smoke test 12/12 HTTP 200，canonical Notion row 已同步。

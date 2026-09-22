@@ -1,9 +1,9 @@
 "use client";
 
 import { useStore } from "@/lib/store";
-import { exportCSV, exportVCards, parseCSV } from "@/lib/export";
+import { exportCalendar, exportCSV, exportVCards, parseCSV } from "@/lib/export";
 import { downloadText } from "../Common";
-import { Download, Upload, Trash2, Settings as SettingsIcon } from "lucide-react";
+import { CalendarPlus, Download, Upload, Trash2, Settings as SettingsIcon } from "lucide-react";
 
 export function SettingsTab() {
   const state = useStore();
@@ -11,6 +11,7 @@ export function SettingsTab() {
   const importContacts = useStore((s) => s.importContacts);
 
   const active = state.contacts.filter((c) => c.status === "active");
+  const pendingFollowups = state.followups.filter((followup) => followup.status === "pending");
 
   return (
     <section aria-labelledby="settings-h" className="space-y-4">
@@ -43,6 +44,20 @@ export function SettingsTab() {
           >
             <Download className="w-4 h-4" /> CSV 匯出
           </button>
+          <button
+            onClick={() =>
+              downloadText(
+                exportCalendar(state.followups, state.contacts),
+                "followup-reminders.ics",
+                "text/calendar",
+              )
+            }
+            disabled={pendingFollowups.length === 0}
+            className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+            title="匯入 Google Calendar；只會匯出尚未完成的回訪"
+          >
+            <CalendarPlus className="w-4 h-4" /> Google Calendar ({pendingFollowups.length})
+          </button>
           <label className="btn-secondary cursor-pointer">
             <Upload className="w-4 h-4" /> CSV 匯入
             <input
@@ -69,6 +84,10 @@ export function SettingsTab() {
             <Trash2 className="w-4 h-4" /> 重置全部
           </button>
         </div>
+      </div>
+      <div className="card p-4 text-xs text-slate-500 space-y-1">
+        <div>Google Calendar 匯出會產生 .ics 檔案，請在 Google Calendar 選擇「匯入」加入。</div>
+        <div>這是單向匯出，不會連線 Google，也不會將 localStorage 資料上傳。</div>
       </div>
       <div className="card p-4 text-xs text-slate-500 space-y-1">
         <div>資料儲存在你的瀏覽器 (localStorage),不會自動上傳。</div>

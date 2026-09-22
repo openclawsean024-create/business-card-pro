@@ -49,6 +49,27 @@ export const useStore = create<Store>((set, get) => ({
   hydrate: () => {
     if (typeof window === "undefined") return;
     try {
+      // React mounts the shell before this client-only hydration effect runs.
+      // Do not overwrite a state that has already been edited in memory (for
+      // example, a contact created from an onboarding action in the same tick).
+      // This also keeps the persisted snapshot from racing a pending tab change.
+      const current = get();
+      const hasInMemoryEdits =
+        current.ownerId !== initialState.ownerId ||
+        current.contacts.length > 0 ||
+        current.cardImages.length > 0 ||
+        current.exchanges.length > 0 ||
+        current.followups.length > 0 ||
+        current.interactions.length > 0 ||
+        current.consents.length > 0 ||
+        current.theme !== initialState.theme ||
+        current.ui.searchQuery !== initialState.ui.searchQuery ||
+        current.ui.activeTag !== initialState.ui.activeTag ||
+        current.ui.activeTab !== initialState.ui.activeTab ||
+        current.ui.sortMode !== initialState.ui.sortMode ||
+        current.ui.selectedContactId !== initialState.ui.selectedContactId;
+      if (hasInMemoryEdits) return;
+
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as Partial<AppState>;

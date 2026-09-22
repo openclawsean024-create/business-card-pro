@@ -2,21 +2,69 @@
 
 import { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
-import { getTimeline, isFollowupDoneEntry, listContacts, sortContacts } from "@/lib/domain";
+import { getTimeline, isFollowupDoneEntry } from "@/lib/domain";
 import { EmptyState } from "../Common";
 import { LogInteractionForm, kindLabel } from "../LogInteractionForm";
 import { MessageSquare, Plus, X } from "lucide-react";
 
+/**
+ * 互動時間線(全站彙總 + 快速記錄)。
+ * - 由新到舊列出所有 followup-done + interaction
+ * - 每筆 → 開 ContactDetailDrawer
+ * - 右上「快速記錄」picker(沿用 v3 UX)
+ */
 export function TimelineTab() {
   const state = useStore();
-  const sortedContacts = useMemo(
-    () => sortContacts(listContacts(state), "createdAt"),
-    [state],
-  );
+  const updateUI = useStore((s) => s.updateUI);
 
-  // 快速記錄:選 contact → 顯示 LogInteractionForm
-  const [quickLogContactId, setQuickLogContactId] = useState<string | null>(null);
-  const quickLogContact = state.contacts.find((c) => c.id === quickLogContactId) ?? null;
+  const entries = useMemo(() => {
+    const all: Array<{
+      id: string;
+      contactId: string;
+      contactName: string;
+      kind: string;
+      summary: string;
+      ts: number;
+      nextCommitment?: string | null;
+    }> = [];
+    for (const c of state.contacts) {
+      if (c.status !== "active") continue;
+      const tl = getTimeline(c.id, state);
+      const display = c.payload.name ?? c.payload.company ?? "(無姓名)";
+      for (const e of tl) {
+        if (isFollowupDoneEntry(e)) {
+          all.push({
+            id: e.id,
+            contactId: c.id,
+            contactName: display,
+            kind: "完成回訪",
+            summary: e.nextStep,
+            ts: new Date(e.completedAt ?? e.updatedAt).getTime(),
+            nextCommitment: e.nextCommitment,
+          });
+        } else {
+          all.push({
+            id: e.id,
+            contactId: c.id,
+            contactName: display,
+            kind: kindLabel(e.kind),
+            summary: e.summary,
+            ts: new Date(e.occurredAt).getTime(),
+            nextCommitment: e.nextCommitment,
+          });
+        }
+      }
+    }
+    return all.sort((a, b) => b.ts - a.ts);
+  }, [state]);
+
+  const sortedContacts = useMemo(
+    () =>
+      state.contacts
+        .filter((c) => c.status === "active")
+        .sort((a, b) => a.payload.name?.localeCompare(b.payload.name ?? "") ?? 0),
+    [state.contacts],
+  );
 
   return (
     <section aria-labelledby="timeline-h" className="space-y-4">
@@ -24,140 +72,127 @@ export function TimelineTab() {
         <h2 id="timeline-h" className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
           <MessageSquare className="w-5 h-5 text-brand-600" /> 互動時間線
         </h2>
-        {sortedContacts.length > 0 && quickLogContactId === null && (
-          <button
-            onClick={() => setQuickLogContactId("__pick__")}
-            className="btn-primary"
-            aria-label="快速記錄新互動"
-          >
-            <Plus className="w-4 h-4" /> 快速記錄
-          </button>
-        )}
+        {sortedContacts.length > 0 && <QuickLogPicker contacts={sortedContacts} />}
       </div>
 
-      {/* 快速記錄區:點按鈕後展開 contact picker + form */}
-      {quickLogContactId === "__pick__" && (
-        <div className="card p-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <label htmlFor="quick-log-contact" className="text-sm font-medium text-slate-700">
-              選聯絡人:
-            </label>
-            <select
-              id="quick-log-contact"
-              autoFocus
-              value=""
-              onChange={(e) => {
-                if (e.target.value) setQuickLogContactId(e.target.value);
-              }}
-              className="input flex-1"
-            >
-              <option value="">請選擇...</option>
-              {sortedContacts.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.payload.name ?? c.payload.company ?? "(無姓名)"}
-                  {c.payload.company && c.payload.name ? ` · ${c.payload.company}` : ""}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => setQuickLogContactId(null)}
-              className="btn-ghost"
-              aria-label="取消快速記錄"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {quickLogContact && (
-        <div className="card p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <span className="text-slate-500">快速記錄給</span>{" "}
-              <span className="font-medium text-slate-900">
-                {quickLogContact.payload.name ?? quickLogContact.payload.company}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setQuickLogContactId(null)}
-              className="btn-ghost !text-xs"
-              aria-label="關閉快速記錄"
-            >
-              <X className="w-3.5 h-3.5" /> 關閉
-            </button>
-          </div>
-          <LogInteractionForm
-            contactId={quickLogContact.id}
-            onLogged={() => {
-              // 記錄成功後關閉 picker
-              setQuickLogContactId(null);
-            }}
-          />
-        </div>
-      )}
-
-      {sortedContacts.length === 0 ? (
+      {entries.length === 0 ? (
         <EmptyState
           title="沒有互動紀錄"
-          hint="在聯絡人新增時建立交換事件,或完成回訪後會自動記錄。也可以從右上方「快速記錄」新增。"
+          hint="完成回訪後會自動寫入時間線,或從右上方『快速記錄』手動新增。"
         />
       ) : (
-        <div className="space-y-2">
-          {sortedContacts.map((c) => {
-            const tl = getTimeline(c.id, state).slice(0, 3);
-            return (
-              <details key={c.id} className="card group">
-                <summary className="cursor-pointer p-4 font-medium text-slate-900 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                  <span>{c.payload.name ?? c.payload.company ?? "(無姓名)"}</span>
-                  <span className="font-mono text-xs text-slate-500 font-normal">
-                    {tl.length} 筆互動
-                  </span>
-                </summary>
-                <ul className="px-4 pb-4 space-y-2 text-sm border-t border-slate-100 pt-3">
-                  {tl.map((it) => {
-                    if (isFollowupDoneEntry(it)) {
-                      return (
-                        <li
-                          key={it.id}
-                          className="border-l-2 border-brand-500 pl-3 py-1"
-                        >
-                          <div className="text-xs text-slate-500 font-mono">
-                            {new Date(it.completedAt ?? it.updatedAt).toLocaleString("zh-TW")} ·{" "}
-                            followup-done
-                          </div>
-                          <div className="text-slate-700">完成: {it.nextStep}</div>
-                          {it.nextCommitment && (
-                            <div className="text-xs text-slate-500 mt-0.5">
-                              下次承諾: {it.nextCommitment}
-                            </div>
-                          )}
-                        </li>
-                      );
-                    }
-                    return (
-                      <li key={it.id} className="border-l-2 border-brand-500 pl-3 py-1">
-                        <div className="text-xs text-slate-500 font-mono">
-                          {new Date(it.occurredAt).toLocaleString("zh-TW")} ·{" "}
-                          {kindLabel(it.kind)}
-                        </div>
-                        <div className="text-slate-700">{it.summary}</div>
-                        {it.nextCommitment && (
-                          <div className="text-xs text-slate-500 mt-0.5">
-                            下次承諾: {it.nextCommitment}
-                          </div>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </details>
-            );
-          })}
-        </div>
+        <ol
+          className="card !p-0 divide-y divide-slate-100"
+          data-testid="global-timeline"
+        >
+          {entries.map((e) => (
+            <li key={`${e.contactId}-${e.id}`}>
+              <button
+                type="button"
+                onClick={() => updateUI({ selectedContactId: e.contactId })}
+                className="w-full text-left flex items-start gap-3 p-4 hover:bg-slate-50 cursor-pointer"
+                aria-label={`查看 ${e.contactName} 的詳細資料`}
+              >
+                <div
+                  aria-hidden="true"
+                  className="mt-1 w-2 h-2 rounded-full bg-brand-600 shrink-0"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="font-medium text-slate-900 truncate">
+                      {e.contactName}
+                    </div>
+                    <time
+                      className="text-xs text-slate-500 font-mono shrink-0"
+                      dateTime={new Date(e.ts).toISOString()}
+                    >
+                      {new Date(e.ts).toLocaleString("zh-TW", {
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </time>
+                  </div>
+                  <div className="text-xs text-slate-500 mt-0.5">{e.kind}</div>
+                  <div className="text-sm text-slate-700 mt-0.5 line-clamp-2">
+                    {e.summary}
+                  </div>
+                  {e.nextCommitment && (
+                    <div className="text-xs text-slate-500 mt-1">
+                      下次承諾: {e.nextCommitment}
+                    </div>
+                  )}
+                </div>
+              </button>
+            </li>
+          ))}
+        </ol>
       )}
     </section>
+  );
+}
+
+interface QuickLogPickerProps {
+  contacts: Array<{ id: string; payload: { name: string | null; company: string | null } }>;
+}
+
+function QuickLogPicker({ contacts }: QuickLogPickerProps) {
+  const [picker, setPicker] = useState<string | null>(null);
+  const active = contacts.find((c) => c.id === picker);
+
+  if (active) {
+    return (
+      <div className="card p-4 space-y-3 w-full">
+        <div className="flex items-center justify-between">
+          <div className="text-sm">
+            <span className="text-slate-500">快速記錄給</span>{" "}
+            <span className="font-medium text-slate-900">
+              {active.payload.name ?? active.payload.company}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPicker(null)}
+            className="btn-ghost !text-xs"
+            aria-label="關閉快速記錄"
+          >
+            <X className="w-3.5 h-3.5" /> 關閉
+          </button>
+        </div>
+        <LogInteractionForm
+          contactId={active.id}
+          onLogged={() => setPicker(null)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex">
+      <button
+        type="button"
+        onClick={() => setPicker("__pick__")}
+        className="btn-primary"
+      >
+        <Plus className="w-4 h-4" /> 快速記錄
+      </button>
+      <select
+        aria-label="快速記錄 — 選擇聯絡人"
+        className="sr-only"
+        tabIndex={-1}
+        value=""
+        onChange={(e) => {
+          if (e.target.value) setPicker(e.target.value);
+        }}
+      >
+        <option value="">請選擇</option>
+        {contacts.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.payload.name ?? c.payload.company ?? "(無姓名)"}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }

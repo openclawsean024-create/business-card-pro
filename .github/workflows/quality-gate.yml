@@ -1,0 +1,56 @@
+name: quality
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deterministic:
+    name: deterministic
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Run repository quality gate
+        run: bash scripts/quality-gate.sh
+
+  sensitive-path-policy:
+    name: sensitive-path-policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require explicit approval for sensitive changes
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          LABELS_JSON: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > changed-files.txt
+          if grep -Eiq '(^|/)(auth|authorization|payments?|secrets?|migrations?|infra|terraform|deploy)(/|$)|(^|/)Dockerfile$|\.github/workflows/' changed-files.txt; then
+            jq -e 'index("risk-approved") != null' <<<"$LABELS_JSON" >/dev/null || {
+              echo "Sensitive paths changed; add the risk-approved label after human review."
+              cat changed-files.txt
+              exit 1
+            }
+          fi

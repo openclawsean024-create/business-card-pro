@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>名片王 Pro · 回訪工作台 prototype</title>
+  <meta name="theme-color" content="#f6f7f5">
+  <style>
+    :root {
+      --bg: #f6f7f5;
+      --surface: #ffffff;
+      --surface-soft: #f9faf9;
+      --ink: #182230;
+      --muted: #66717e;
+      --faint: #97a0aa;
+      --line: #e5e8ec;
+      --line-strong: #d8dde3;
+      --primary: #3f5bf6;
+      --primary-dark: #2f48d5;
+      --primary-soft: #eef1ff;
+      --success: #159a75;
+      --success-soft: #eaf8f3;
+      --warning: #b87815;
+      --warning-soft: #fff5df;
+      --danger: #ce554f;
+      --danger-soft: #fff0ef;
+      --shadow: 0 18px 60px rgba(22, 32, 43, 0.08);
+      --shadow-soft: 0 8px 24px rgba(22, 32, 43, 0.05);
+      --radius-lg: 22px;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--bg); }
+    body { margin: 0; min-width: 320px; background: var(--bg); color: var(--ink); font-family: Inter, "Noto Sans TC", "PingFang TC", system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(63, 91, 246, 0.25); outline-offset: 2px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .app-shell { display: flex; min-height: 100vh; }
+    .sidebar { width: 244px; flex: 0 0 244px; display: flex; flex-direction: column; padding: 24px 16px 18px; border-right: 1px solid var(--line); background: rgba(255, 255, 255, 0.8); }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 4px 10px 28px; }
+    .brand-mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; color: #fff; background: var(--ink); font-size: 18px; font-weight: 800; letter-spacing: -0.08em; }
+    .brand-name { font-size: 16px; font-weight: 750; letter-spacing: -0.03em; }
+    .brand-caption { margin-top: 1px; color: var(--muted); font-size: 11px; }
+    .nav-label { padding: 0 12px 8px; color: var(--faint); font-size: 11px; font-weight: 700; letter-spacing: 0.1em; }
+    .nav-list { display: grid; gap: 4px; }
+    .nav-button { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 42px; padding: 0 12px; border: 0; border-radius: 12px; color: var(--muted); background: transparent; text-align: left; transition: 160ms ease; }
+    .nav-button:hover { color: var(--ink); background: var(--surface-soft); }
+    .nav-button.active { color: var(--primary); background: var(--primary-soft); font-weight: 700; }
+    .nav-icon { display: grid; width: 22px; height: 22px; place-items: center; border-radius: 7px; color: currentColor; font-size: 16px; line-height: 1; }
+    .nav-count { margin-left: auto; padding: 1px 7px; border-radius: 99px; color: var(--danger); background: var(--danger-soft); font-size: 11px; font-weight: 800; }
+    .sidebar-spacer { flex: 1; }
+    .local-card { margin: 20px 4px 14px; padding: 14px; border: 1px solid #dcebe6; border-radius: 15px; background: #f1faf7; }
+    .local-title { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 750; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+    .local-copy { margin-top: 7px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .capacity { margin-top: 12px; }
+    .capacity-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+    .capacity-track { height: 5px; margin-top: 6px; overflow: hidden; border-radius: 99px; background: #dbeee8; }
+    .capacity-fill { width: 60%; height: 100%; border-radius: inherit; background: var(--success); }
+    .profile { display: flex; align-items: center; gap: 10px; padding: 11px 9px 0; border-top: 1px solid var(--line); }
+    .avatar { display: grid; width: 34px; height: 34px; flex: 0 0 34px; place-items: center; border-radius: 11px; color: #38476b; background: #e5eaff; font-size: 12px; font-weight: 800; }
+    .profile-name { font-size: 12px; font-weight: 700; }
+    .profile-plan { color: var(--muted); font-size: 11px; }
+    .more-button { width: 30px; height: 30px; margin-left: auto; border: 0; border-radius: 9px; color: var(--muted); background: transparent; font-size: 18px; }
+    .main { width: min(100%, 1440px); flex: 1; min-width: 0; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 78px; padding: 0 clamp(22px, 4vw, 56px); border-bottom: 1px solid var(--line); background: rgba(246, 247, 245, 0.86); }
+    .crumb { color: var(--muted); font-size: 12px; }
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-button, .outline-button, .primary-button { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; border-radius: 10px; font-weight: 700; transition: 160ms ease; }
+    .icon-button { width: 38px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); font-size: 16px; }
+    .icon-button:hover, .outline-button:hover { border-color: var(--line-strong); color: var(--ink); background: var(--surface-soft); }
+    .profile-mini { display: flex; align-items: center; gap: 9px; padding-left: 6px; color: var(--muted); font-size: 12px; }
+    .profile-mini .avatar { width: 32px; height: 32px; flex-basis: 32px; border-radius: 10px; }
+    .content { max-width: 1260px; margin: 0 auto; padding: 42px clamp(22px, 4vw, 56px) 60px; }
+    .intro { display: flex; align-items: end; justify-content: space-between; gap: 28px; }
+    .eyebrow { display: flex; align-items: center; gap: 7px; color: var(--primary); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; }
+    .eyebrow-mark { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    h1 { max-width: 700px; margin: 8px 0 8px; font-size: clamp(28px, 4vw, 42px); line-height: 1.14; letter-spacing: -0.06em; }
+    .intro-copy { max-width: 600px; margin: 0; color: var(--muted); font-size: 15px; }
+    .primary-button { gap: 8px; padding: 0 16px; border: 1px solid var(--primary); color: #fff; background: var(--primary); box-shadow: 0 7px 18px rgba(63, 91, 246, 0.2); white-space: nowrap; }
+    .primary-button:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .outline-button { gap: 7px; padding: 0 13px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); }
+    .section-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(290px, 0.85fr); gap: 18px; margin-top: 32px; }
+    .surface { border: 1px solid var(--line); border-radius: 22px; background: var(--surface); box-shadow: var(--shadow-soft); }
+    .progress-card { position: relative; overflow: hidden; padding: 23px 24px; }
+    .progress-card::after { position: absolute; right: -46px; bottom: -90px; width: 200px; height: 200px; border: 30px solid #f0f2ff; border-radius: 50%; content: ""; }
+    .progress-head { position: relative; z-index: 1; display: flex; align-items: start; justify-content: space-between; gap: 20px; }
+    .card-kicker { color: var(--muted); font-size: 12px; font-weight: 700; }
+    .progress-title { margin-top: 3px; font-size: 18px; font-weight: 780; letter-spacing: -0.035em; }
+    .progress-stat { color: var(--primary); font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.07em; }
+    .progress-stat small { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: 0; }
+    .progress-row { position: relative; z-index: 1; display: flex; align-items: center; gap: 14px; margin-top: 20px; }
+    .progress-track { height: 8px; flex: 1; overflow: hidden; border-radius: 99px; background: #eceef2; }
+    .progress-track > span { display: block; width: 50%; height: 100%; border-radius: inherit; background: var(--primary); transition: width 250ms ease; }
+    .progress-note { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .queue-card { margin-top: 18px; padding: 23px 24px 10px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .section-title { margin: 0; font-size: 18px; letter-spacing: -0.035em; }
+    .section-subtitle { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+    .queue-filters { display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); }
+    .filter-button { min-height: 28px; padding: 0 9px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font-size: 11px; font-weight: 700; }
+    .filter-button.active { color: var(--ink); background: var(--surface); box-shadow: 0 2px 6px rgba(22, 32, 43, 0.08); }
+    .queue-list { margin-top: 16px; }
+    .queue-group-label { display: flex; align-items: center; gap: 8px; margin: 19px 0 7px; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: 0.06em; }
+    .queue-group-label:first-child { margin-top: 0; }
+    .group-line { height: 1px; flex: 1; background: var(--line); }
+    .queue-item { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(124px, 0.72fr) auto auto; align-items: center; gap: 14px; min-height: 80px; padding: 12px 2px; border-top: 1px solid #f0f1f3; transition: 180ms ease; }
+    .queue-item:hover { padding-right: 9px; padding-left: 9px; border-radius: 12px; background: var(--surface-soft); }
+    .queue-item.done { opacity: 0.62; }
+    .queue-item.done .contact-name { text-decoration: line-through; text-decoration-thickness: 1px; }
+    .contact-avatar { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 13px; color: #334570; background: #e4e9ff; font-size: 13px; font-weight: 800; }
+    .avatar-2 { color: #79531d; background: #fff0ca; }
+    .avatar-3 { color: #126752; background: #dff5ed; }
+    .avatar-4 { color: #8a3e50; background: #ffe3e9; }
+    .contact-name { overflow: hidden; color: var(--ink); font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    .contact-meta { overflow: hidden; margin-top: 2px; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+    .next-step { overflow: hidden; color: var(--ink); font-size: 12px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .next-step::before { margin-right: 5px; color: var(--primary); content: "↳"; }
+    .context-tag { display: inline-flex; width: max-content; max-width: 100%; margin-top: 5px; padding: 2px 7px; overflow: hidden; border-radius: 6px; color: var(--muted); background: var(--surface-soft); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+    .due { min-width: 67px; color: var(--muted); font-size: 11px; text-align: right; white-space: nowrap; }
+    .due strong { display: block; color: var(--ink); font-size: 12px; }
+    .due.overdue strong { color: var(--danger); }
+    .due.today strong { color: var(--warning); }
+    .complete-button { min-height: 32px; padding: 0 10px; border: 1px solid #cfe9df; border-radius: 9px; color: var(--success); background: var(--success-soft); font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .complete-button:hover { border-color: var(--success); background: #dcf4eb; }
+    .complete-button:disabled { cursor: default; opacity: 0.75; }
+    .item-menu { width: 26px; height: 30px; border: 0; color: var(--faint); background: transparent; font-size: 18px; }
+    .pulse-card { padding: 23px 22px 20px; }
+    .pulse-header { display: flex; align-items: start; justify-content: space-between; }
+    .pulse-value { color: var(--success); font-size: 12px; font-weight: 800; }
+    .week-chart { display: grid; grid-template-columns: repeat(7, 1fr); align-items: end; gap: 8px; height: 126px; margin-top: 26px; padding: 0 4px; border-bottom: 1px solid var(--line); }
+    .bar-wrap { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: end; gap: 7px; }
+    .bar-track { display: flex; width: 17px; height: 88px; align-items: end; border-radius: 99px; background: #f0f1f4; }
+    .bar { width: 100%; min-height: 7px; border-radius: 99px; background: #c9d0ff; }
+    .bar.active { background: var(--primary); }
+    .bar.done { background: #7bcfb6; }
+    .bar-label { position: relative; top: 24px; color: var(--faint); font-size: 10px; }
+    .bar-label.active { color: var(--ink); font-weight: 800; }
+    .pulse-note { margin: 27px 0 0; color: var(--muted); font-size: 12px; }
+    .pulse-note strong { color: var(--ink); }
+    .mini-task-list { display: grid; gap: 3px; margin-top: 20px; }
+    .mini-task { display: flex; align-items: center; gap: 9px; padding: 9px 0; border-top: 1px solid #f0f1f3; }
+    .mini-task-mark { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: var(--warning); }
+    .mini-task-copy { overflow: hidden; }
+    .mini-task-name { overflow: hidden; color: var(--ink); font-size: 12px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+    .mini-task-date { color: var(--muted); font-size: 11px; }
+    .lower-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.9fr); gap: 18px; margin-top: 18px; }
+    .activity-card, .portable-card { padding: 22px 24px; }
+    .activity-list { margin-top: 16px; }
+    .activity-item { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; padding: 12px 0; border-top: 1px solid #f0f1f3; }
+    .activity-marker { position: relative; display: flex; justify-content: center; width: 20px; }
+    .activity-marker::before { width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; background: var(--primary); content: ""; }
+    .activity-item:not(:last-child) .activity-marker::after { position: absolute; top: 17px; bottom: -17px; left: 9px; width: 1px; background: #e1e5ee; content: ""; }
+    .activity-title { color: var(--ink); font-size: 12px; font-weight: 750; }
+    .activity-copy { margin-top: 2px; color: var(--muted); font-size: 11px; }
+    .activity-date { color: var(--faint); font-size: 11px; white-space: nowrap; }
+    .portable-card { color: #fff; background: var(--ink); }
+    .portable-card .card-kicker, .portable-card .section-subtitle { color: #aeb9c7; }
+    .portable-title { margin-top: 4px; font-size: 18px; font-weight: 780; letter-spacing: -0.035em; }
+    .portable-copy { margin-top: 8px; color: #c1cbd6; font-size: 12px; line-height: 1.6; }
+    .portable-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .portable-actions button { min-height: 32px; padding: 0 10px; border: 1px solid #526172; border-radius: 9px; color: #fff; background: #2c394b; font-size: 11px; font-weight: 750; }
+    .portable-actions button:hover { background: #3d4d62; }
+    .mobile-nav { display: none; }
+    .scrim { position: fixed; z-index: 10; inset: 0; display: none; background: rgba(20, 29, 40, 0.35); backdrop-filter: blur(4px); }
+    .modal { position: fixed; z-index: 20; top: 50%; left: 50%; display: none; width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto; padding: 24px; border: 1px solid var(--line); border-radius: 22px; background: var(--surface); box-shadow: var(--shadow); transform: translate(-50%, -50%); }
+    .modal.open, .scrim.open { display: block; }
+    .modal-header { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+    .modal-title { margin: 0; font-size: 21px; letter-spacing: -0.04em; }
+    .modal-copy { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .close-button { width: 32px; height: 32px; border: 0; border-radius: 9px; color: var(--muted); background: var(--surface-soft); font-size: 19px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+    .field { display: grid; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: var(--ink); font-size: 12px; font-weight: 750; }
+    .field label span { color: var(--danger); }
+    .field input, .field select, .field textarea { width: 100%; min-height: 40px; padding: 0 11px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: var(--surface-soft); }
+    .field textarea { min-height: 72px; padding-top: 9px; resize: vertical; }
+    .field input::placeholder, .field textarea::placeholder { color: #a6adb6; }
+    .field-error { display: none; color: var(--danger); font-size: 11px; }
+    .field.invalid .field-error { display: block; }
+    .field.invalid input { border-color: var(--danger); background: var(--danger-soft); }
+    .modal-footer { display: flex; align-items: center; justify-content: flex-end; gap: 9px; margin-top: 22px; }
+    .detail-panel { position: fixed; z-index: 20; top: 0; right: 0; display: none; width: min(430px, 100vw); height: 100vh; overflow: auto; padding: 28px; border-left: 1px solid var(--line); background: var(--surface); box-shadow: -18px 0 50px rgba(22, 32, 43, 0.12); }
+    .detail-panel.open { display: block; }
+    .detail-top { display: flex; align-items: start; justify-content: space-between; }
+    .detail-person { display: flex; align-items: center; gap: 12px; }
+    .detail-person .contact-avatar { width: 48px; height: 48px; font-size: 15px; }
+    .detail-name { font-size: 20px; font-weight: 800; letter-spacing: -0.04em; }
+    .detail-company { color: var(--muted); font-size: 12px; }
+    .detail-section { margin-top: 30px; }
+    .detail-label { color: var(--faint); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; }
+    .detail-next { margin-top: 8px; padding: 15px; border: 1px solid #dfe4ff; border-radius: 14px; color: var(--ink); background: var(--primary-soft); font-size: 14px; font-weight: 750; }
+    .detail-row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
+    .detail-row span:first-child { color: var(--muted); }
+    .detail-row span:last-child { color: var(--ink); font-weight: 700; text-align: right; }
+    .toast { position: fixed; z-index: 30; right: 22px; bottom: 22px; display: flex; align-items: center; gap: 9px; max-width: calc(100vw - 44px); padding: 12px 15px; border: 1px solid #bfe6d9; border-radius: 12px; color: #0d624c; background: #f0fcf8; box-shadow: var(--shadow); font-size: 12px; font-weight: 750; opacity: 0; pointer-events: none; transform: translateY(12px); transition: 180ms ease; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .empty-state { padding: 28px 10px; color: var(--muted); text-align: center; }
+    body.dark { --bg: #111820; --surface: #19232e; --surface-soft: #202c38; --ink: #f0f4f8; --muted: #aebac6; --faint: #7f8c99; --line: #2b3744; --line-strong: #405060; --primary-soft: #202c55; --success-soft: #173d35; --warning-soft: #4a3719; --danger-soft: #4a2425; --shadow: 0 18px 60px rgba(0, 0, 0, 0.22); --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.14); }
+    body.dark .sidebar, body.dark .topbar { background: rgba(17, 24, 32, 0.88); }
+    body.dark .local-card { border-color: #2d574b; background: #17312b; }
+    body.dark .contact-avatar { color: #c6d1ff; background: #293762; }
+    body.dark .avatar-2 { color: #ffe0a0; background: #4b3a21; }
+    body.dark .avatar-3 { color: #a6ead3; background: #1f493e; }
+    body.dark .avatar-4 { color: #ffc4d1; background: #4b2733; }
+    body.dark .progress-card::after { border-color: #212a4b; }
+    body.dark .bar-track { background: #27323d; }
+    body.dark .bar { background: #404d89; }
+    body.dark .bar.done { background: #32856d; }
+    body.dark .field input, body.dark .field select, body.dark .field textarea { color: var(--ink); }
+    @media (max-width: 1040px) { .sidebar { width: 218px; flex-basis: 218px; } .section-grid, .lower-grid { grid-template-columns: 1fr; } .week-chart { max-width: 500px; } }
+    @media (max-width: 720px) {
+      .app-shell { display: block; }
+      .sidebar { display: none; }
+      .topbar { min-height: 64px; padding: 0 16px; }
+      .crumb { font-size: 11px; }
+      .profile-mini span { display: none; }
+      .content { padding: 27px 16px 92px; }
+      .intro { display: block; }
+      h1 { margin-top: 9px; font-size: 31px; }
+      .intro-copy { font-size: 14px; }
+      .intro .primary-button { width: 100%; margin-top: 20px; }
+      .section-grid { gap: 14px; margin-top: 24px; }
+      .progress-card, .queue-card, .pulse-card, .activity-card, .portable-card { padding: 18px; border-radius: 18px; }
+      .progress-note { display: none; }
+      .queue-card { padding-bottom: 8px; }
+      .section-head { align-items: start; flex-direction: column; }
+      .queue-filters { width: 100%; }
+      .filter-button { flex: 1; }
+      .queue-item { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; min-height: 75px; }
+      .queue-item > .next-step { grid-column: 2 / 4; grid-row: 2; margin-top: -11px; }
+      .queue-item > .due { grid-column: 3; grid-row: 1; }
+      .queue-item > .complete-button { grid-column: 2; grid-row: 3; justify-self: start; margin-top: 2px; }
+      .queue-item > .item-menu { grid-column: 3; grid-row: 3; margin-top: 2px; }
+      .queue-item { padding-bottom: 15px; }
+      .contact-meta { font-size: 11px; }
+      .lower-grid { gap: 14px; margin-top: 14px; }
+      .mobile-nav { position: fixed; z-index: 8; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(4, 1fr); padding: 7px 9px max(7px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255, 255, 255, 0.93); backdrop-filter: blur(16px); }
+      body.dark .mobile-nav { background: rgba(17, 24, 32, 0.94); }
+      .mobile-nav button { display: grid; gap: 2px; place-items: center; min-height: 42px; border: 0; color: var(--muted); background: transparent; font-size: 10px; }
+      .mobile-nav button.active { color: var(--primary); font-weight: 800; }
+      .mobile-nav .nav-icon { font-size: 17px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .modal { padding: 20px; }
+      .detail-panel { padding: 22px 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="側邊導覽">
+      <div class="brand"><div class="brand-mark" aria-hidden="true">王</div><div><div class="brand-name">名片王 Pro</div><div class="brand-caption">把下一步做完，關係不掉線</div></div></div>
+      <div class="nav-label">工作台</div>
+      <nav class="nav-list" aria-label="主要導覽">
+        <button class="nav-button active" data-view="today"><span class="nav-icon" aria-hidden="true">◷</span><span>今日回訪</span><span class="nav-count" id="navCount">3</span></button>
+        <button class="nav-button" data-view="contacts"><span class="nav-icon" aria-hidden="true">♧</span><span>聯絡人</span></button>
+        <button class="nav-button" data-view="timeline"><span class="nav-icon" aria-hidden="true">↗</span><span>互動時間線</span></button>
+        <button class="nav-button" data-view="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span>設定</span></button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="local-card">
+        <div class="local-title"><span class="status-dot" aria-hidden="true"></span>本機模式已啟用</div>
+        <div class="local-copy">資料只存在這台瀏覽器，不上傳任何伺服器。你可以隨時匯出帶走。</div>
+        <div class="capacity"><div class="capacity-meta"><span>名片庫容量</span><strong id="capacityLabel">12 / 20</strong></div><div class="capacity-track" role="progressbar" aria-label="名片庫容量" aria-valuenow="12" aria-valuemin="0" aria-valuemax="20"><div class="capacity-fill" id="capacityFill"></div></div></div>
+      </div>
+      <div class="profile"><div class="avatar">林</div><div><div class="profile-name">林怡君</div><div class="profile-plan">免費 pilot</div></div><button class="more-button" aria-label="更多帳號選項">···</button></div>
+    </aside>
+    <main class="main" id="main-content">
+      <header class="topbar"><div class="crumb">工作台 <span aria-hidden="true">/</span> <strong>週二 · 9 月 21 日</strong></div><div class="top-actions"><button class="icon-button" id="themeButton" aria-label="切換深色主題">☾</button><div class="profile-mini"><span>林怡君</span><div class="avatar">林</div></div></div></header>
+      <div class="content">
+        <section class="intro" aria-labelledby="pageTitle"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>今天，先完成最重要的下一步</div><h1 id="pageTitle">讓交換過的名片，真的走到下一次對話。</h1><p class="intro-copy">你不需要記住所有人，只要把今天該做的 3 件事完成。</p></div><button class="primary-button" id="openContactButton"><span aria-hidden="true">＋</span>新增聯絡人</button></section>
+        <div class="section-grid">
+          <div>
+            <section class="surface progress-card" aria-labelledby="progressTitle"><div class="progress-head"><div><div class="card-kicker">今日回訪節奏</div><div class="progress-title" id="progressTitle">你已經在往前走了</div></div><div class="progress-stat"><span id="doneStat">2</span><small> / 5 完成</small></div></div><div class="progress-row"><div class="progress-track" role="progressbar" aria-label="今日回訪完成度" aria-valuenow="2" aria-valuemin="0" aria-valuemax="5"><span id="progressFill"></span></div><div class="progress-note" id="progressNote">還有 3 個下一步</div></div></section>
+            <section class="surface queue-card" aria-labelledby="queueTitle">
+              <div class="section-head"><div><h2 class="section-title" id="queueTitle">回訪 queue</h2><p class="section-subtitle">依照緊急程度，從逾期到即將到期排列</p></div><div class="queue-filters" role="group" aria-label="回訪篩選"><button class="filter-button active" data-filter="all">全部 <span id="allCount">5</span></button><button class="filter-button" data-filter="today">今天 <span id="todayCount">3</span></button><button class="filter-button" data-filter="overdue">逾期 <span id="overdueCount">1</span></button></div></div>
+              <div class="queue-list" id="queueList">
+                <div class="queue-group-label" data-group="overdue"><span>逾期 · 需要先處理</span><span class="group-line"></span></div>
+                <article class="queue-item" data-id="1" data-state="overdue" tabindex="0"><div class="contact-avatar avatar-4">陳</div><div class="contact-block"><div class="contact-name">陳柏翰</div><div class="contact-meta">拓遠設計 · 建築顧問</div></div><div class="step-block"><div class="next-step">寄送商辦改造案例與預算範本</div><span class="context-tag">9/10 建築交流會</span></div><div class="due overdue"><strong>逾期 5 天</strong>9 月 16 日</div><button class="complete-button" data-complete="1">完成</button><button class="item-menu" data-detail="1" aria-label="查看陳柏翰詳細資料">···</button></article>
+                <div class="queue-group-label" data-group="today"><span>今天 · 先把承諾交出去</span><span class="group-line"></span></div>
+                <article class="queue-item" data-id="2" data-state="today" tabindex="0"><div class="contact-avatar">王</div><div class="contact-block"><div class="contact-name">王思妤</div><div class="contact-meta">沐光保險 · 業務經理</div></div><div class="step-block"><div class="next-step">確認家庭保障檢視時間</div><span class="context-tag">9/18 朋友介紹</span></div><div class="due today"><strong>今天</strong>下午 3:00</div><button class="complete-button" data-complete="2">完成</button><button class="item-menu" data-detail="2" aria-label="查看王思妤詳細資料">···</button></article>
+                <article class="queue-item" data-id="3" data-state="today" tabindex="0"><div class="contact-avatar avatar-3">高</div><div class="contact-block"><div class="contact-name">高志明</div><div class="contact-meta">禾木科技 · 採購主管</div></div><div class="step-block"><div class="next-step">補上報價單中的交期選項</div><span class="context-tag">9/19 創業小聚</span></div><div class="due today"><strong>今天</strong>下班前</div><button class="complete-button" data-complete="3">完成</button><button class="item-menu" data-detail="3" aria-label="查看高志明詳細資料">···</button></article>
+                <article class="queue-item" data-id="4" data-state="today" tabindex="0"><div class="contact-avatar avatar-2">吳</div><div class="contact-block"><div class="contact-name">吳欣怡</div><div class="contact-meta">拾光旅宿 · 創辦人</div></div><div class="step-block"><div class="next-step">分享台中旅宿案例</div><span class="context-tag">9/20 台中創業聚會</span></div><div class="due today"><strong>今天</strong>晚上 8:00</div><button class="complete-button" data-complete="4">完成</button><button class="item-menu" data-detail="4" aria-label="查看吳欣怡詳細資料">···</button></article>
+                <div class="queue-group-label" data-group="upcoming"><span>接下來 · 先排好就不會忘</span><span class="group-line"></span></div>
+                <article class="queue-item" data-id="5" data-state="upcoming" tabindex="0"><div class="contact-avatar">林</div><div class="contact-block"><div class="contact-name">林冠廷</div><div class="contact-meta">日常策展 · 品牌顧問</div></div><div class="step-block"><div class="next-step">約下週找時間聊合作方向</div><span class="context-tag">9/20 共同朋友引薦</span></div><div class="due"><strong>9 月 24 日</strong>還有 3 天</div><button class="complete-button" data-complete="5">完成</button><button class="item-menu" data-detail="5" aria-label="查看林冠廷詳細資料">···</button></article>
+              </div>
+              <div class="empty-state" id="queueEmpty" hidden>這個篩選目前沒有待回訪。</div>
+            </section>
+          </div>
+          <aside class="surface pulse-card" aria-labelledby="pulseTitle"><div class="pulse-header"><div><div class="card-kicker">14 天回訪節奏</div><h2 class="section-title" id="pulseTitle">本週脈搏</h2></div><div class="pulse-value">比上週 +18%</div></div><div class="week-chart" role="img" aria-label="週一至週日回訪完成節奏"><div class="bar-wrap"><div class="bar-track"><div class="bar done" style="height: 44%"></div></div><div class="bar-label">一</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar done" style="height: 64%"></div></div><div class="bar-label active">二</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar active" style="height: 22%"></div></div><div class="bar-label">三</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 36%"></div></div><div class="bar-label">四</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 56%"></div></div><div class="bar-label">五</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 10%"></div></div><div class="bar-label">六</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 10%"></div></div><div class="bar-label">日</div></div></div><p class="pulse-note">最近 7 天完成 <strong>8 / 12</strong> 個下一步，維持這個節奏就很好。</p><div class="mini-task-list"><div class="mini-task"><span class="mini-task-mark"></span><div class="mini-task-copy"><div class="mini-task-name">先處理 1 個逾期回訪</div><div class="mini-task-date">讓 queue 回到可呼吸的狀態</div></div></div><div class="mini-task"><span class="mini-task-mark" style="background: var(--primary)"></span><div class="mini-task-copy"><div class="mini-task-name">今天完成 3 個承諾</div><div class="mini-task-date">下午再回來看一次就好</div></div></div></div></aside>
+        </div>
+        <div class="lower-grid">
+          <section class="surface activity-card" aria-labelledby="activityTitle"><div class="section-head"><div><h2 class="section-title" id="activityTitle">最近互動</h2><p class="section-subtitle">每一次完成，都留下下一次對話的線索</p></div><button class="outline-button" data-view-button="timeline">查看完整時間線 <span aria-hidden="true">→</span></button></div><div class="activity-list" id="activityList"><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">已完成回訪 · 劉育誠</div><div class="activity-copy">傳送餐飲展位配置案例，約下週二再聊</div></div><div class="activity-date">昨天 16:42</div></div><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">新增聯絡人 · 林冠廷</div><div class="activity-copy">共同朋友引薦 · 已建立 9 月 24 日下一步</div></div><div class="activity-date">昨天 11:18</div></div><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">已完成回訪 · 張雅雯</div><div class="activity-copy">電話確認提案需求，等待對方回覆</div></div><div class="activity-date">9 月 19 日</div></div></div></section>
+          <section class="surface portable-card" aria-labelledby="portableTitle"><div class="card-kicker">你的資料，你做主</div><h2 class="portable-title" id="portableTitle">隨時帶走，不被鎖住</h2><p class="portable-copy">名片王只存在你的瀏覽器。需要整理、備份或換工具時，可以把資料匯出成通用格式。</p><div class="portable-actions"><button data-export="vcard">匯出 vCard</button><button data-export="csv">匯出 CSV</button><button data-export="ics">回訪 .ics</button></div></section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <nav class="mobile-nav" aria-label="行動版導覽"><button class="active" data-view="today"><span class="nav-icon" aria-hidden="true">◷</span><span>今日</span></button><button data-view="contacts"><span class="nav-icon" aria-hidden="true">♧</span><span>聯絡人</span></button><button data-view="timeline"><span class="nav-icon" aria-hidden="true">↗</span><span>時間線</span></button><button id="mobileAdd"><span class="nav-icon" aria-hidden="true">＋</span><span>新增</span></button></nav>
+  <div class="scrim" id="scrim"></div>
+  <section class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-header"><div><h2 class="modal-title" id="modalTitle">新增聯絡人</h2><p class="modal-copy">先留下下一步，之後才不需要靠記憶。</p></div><button class="close-button" data-close aria-label="關閉新增聯絡人視窗">×</button></div><form id="contactForm"><div class="form-grid"><div class="field" id="nameField"><label for="name">姓名 <span>*</span></label><input id="name" name="name" placeholder="例如：陳柏翰"><div class="field-error">請填寫姓名或公司至少一項。</div></div><div class="field"><label for="company">公司 / 身分</label><input id="company" name="company" placeholder="例如：拓遠設計"></div><div class="field"><label for="phone">手機</label><input id="phone" name="phone" placeholder="09xx-xxx-xxx"></div><div class="field"><label for="email">Email</label><input id="email" name="email" placeholder="name@company.tw"></div><div class="field"><label for="source">認識來源</label><select id="source" name="source"><option>活動 / 聚會</option><option>朋友介紹</option><option>客戶轉介</option><option>主動認識</option></select></div><div class="field"><label for="date">下次回訪日期 <span>*</span></label><input id="date" name="date" type="date" value="2026-09-24"></div><div class="field full"><label for="nextStep">下一步要做什麼？ <span>*</span></label><input id="nextStep" name="nextStep" placeholder="例如：寄送案例、約電話、確認預算"><div class="field-error">請寫下至少一個下一步，讓之後能直接行動。</div></div><div class="field full"><label for="note">備註</label><textarea id="note" name="note" placeholder="記下交換時聊到的關鍵線索，不用寫完整會議紀錄。"></textarea></div></div><div class="modal-footer"><button type="button" class="outline-button" data-close>先取消</button><button type="submit" class="primary-button">建立聯絡人</button></div></form></section>
+  <aside class="detail-panel" id="detailPanel" aria-labelledby="detailName"><div class="detail-top"><div class="detail-person"><div class="contact-avatar" id="detailAvatar">陳</div><div><div class="detail-name" id="detailName">陳柏翰</div><div class="detail-company" id="detailCompany">拓遠設計 · 建築顧問</div></div></div><button class="close-button" data-close aria-label="關閉聯絡人詳細資料">×</button></div><div class="detail-section"><div class="detail-label">下一步</div><div class="detail-next" id="detailNext">寄送商辦改造案例與預算範本</div></div><div class="detail-section"><div class="detail-label">交換情境</div><div class="detail-row"><span>來源</span><span id="detailSource">活動 / 聚會</span></div><div class="detail-row"><span>上次互動</span><span id="detailLast">9 月 10 日</span></div><div class="detail-row"><span>預計回訪</span><span id="detailDue">逾期 5 天</span></div></div><div class="detail-section"><div class="detail-label">最近備註</div><p class="modal-copy" id="detailNote">對方近期正在找辦公室改造案例，希望先看預算範本再約線上聊。</p></div><div class="modal-footer" style="justify-content: flex-start"><button class="primary-button" id="detailComplete">完成這次回訪</button></div></aside>
+  <div class="toast" id="toast" role="status" aria-live="polite"><span aria-hidden="true">✓</span><span id="toastMessage">已完成回訪，互動已記錄。</span></div>
+  <script>
+    const contacts = {
+      1: { name: "陳柏翰", company: "拓遠設計 · 建築顧問", initial: "陳", next: "寄送商辦改造案例與預算範本", source: "9/10 建築交流會", last: "9 月 10 日", due: "逾期 5 天", note: "對方近期正在找辦公室改造案例，希望先看預算範本再約線上聊。", cls: "avatar-4" },
+      2: { name: "王思妤", company: "沐光保險 · 業務經理", initial: "王", next: "確認家庭保障檢視時間", source: "9/18 朋友介紹", last: "9 月 18 日", due: "今天 下午 3:00", note: "對方想先和家人確認時間，週末前再主動聯絡。", cls: "" },
+      3: { name: "高志明", company: "禾木科技 · 採購主管", initial: "高", next: "補上報價單中的交期選項", source: "9/19 創業小聚", last: "9 月 19 日", due: "今天 下班前", note: "採購正在比較兩個供應商，交期是目前最在意的條件。", cls: "avatar-3" },
+      4: { name: "吳欣怡", company: "拾光旅宿 · 創辦人", initial: "吳", next: "分享台中旅宿案例", source: "9/20 台中創業聚會", last: "9 月 20 日", due: "今天 晚上 8:00", note: "想了解旅宿品牌如何把淡季活動做成固定內容。", cls: "avatar-2" },
+      5: { name: "林冠廷", company: "日常策展 · 品牌顧問", initial: "林", next: "約下週找時間聊合作方向", source: "9/20 共同朋友引薦", last: "9 月 20 日", due: "9 月 24 日", note: "兩邊都有品牌顧問客戶，先交換服務方式再找合作交集。", cls: "" }
+    };
+    let doneCount = 2;
+    let currentDetail = null;
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    function showToast(message) { $("#toastMessage").textContent = message; $("#toast").classList.add("show"); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => $("#toast").classList.remove("show"), 2600); }
+    function updateStats() {
+      const remaining = Math.max(5 - doneCount, 0);
+      $("#doneStat").textContent = doneCount;
+      $("#progressFill").style.width = Math.min(doneCount / 5 * 100, 100) + "%";
+      $("#progressFill").parentElement.setAttribute("aria-valuenow", doneCount);
+      $("#progressNote").textContent = remaining ? "還有 " + remaining + " 個下一步" : "今天的 queue 清空了";
+      const activeItems = $$(".queue-item:not(.done)");
+      const overdue = activeItems.filter(item => item.dataset.state === "overdue").length;
+      const today = activeItems.filter(item => item.dataset.state === "today").length;
+      $("#allCount").textContent = activeItems.length;
+      $("#overdueCount").textContent = overdue;
+      $("#todayCount").textContent = today;
+      $("#navCount").textContent = activeItems.length;
+      $("#navCount").hidden = activeItems.length === 0;
+    }
+    function setFilter(filter) {
+      $$(".filter-button").forEach(button => button.classList.toggle("active", button.dataset.filter === filter));
+      let visible = 0;
+      $$(".queue-item").forEach(item => { const match = filter === "all" || (filter === "today" && item.dataset.state === "today") || (filter === "overdue" && item.dataset.state === "overdue"); const show = match && !item.classList.contains("done"); item.hidden = !show; if (show) visible++; });
+      $$(".queue-group-label").forEach(label => { const group = label.dataset.group; label.hidden = filter !== "all" && filter !== group || !$('.queue-item[data-state="' + group + '"]:not(.done)'); });
+      $("#queueEmpty").hidden = visible !== 0;
+    }
+    function openModal() { $("#contactModal").classList.add("open"); $("#scrim").classList.add("open"); $("#name").focus(); }
+    function openDetail(id) {
+      const contact = contacts[id]; if (!contact) return; currentDetail = id;
+      $("#detailAvatar").textContent = contact.initial; $("#detailAvatar").className = "contact-avatar " + contact.cls; $("#detailName").textContent = contact.name; $("#detailCompany").textContent = contact.company; $("#detailNext").textContent = contact.next; $("#detailSource").textContent = contact.source; $("#detailLast").textContent = contact.last; $("#detailDue").textContent = contact.due; $("#detailNote").textContent = contact.note;
+      $("#detailPanel").classList.add("open"); $("#scrim").classList.add("open");
+    }
+    function closeOverlays() { $("#contactModal").classList.remove("open"); $("#detailPanel").classList.remove("open"); $("#scrim").classList.remove("open"); }
+    function completeContact(id) {
+      const item = $('.queue-item[data-id="' + id + '"]'); if (!item || item.classList.contains("done")) return;
+      item.classList.add("done"); item.dataset.state = "done"; const button = $("[data-complete]", item); button.textContent = "已完成"; button.disabled = true; doneCount++; updateStats(); setFilter("all"); const contact = contacts[id]; if (currentDetail === id) closeOverlays(); showToast("已完成 " + contact.name + " 的回訪，互動已記錄。");
+    }
+    function addContact(event) {
+      event.preventDefault(); const form = event.currentTarget; const name = $("#name").value.trim(); const company = $("#company").value.trim(); const next = $("#nextStep").value.trim(); const nameInvalid = !name && !company; $("#nameField").classList.toggle("invalid", nameInvalid); $("#nextStep").parentElement.classList.toggle("invalid", !next); if (nameInvalid || !next) return;
+      const displayName = name || company; const id = String(Date.now()); contacts[id] = { name: displayName, company: name && company ? company : "尚未填寫公司", initial: displayName.slice(0, 1), next, source: $("#source").value, last: "今天", due: "9 月 24 日", note: $("#note").value || "剛建立聯絡人，尚未留下備註。", cls: "" };
+      const item = document.createElement("article"); item.className = "queue-item"; item.dataset.id = id; item.dataset.state = "upcoming"; item.tabIndex = 0;
+      item.innerHTML = '<div class="contact-avatar">' + displayName.slice(0, 1) + '</div><div class="contact-block"><div class="contact-name">' + displayName + '</div><div class="contact-meta">' + (company || "尚未填寫公司") + '</div></div><div class="step-block"><div class="next-step">' + next + '</div><span class="context-tag">' + $("#source").value + '</span></div><div class="due"><strong>9 月 24 日</strong>新建立</div><button class="complete-button" data-complete="' + id + '">完成</button><button class="item-menu" data-detail="' + id + '" aria-label="查看' + displayName + '詳細資料">···</button>';
+      const group = $('[data-group="upcoming"]'); $("#queueList").insertBefore(item, group.nextElementSibling); item.querySelector("[data-complete]").addEventListener("click", () => completeContact(id)); item.querySelector("[data-detail]").addEventListener("click", () => openDetail(id)); item.addEventListener("click", event => { if (!event.target.closest("button")) openDetail(id); }); form.reset(); $("#date").value = "2026-09-24"; closeOverlays(); updateStats(); showToast(displayName + " 已加入回訪 queue。");
+    }
+    $$(".nav-button, .mobile-nav button[data-view]").forEach(button => button.addEventListener("click", () => { const view = button.dataset.view; $$(".nav-button, .mobile-nav button[data-view]").forEach(item => item.classList.toggle("active", item.dataset.view === view)); if (view !== "today") showToast(view === "contacts" ? "聯絡人頁面 prototype 即將接上同一份資料。" : view === "timeline" ? "時間線會保留每次完成回訪的紀錄。" : "設定會集中管理匯出與 local-only 資料。"); else window.scrollTo({ top: 0, behavior: "smooth" }); }));
+    $$("[data-view-button]").forEach(button => button.addEventListener("click", () => showToast("時間線會保留每次完成回訪的紀錄。")));
+    $("#openContactButton").addEventListener("click", openModal); $("#mobileAdd").addEventListener("click", openModal); $("#contactForm").addEventListener("submit", addContact); $$(".filter-button").forEach(button => button.addEventListener("click", () => setFilter(button.dataset.filter))); $$("[data-complete]").forEach(button => button.addEventListener("click", event => { event.stopPropagation(); completeContact(button.dataset.complete); })); $$("[data-detail]").forEach(button => button.addEventListener("click", event => { event.stopPropagation(); openDetail(button.dataset.detail); })); $$(".queue-item").forEach(item => item.addEventListener("click", event => { if (!event.target.closest("button")) openDetail(item.dataset.id); })); $$("[data-close]").forEach(button => button.addEventListener("click", closeOverlays)); $("#scrim").addEventListener("click", closeOverlays); $("#detailComplete").addEventListener("click", () => currentDetail && completeContact(currentDetail)); $("#themeButton").addEventListener("click", () => { document.body.classList.toggle("dark"); $("#themeButton").textContent = document.body.classList.contains("dark") ? "☀" : "☾"; }); $$("[data-export]").forEach(button => button.addEventListener("click", () => showToast("已準備 " + button.dataset.export.toUpperCase() + " 匯出 prototype。"))); document.addEventListener("keydown", event => { if (event.key === "Escape") closeOverlays(); }); updateStats();
+  </script>
+</body>
+</html>

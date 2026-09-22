@@ -32,7 +32,7 @@ function emptyStateStub(state: {
     ownerId: "x",
     plan: { ownerId: "x", tier: "free" as const, maxContacts: 20, cloudSync: false },
     theme: "light" as const,
-    ui: { searchQuery: "", activeTag: null, activeTab: "today" as const, sortMode: "dueDate" as const },
+    ui: { searchQuery: "", activeTag: null, activeTab: "today" as const, sortMode: "dueDate" as const, selectedContactId: null },
   } as Parameters<typeof lastInteractionDate>[1];
 }
 
@@ -77,6 +77,95 @@ export function exportVCards(
       ),
     )
     .join("\r\n");
+}
+
+/**
+ * Google Calendar-compatible one-way reminder export.
+ *
+ * This intentionally creates an .ics file instead of calling Google APIs so
+ * the v3 local-only data model does not gain OAuth, server routes, or cloud
+ * synchronization as a side effect of the P1 connector.
+ */
+export function exportCalendar(
+  followups: Followup[],
+  contacts: Contact[],
+  exportedAt: string = new Date().toISOString(),
+): string {
+  const activeContacts = new Map(
+    contacts.filter((contact) => contact.status === "active").map((contact) => [contact.id, contact]),
+  );
+  const events = followups
+    .filter((followup) => followup.status === "pending")
+    .map((followup) => ({ followup, contact: activeContacts.get(followup.contactId) }))
+    .filter((item): item is { followup: Followup; contact: Contact } => Boolean(item.contact))
+    .sort((a, b) => new Date(a.followup.dueDate).getTime() - new Date(b.followup.dueDate).getTime())
+    .map(({ followup, contact }) => buildCalendarEvent(followup, contact, exportedAt))
+    .join("\r\n");
+
+  const body = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//business-card-pro//followup-reminders//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    events,
+    "END:VCALENDAR",
+  ].filter(Boolean).join("\r\n");
+  return `${body}\r\n`;
+}
+
+function buildCalendarEvent(followup: Followup, contact: Contact, exportedAt: string): string {
+  const p = contact.payload;
+  const label = p.name ?? p.company ?? "未命名聯絡人";
+  const summary = `回訪：${label}`;
+  const description = [
+    `下一步：${followup.nextStep}`,
+    p.company ? `公司：${p.company}` : null,
+    p.phone ? `電話：${p.phone}` : null,
+    p.email ? `Email：${p.email}` : null,
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
+  const start = calendarDate(followup.dueDate);
+  const end = calendarDate(addUtcDays(new Date(followup.dueDate), 1).toISOString());
+
+  return [
+    "BEGIN:VEVENT",
+    `UID:${icsEscape(`${followup.id}@business-card-pro`)}`,
+    `DTSTAMP:${icsTimestamp(exportedAt)}`,
+    `DTSTART;VALUE=DATE:${start}`,
+    `DTEND;VALUE=DATE:${end}`,
+    `SUMMARY:${icsEscape(summary)}`,
+    `DESCRIPTION:${icsEscape(description)}`,
+    "BEGIN:VALARM",
+    "ACTION:DISPLAY",
+    "TRIGGER:-PT15M",
+    `DESCRIPTION:${icsEscape(summary)}`,
+    "END:VALARM",
+    "END:VEVENT",
+  ].join("\r\n");
+}
+
+function calendarDate(iso: string): string {
+  const date = new Date(iso);
+  return [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()]
+    .map((part) => String(part).padStart(2, "0"))
+    .join("");
+}
+
+function addUtcDays(date: Date, days: number): Date {
+  return new Date(date.getTime() + days * 24 * 60 * 60 * 1000);
+}
+
+function icsTimestamp(iso: string): string {
+  return new Date(iso)
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}Z$/, "Z");
+}
+
+function icsEscape(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 }
 
 /** AC-007: CSV 包含原始欄位與最後互動日期 */

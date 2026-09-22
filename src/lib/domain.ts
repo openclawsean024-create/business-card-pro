@@ -63,6 +63,95 @@ export function getTodayQueue(
     .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
 }
 
+/** 「接下來」的 queue(尚未到期但在下個 windowDays 天內)
+ *  注意:不含今天,也不含逾期 — 這兩類已由 getTodayQueue 涵蓋 */
+export function getUpcomingQueue(
+  followups: Followup[],
+  contacts: Contact[],
+  now: Date = new Date(),
+  windowDays = 7,
+): Array<Followup & { contact: Contact | null }> {
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const windowEnd = new Date(todayStart.getTime() + windowDays * 24 * 3600 * 1000);
+  const eligible = followups.filter((f) => {
+    if (f.status !== "pending") return false;
+    const due = new Date(f.dueDate);
+    // 排除今天與更早
+    if (due < todayStart) return false;
+    if (due.getTime() < todayStart.getTime() + 24 * 3600 * 1000) return false;
+    return due < windowEnd;
+  });
+  return eligible
+    .map((f) => ({
+      ...f,
+      contact: contacts.find((c) => c.id === f.contactId && c.status === "active") ?? null,
+    }))
+    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+}
+
+/** 今日進度:已完成的 + 仍待完成的(只看 pending 中到期日=今日)
+ *  用於 dashboard 上的「你今天做了 N 件,還剩 M 件」 */
+export function getTodayProgress(
+  followups: Followup[],
+  now: Date = new Date(),
+): { done: number; total: number } {
+  let done = 0;
+  let total = 0;
+  for (const f of followups) {
+    const due = new Date(f.dueDate);
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayEnd = new Date(todayStart.getTime() + 24 * 3600 * 1000);
+    const isToday = due >= todayStart && due < todayEnd;
+    const isOverdue = due < todayStart;
+    if (!isToday && !isOverdue) continue;
+    if (f.status === "done") {
+      done += 1;
+      total += 1;
+    } else if (f.status === "pending") {
+      total += 1;
+    }
+  }
+  return { done, total };
+}
+
+/** 14 天互動節奏:每天的 followup-done + interaction 數量(由舊到新)
+ *  用於 PulseCard 的迷你條形圖 */
+export interface RhythmPoint {
+  /** ISO date YYYY-MM-DD (本地日) */
+  date: string;
+  count: number;
+  isToday: boolean;
+}
+
+export function buildRhythm(
+  followups: Followup[],
+  interactions: Interaction[],
+  now: Date = new Date(),
+  days = 14,
+): RhythmPoint[] {
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const points: RhythmPoint[] = [];
+  for (let i = days - 1; i >= 0; i -= 1) {
+    const d = new Date(todayStart.getTime() - i * 24 * 3600 * 1000);
+    const start = d.getTime();
+    const end = start + 24 * 3600 * 1000;
+    const isoDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    let count = 0;
+    for (const f of followups) {
+      if (f.status !== "done") continue;
+      const t = f.completedAt ?? f.updatedAt;
+      const ts = new Date(t).getTime();
+      if (ts >= start && ts < end) count += 1;
+    }
+    for (const it of interactions) {
+      const ts = new Date(it.occurredAt).getTime();
+      if (ts >= start && ts < end) count += 1;
+    }
+    points.push({ date: isoDate, count, isToday: i === 0 });
+  }
+  return points;
+}
+
 /** AC-008: 搜尋姓名、公司、標籤與最近互動 */
 export function matchesSearch(contact: Contact, q: string): boolean {
   if (!q.trim()) return true;

@@ -1,0 +1,45 @@
+version: 1
+name: business-card-pro-planner-developer-qa
+max_iterations: 3
+
+roles:
+  planner:
+    harness: codex-account-1
+    access: read-only
+  developer:
+    harness: minimax-code
+    access: workspace-write
+  qa:
+    harness: minimax-code
+    access: isolated-read-only-copy
+  integrator:
+    harness: codex-account-1
+    access: workspace-write
+  final_reviewer:
+    harness: codex-account-2
+    access: read-only and fresh conversation
+
+fallback:
+  enabled: true
+  policy: quota-or-rate-limit-only
+  chains:
+    planner: [codex-account-1, codex-account-2, minimax-code]
+    developer: [minimax-code, codex-account-1, codex-account-2]
+    qa: [minimax-code, codex-account-2, codex-account-1]
+    integrator: [codex-account-1, codex-account-2, minimax-code]
+    final_reviewer: [codex-account-2, codex-account-1, minimax-code]
+
+gates:
+  before_qa:
+    - deterministic-quality-gate
+  before_pull_request:
+    - deterministic-quality-gate
+    - final-review-pass
+  before_merge:
+    - github-required-status-checks
+    - branch-protection
+    - risk-approval-for-sensitive-paths
+
+termination:
+  success: "final reviewer emits VERDICT: PASS and deterministic checks pass"
+  failure: iteration budget exhausted or a command exits non-zero

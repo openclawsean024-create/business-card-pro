@@ -125,6 +125,8 @@ export interface AppState {
     activeTag: string | null;
     activeTab: TabId;
     sortMode: "name" | "company" | "dueDate" | "createdAt";
+    /** 詳細 drawer 開啟的 contact id(無則 null) */
+    selectedContactId: ID | null;
   };
 }
 
@@ -157,6 +159,7 @@ export function emptyAppState(): AppState {
       activeTag: null,
       activeTab: "today",
       sortMode: "dueDate",
+      selectedContactId: null,
     },
   };
 }

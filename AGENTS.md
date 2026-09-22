@@ -46,7 +46,15 @@ GitHub HEAD = 本地 HEAD = Vercel production SHA = Notion 進度欄位 SHA
 - ❌ 在 `next.config.ts` 加 unoptimized: false(本版是 static export)
 - ❌ 改 `STORAGE_KEY = 'business-card-pro-v3'`(會破壞既有使用者資料)
 
-## 6. 主要檔案入口
+## 6. Autonomous development contract
+
+- Planner、QA、Final reviewer are read-only; only Developer and Integrator may modify the workspace.
+- Run `bash scripts/quality-gate.sh` before accepting any agent change.
+- Quota fallback may advance only through `.agent/workflow.yaml`; authentication, test, and security failures must stop the run.
+- Agents do not push, merge, deploy, or change branch protection from a work session.
+- Changes to authentication, secrets, deployment, workflows, or infrastructure require the `risk-approved` label and human review.
+
+## 7. 主要檔案入口
 
 - `src/app/page.tsx` — 主頁 + 4 個 tab
 - `src/lib/types.ts` — Domain models(SPEC §4.3)

@@ -77,6 +77,12 @@ business-card-pro/
 
 > **AC-005 (OCR preview)** 未在本版實作 UI — SPEC §1.5 Non-Goals 明確把 OCR 降級為「可選 preview」,本版聚焦手動輸入閉環。
 
+## 📅 P1-02 Google Calendar 單向提醒
+
+設定分頁的 **Google Calendar** 按鈕會將所有尚未完成且仍有有效聯絡人的回訪匯出成 `.ics` 檔案。使用者可在 Google Calendar 選擇「匯入」加入行事曆；每個事件包含下一步、聯絡資訊與 15 分鐘前顯示提醒。
+
+這個版本刻意維持 local-only：不使用 Google OAuth、不建立 server route，也不會把 localStorage 資料上傳到雲端。匯出實作位於 `src/lib/export.ts`，測試位於 `src/test/calendar.test.ts`。
+
 ## 🚫 跳過功能 (SPEC §1.5 / §3.2 / §3.3 排除項)
 
 - ❌ 通用全球名片資料庫

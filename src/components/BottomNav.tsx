@@ -9,37 +9,35 @@ interface BottomNavProps {
 }
 
 /**
- * mobile-only bottom nav(< md)。桌機 / tablet 由 TopNav 取代。
+ * 手機主導覽(< md 顯示)。
+ * 對齊 ui-prototype.html 5 列 mobile-nav(prototype 把「新增」包進時間線/聯絡人頁內的 + 按鈕,
+ * 不佔 mobile-nav slot — 因此這裡保持 5 個 tab button: 今日 / 全部 / 聯絡人 / 時間線 / 設定)。
+ *
+ * NAV_ITEMS 是 single source of truth — 加 tab 只改 nav-items.ts。
  */
 export function BottomNav({ activeTab, onChange }: BottomNavProps) {
   return (
     <nav
-      aria-label="主導覽"
-      className="sticky bottom-0 z-30 md:hidden bg-white border-t border-slate-200"
+      aria-label="行動版導覽"
+      className="ws-mobile-nav md:hidden"
     >
-      <ul className="grid grid-cols-5">
-        {NAV_ITEMS.map((it) => {
-          const Icon = it.icon;
-          const active = activeTab === it.id;
-          return (
-            <li key={it.id}>
-              <button
-                onClick={() => onChange(it.id)}
-                aria-current={active ? "page" : undefined}
-                className={clsx(
-                  "w-full flex flex-col items-center gap-1 py-2 text-[10px] cursor-pointer transition-colors",
-                  active
-                    ? "text-brand-600"
-                    : "text-slate-500 hover:text-slate-900",
-                )}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{it.label}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      {NAV_ITEMS.map((it) => {
+        const Icon = it.icon;
+        const active = activeTab === it.id;
+        return (
+          <button
+            key={it.id}
+            type="button"
+            onClick={() => onChange(it.id)}
+            aria-current={active ? "page" : undefined}
+            data-tab={it.id}
+            className={clsx(active && "active")}
+          >
+            <Icon aria-hidden="true" />
+            <span>{it.label}</span>
+          </button>
+        );
+      })}
     </nav>
   );
 }

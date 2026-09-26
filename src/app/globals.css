@@ -4,6 +4,47 @@
 
 :root {
   color-scheme: light dark;
+
+  /* v3 product design tokens — 對齊 public/ui-prototype.html
+     名片王 Pro workstation 使用 Swiss-Minimalism + 暖米色底,
+     讓台灣業務長時間注視也不疲勞 */
+  --bg-app: #f6f7f5;
+  --surface-app: #ffffff;
+  --surface-soft: #f9faf9;
+  --ink-app: #182230;
+  --muted-app: #66717e;
+  --faint-app: #97a0aa;
+  --line-app: #e5e8ec;
+  --line-strong-app: #d8dde3;
+  --primary-app: #3f5bf6;
+  --primary-dark-app: #2f48d5;
+  --primary-soft-app: #eef1ff;
+  --success-app: #159a75;
+  --success-soft-app: #eaf8f3;
+  --warning-app: #b87815;
+  --warning-soft-app: #fff5df;
+  --danger-app: #ce554f;
+  --danger-soft-app: #fff0ef;
+  --radius-app: 22px;
+  --shadow-app: 0 18px 60px rgba(22, 32, 43, 0.08);
+  --shadow-soft-app: 0 8px 24px rgba(22, 32, 43, 0.05);
+}
+
+html.dark {
+  --bg-app: #111820;
+  --surface-app: #19232e;
+  --surface-soft-app: #202c38;
+  --ink-app: #f0f4f8;
+  --muted-app: #aebac6;
+  --faint-app: #7f8c99;
+  --line-app: #2b3744;
+  --line-strong-app: #405060;
+  --primary-soft-app: #202c55;
+  --success-soft-app: #173d35;
+  --warning-soft-app: #4a3719;
+  --danger-soft-app: #4a2425;
+  --shadow-app: 0 18px 60px rgba(0, 0, 0, 0.22);
+  --shadow-soft-app: 0 8px 24px rgba(0, 0, 0, 0.14);
 }
 
 html,
@@ -15,13 +56,17 @@ body {
    Dark mode is opt-in via html.dark class. */
 body {
   @apply bg-slate-50 text-slate-900 font-sans antialiased;
+  background-color: var(--bg-app);
+  color: var(--ink-app);
 }
 
 html.dark body {
-  @apply bg-surface-dark text-slate-100;
+  background-color: var(--bg-app);
+  color: var(--ink-app);
 }
 
-/* Focus ring — accessibility §5.1 — strong contrast on light/dark */
+/* Focus ring — accessibility §5.1 — strong contrast on light/dark
+   對齊 prototype:`outline: 3px solid rgba(63, 91, 246, 0.25)` */
 :focus-visible {
   outline: 2px solid theme("colors.brand.600");
   outline-offset: 2px;
@@ -102,6 +147,646 @@ html.dark :focus-visible {
   html.dark .btn-ghost {
     @apply text-slate-300 hover:bg-slate-700;
   }
+
+  /* Product surfaces — prototype's rounded "22px cards" */
+  .ws-surface {
+    background-color: var(--surface-app);
+    border: 1px solid var(--line-app);
+    border-radius: var(--radius-app);
+    box-shadow: var(--shadow-soft-app);
+  }
+
+  html.dark .ws-surface {
+    background-color: var(--surface-app);
+    border-color: var(--line-app);
+  }
+
+  /* Eyebrow text — small caps brand color kicker used on the hero intro */
+  .ws-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--primary-app);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+  .ws-eyebrow::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background-color: currentColor;
+  }
+
+  /* Progress bar track + fill (used by PulseCard, sidebar capacity) */
+  .ws-progress-track {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 999px;
+    background-color: #eceef2;
+  }
+  html.dark .ws-progress-track {
+    background-color: #27323d;
+  }
+  .ws-progress-fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--primary-app);
+    transition: width 250ms ease;
+  }
+
+  .ws-progress-track.capacity {
+    height: 5px;
+    background-color: #dbeee8;
+  }
+  html.dark .ws-progress-track.capacity {
+    background-color: #27323d;
+  }
+  .ws-progress-fill.success {
+    background-color: var(--success-app);
+  }
+
+  /* Avatar — single-letter avatar matching the prototype palette */
+  .ws-avatar {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 13px;
+    color: #334570;
+    background-color: #e4e9ff;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .ws-avatar.alt-1 {
+    color: #79531d;
+    background-color: #fff0ca;
+  }
+  .ws-avatar.alt-2 {
+    color: #126752;
+    background-color: #dff5ed;
+  }
+  .ws-avatar.alt-3 {
+    color: #8a3e50;
+    background-color: #ffe3e9;
+  }
+  .ws-avatar.sm {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    font-size: 12px;
+  }
+  .ws-avatar.md {
+    width: 48px;
+    height: 48px;
+    font-size: 15px;
+  }
+  html.dark .ws-avatar {
+    color: #c6d1ff;
+    background-color: #293762;
+  }
+  html.dark .ws-avatar.alt-1 {
+    color: #ffe0a0;
+    background-color: #4b3a21;
+  }
+  html.dark .ws-avatar.alt-2 {
+    color: #a6ead3;
+    background-color: #1f493e;
+  }
+  html.dark .ws-avatar.alt-3 {
+    color: #ffc4d1;
+    background-color: #4b2733;
+  }
+
+  /* Local-mode pill (sidebar) */
+  .ws-local-card {
+    margin: 20px 4px 14px;
+    padding: 14px;
+    border: 1px solid #dcebe6;
+    border-radius: 15px;
+    background-color: #f1faf7;
+  }
+  html.dark .ws-local-card {
+    border-color: #2d574b;
+    background-color: #17312b;
+  }
+
+  /* Dark (portable) card — reverse ink-on-paper surface for export panel */
+  .ws-portable-card {
+    color: #fff;
+    background-color: var(--ink-app);
+  }
+  .ws-portable-card .ws-portable-kicker,
+  .ws-portable-card .ws-portable-subtitle {
+    color: #aeb9c7;
+  }
+  .ws-portable-card .ws-portable-copy {
+    color: #c1cbd6;
+  }
+  .ws-portable-card .ws-portable-actions button {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid #526172;
+    border-radius: 9px;
+    color: #fff;
+    background-color: #2c394b;
+    font-size: 11px;
+    font-weight: 750;
+  }
+  .ws-portable-card .ws-portable-actions button:hover {
+    background-color: #3d4d62;
+  }
+
+  /* Activity timeline (vertical) — left dot + line connector */
+  .ws-activity-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid #f0f1f3;
+  }
+  html.dark .ws-activity-item {
+    border-top-color: var(--line-app);
+  }
+  .ws-activity-item:first-child {
+    border-top: 0;
+  }
+  .ws-activity-marker {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 20px;
+  }
+  .ws-activity-marker::before {
+    width: 8px;
+    height: 8px;
+    margin-top: 5px;
+    border-radius: 999px;
+    background-color: var(--primary-app);
+    content: "";
+  }
+  .ws-activity-item:not(:last-child) .ws-activity-marker::after {
+    position: absolute;
+    top: 17px;
+    bottom: -17px;
+    left: 9px;
+    width: 1px;
+    background-color: #e1e5ee;
+    content: "";
+  }
+  html.dark .ws-activity-item:not(:last-child) .ws-activity-marker::after {
+    background-color: var(--line-app);
+  }
+
+  /* Rhythm chart bar (PulseCard) */
+  .ws-bar-track {
+    display: flex;
+    width: 17px;
+    height: 88px;
+    align-items: end;
+    border-radius: 999px;
+    background-color: #f0f1f4;
+  }
+  html.dark .ws-bar-track {
+    background-color: #27323d;
+  }
+  .ws-bar {
+    width: 100%;
+    min-height: 7px;
+    border-radius: 999px;
+    background-color: #c9d0ff;
+    transition: height 250ms ease;
+  }
+  .ws-bar.active {
+    background-color: var(--primary-app);
+  }
+  .ws-bar.done {
+    background-color: #7bcfb6;
+  }
+  html.dark .ws-bar {
+    background-color: #404d89;
+  }
+  html.dark .ws-bar.done {
+    background-color: #32856d;
+  }
+
+  /* Queue group label (overdue / today / upcoming) */
+  .ws-group-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 19px 0 7px;
+    color: var(--muted-app);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+  .ws-group-label:first-child {
+    margin-top: 0;
+  }
+  .ws-group-label-line {
+    height: 1px;
+    flex: 1;
+    background-color: var(--line-app);
+  }
+
+  /* Queue item row (Today tab) */
+  .ws-queue-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1.4fr) minmax(140px, 0.8fr) auto auto;
+    align-items: center;
+    gap: 14px;
+    min-height: 80px;
+    padding: 12px 2px;
+    border-top: 1px solid #f0f1f3;
+    transition: background 180ms ease;
+    cursor: pointer;
+  }
+  html.dark .ws-queue-item {
+    border-top-color: var(--line-app);
+  }
+  .ws-queue-item:hover {
+    padding-right: 9px;
+    padding-left: 9px;
+    border-radius: 12px;
+    background-color: var(--surface-soft);
+  }
+  .ws-queue-item.done {
+    opacity: 0.62;
+  }
+  .ws-queue-item.done .ws-queue-name {
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .ws-queue-name {
+    overflow: hidden;
+    color: var(--ink-app);
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ws-queue-meta {
+    overflow: hidden;
+    margin-top: 2px;
+    color: var(--muted-app);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ws-next-step {
+    overflow: hidden;
+    color: var(--ink-app);
+    font-size: 12px;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ws-next-step::before {
+    margin-right: 5px;
+    color: var(--primary-app);
+    content: "↳";
+  }
+  .ws-context-tag {
+    display: inline-flex;
+    width: max-content;
+    max-width: 100%;
+    margin-top: 5px;
+    padding: 2px 7px;
+    overflow: hidden;
+    border-radius: 6px;
+    color: var(--muted-app);
+    background-color: var(--surface-soft);
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ws-due {
+    min-width: 67px;
+    color: var(--muted-app);
+    font-size: 11px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .ws-due strong {
+    display: block;
+    color: var(--ink-app);
+    font-size: 12px;
+  }
+  .ws-due.overdue strong {
+    color: var(--danger-app);
+  }
+  .ws-due.today strong {
+    color: var(--warning-app);
+  }
+
+  /* "完成" pill used by queue rows */
+  .ws-complete-pill {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid #cfe9df;
+    border-radius: 9px;
+    color: var(--success-app);
+    background-color: var(--success-soft-app);
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 160ms ease;
+  }
+  .ws-complete-pill:hover {
+    border-color: var(--success-app);
+    background-color: #dcf4eb;
+  }
+  .ws-complete-pill:disabled {
+    cursor: default;
+    opacity: 0.75;
+  }
+
+  /* Filter pill (queue filter group) */
+  .ws-filter-pill {
+    min-height: 28px;
+    padding: 0 9px;
+    border: 0;
+    border-radius: 7px;
+    color: var(--muted-app);
+    background: transparent;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 160ms ease;
+  }
+  .ws-filter-pill.active {
+    color: var(--ink-app);
+    background: var(--surface-app);
+    box-shadow: 0 2px 6px rgba(22, 32, 43, 0.08);
+  }
+  .ws-filter-row {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--line-app);
+    border-radius: 10px;
+    background: var(--surface-soft);
+  }
+
+  /* Detail drawer (right-slide) */
+  .ws-detail-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 50;
+    width: min(430px, 100vw);
+    height: 100vh;
+    overflow: auto;
+    padding: 28px;
+    border-left: 1px solid var(--line-app);
+    background: var(--surface-app);
+    box-shadow: -18px 0 50px rgba(22, 32, 43, 0.12);
+  }
+  html.dark .ws-detail-drawer {
+    background: var(--surface-app);
+    border-left-color: var(--line-app);
+  }
+
+  .ws-detail-next {
+    margin-top: 8px;
+    padding: 15px;
+    border: 1px solid #dfe4ff;
+    border-radius: 14px;
+    color: var(--ink-app);
+    background: var(--primary-soft-app);
+    font-size: 14px;
+    font-weight: 750;
+  }
+  html.dark .ws-detail-next {
+    border-color: var(--line-app);
+  }
+
+  /* Toast */
+  .ws-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    max-width: calc(100vw - 44px);
+    padding: 12px 15px;
+    border: 1px solid #bfe6d9;
+    border-radius: 12px;
+    color: #0d624c;
+    background: #f0fcf8;
+    box-shadow: var(--shadow-app);
+    font-size: 12px;
+    font-weight: 750;
+  }
+
+  /* Hero intro typography */
+  .ws-hero-title {
+    margin: 8px 0;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.14;
+    letter-spacing: -0.06em;
+    color: var(--ink-app);
+  }
+  .ws-hero-copy {
+    max-width: 600px;
+    margin: 0;
+    color: var(--muted-app);
+    font-size: 15px;
+  }
+
+  /* Section title */
+  .ws-section-title {
+    margin: 0;
+    font-size: 18px;
+    letter-spacing: -0.035em;
+    color: var(--ink-app);
+  }
+  .ws-section-subtitle {
+    margin: 3px 0 0;
+    color: var(--muted-app);
+    font-size: 12px;
+  }
+
+  /* Brand mark (sidebar top) */
+  .ws-brand-mark {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 12px;
+    color: #fff;
+    background: var(--ink-app);
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.08em;
+  }
+
+  /* Sidebar nav buttons */
+  .ws-nav-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 12px;
+    color: var(--muted-app);
+    background: transparent;
+    text-align: left;
+    transition: background 160ms ease;
+    cursor: pointer;
+  }
+  .ws-nav-button:hover {
+    color: var(--ink-app);
+    background: var(--surface-soft);
+  }
+  .ws-nav-button.active {
+    color: var(--primary-app);
+    background: var(--primary-soft-app);
+    font-weight: 700;
+  }
+  html.dark .ws-nav-button.active {
+    color: var(--primary-app);
+  }
+  .ws-nav-count {
+    margin-left: auto;
+    padding: 1px 7px;
+    border-radius: 999px;
+    color: var(--danger-app);
+    background: var(--danger-soft-app);
+    font-size: 11px;
+    font-weight: 800;
+  }
+
+  /* Status dot for "本機模式已啟用" */
+  .ws-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: var(--success-app);
+  }
+}
+
+/* Mobile bottom nav (4 columns: 今日 / 聯絡人 / 時間線 / 新增) */
+@layer components {
+  .ws-mobile-header {
+    border-bottom: 1px solid var(--line-app);
+    background: var(--surface-app);
+  }
+
+  .ws-mobile-header h1 {
+    color: var(--ink-app);
+  }
+
+  .ws-mobile-header p {
+    color: var(--muted-app);
+  }
+
+  .ws-theme-toggle {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--line-app);
+    border-radius: 10px;
+    color: var(--muted-app);
+    background: var(--surface-app);
+    cursor: pointer;
+  }
+
+  .ws-theme-toggle:hover {
+    color: var(--ink-app);
+    background: var(--surface-soft);
+  }
+
+  .ws-theme-toggle .lucide {
+    width: 16px;
+    height: 16px;
+  }
+
+  .ws-mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 30;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    padding: 7px 9px max(7px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line-app);
+    background: rgba(255, 255, 255, 0.93);
+    backdrop-filter: blur(16px);
+  }
+  html.dark .ws-mobile-nav {
+    background: rgba(17, 24, 32, 0.94);
+  }
+  .ws-mobile-nav button {
+    display: grid;
+    gap: 2px;
+    place-items: center;
+    min-height: 42px;
+    border: 0;
+    color: var(--muted-app);
+    background: transparent;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  .ws-mobile-nav button.active {
+    color: var(--primary-app);
+    font-weight: 800;
+  }
+  .ws-mobile-nav button .lucide {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* App shell layout — desktop sidebar + main */
+@media (min-width: 768px) {
+  .ws-app-shell {
+    display: flex;
+    min-height: 100vh;
+  }
+  .ws-sidebar {
+    width: 244px;
+    flex: 0 0 244px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px 18px;
+    border-right: 1px solid var(--line-app);
+    background: rgba(255, 255, 255, 0.8);
+  }
+  html.dark .ws-sidebar {
+    background: rgba(17, 24, 32, 0.88);
+  }
+  .ws-main {
+    width: min(100%, 1440px);
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 1040px) {
+  .ws-sidebar {
+    width: 218px;
+    flex-basis: 218px;
+  }
+}
+
+@media (max-width: 767px) {
+  .ws-sidebar {
+    display: none;
+  }
+  .ws-mobile-nav {
+    display: grid;
+  }
 }
 
 /* prefers-reduced-motion — accessibility (MASTER.md + SPEC §6.1) */
@@ -109,6 +794,7 @@ html.dark :focus-visible {
   *,
   *::before,
   *::after {
+    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }

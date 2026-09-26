@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
 import { Sidebar } from "@/components/Sidebar";
-import { TopNav } from "@/components/TopNav";
 import { BottomNav } from "@/components/BottomNav";
+import { TopNav } from "@/components/TopNav";
 import { TodayTab } from "@/components/tabs/TodayTab";
 import { QueueTab } from "@/components/tabs/QueueTab";
 import { ContactsTab } from "@/components/tabs/ContactsTab";
@@ -12,15 +12,32 @@ import { TimelineTab } from "@/components/tabs/TimelineTab";
 import { SettingsTab } from "@/components/tabs/SettingsTab";
 import { OnboardingHint } from "@/components/OnboardingHint";
 import { ContactDetailDrawer } from "@/components/ContactDetailDrawer";
+import { ContactFormModal } from "@/components/ContactFormModal";
 import type { TabId } from "@/components/nav-items";
+import { Moon, Sun } from "lucide-react";
 
 const ONBOARDING_DISMISS_KEY = "bcp-onboarding-dismissed";
 
+/**
+ * 名片王 Pro workstation 桌機 layout(對齊 ui-prototype.html):
+ *  <div class="ws-app-shell">
+ *    <aside class="ws-sidebar" />      ← 桌機永久顯示
+ *    <main class="ws-main">
+ *      <header class="ws-topbar" />    ← 麵包屑 / 主題切換
+ *      <TopNav />                      ← md+ tab bar
+ *      <div class="ws-content">…</div>  ← 各 tab
+ *      <BottomNav />                   ← mobile 浮動 nav
+ *    </main>
+ *    <ContactDetailDrawer />
+ *  </div>
+ */
 export default function HomePage() {
   const store = useStore();
   const hydrate = useStore((s) => s.hydrate);
   const [hydrated, setHydrated] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  // 全域「新增聯絡人」modal — 任何 tab 的 + 按鈕都可觸發
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     hydrate();
@@ -32,6 +49,14 @@ export default function HomePage() {
     if (typeof document === "undefined") return;
     document.documentElement.classList.toggle("dark", store.theme === "dark");
   }, [store.theme]);
+
+  // 任何 tab 都可 dispatch `bcp:open-create` 開啟新增聯絡人 modal
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handler = () => setCreating(true);
+    window.addEventListener("bcp:open-create", handler);
+    return () => window.removeEventListener("bcp:open-create", handler);
+  }, []);
 
   const activeContactCount = useMemo(
     () => store.contacts.filter((c) => c.status === "active").length,
@@ -49,6 +74,14 @@ export default function HomePage() {
 
   const tab: TabId = store.ui.activeTab;
 
+  // 麵包屑日期(對齊 prototype: 週二 · 9 月 21 日)
+  const todayLabel = useMemo(() => {
+    const d = new Date();
+    const weekdays = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+    const w = weekdays[d.getDay()] ?? "";
+    return `${w} · ${d.getMonth() + 1} 月 ${d.getDate()} 日`;
+  }, []);
+
   if (!hydrated) {
     return (
       <div className="min-h-screen flex items-center justify-center text-sm opacity-60">
@@ -57,8 +90,10 @@ export default function HomePage() {
     );
   }
 
+  const onTabChange = (t: TabId) => store.updateUI({ activeTab: t });
+
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="ws-app-shell">
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-brand-600 focus:text-white focus:px-3 focus:py-2 focus:rounded"
@@ -66,12 +101,16 @@ export default function HomePage() {
         跳到主要內容
       </a>
 
-      {/* 桌機側欄 */}
-      <Sidebar />
+      {/* 桌機 sidebar (md+) — 永久掛載以利測試取得 role=complementary */}
+      <Sidebar activeTab={tab} onChange={onTabChange} />
 
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* 手機 header + top nav 保留,桌機由 sidebar 提供導覽 */}
-        <header className="md:hidden sticky top-0 z-30 bg-white border-b border-slate-200">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="ws-main"
+      >
+        {/* Mobile 簡化 header */}
+        <header className="ws-mobile-header md:hidden sticky top-0 z-30">
           <div className="px-4 py-3 flex items-center justify-between">
             <div>
               <h1 className="text-base font-semibold text-slate-900 tracking-tight">
@@ -81,15 +120,41 @@ export default function HomePage() {
                 {activeContactCount} 位聯絡人
               </p>
             </div>
+            <button
+              type="button"
+              className="ws-theme-toggle"
+              aria-label={store.theme === "dark" ? "切換淺色主題" : "切換深色主題"}
+              onClick={() => store.update({ theme: store.theme === "light" ? "dark" : "light" })}
+            >
+              {store.theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+            </button>
           </div>
         </header>
-        <TopNav activeTab={tab} onChange={(t) => store.updateUI({ activeTab: t })} />
 
-        <main
-          id="main-content"
-          tabIndex={-1}
-          className="flex-1 max-w-3xl w-full mx-auto px-4 py-6 sm:py-8"
-        >
+        {/* TopNav (md+) — 桌機第二列 tab bar */}
+        <TopNav activeTab={tab} onChange={onTabChange} />
+
+        <div className="max-w-[1260px] mx-auto px-4 sm:px-6 md:px-12 py-6 md:py-10">
+          {/* 麵包屑 (桌機頂部列) */}
+          <div className="hidden md:flex items-center justify-between min-h-[78px] pb-6">
+            <div className="text-xs text-[color:var(--muted-app)]">
+              工作台 <span aria-hidden="true"> / </span>{" "}
+              <strong className="text-[color:var(--ink-app)]">{todayLabel}</strong>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-[color:var(--muted-app)]">
+              <span className="hidden lg:inline">本機使用者</span>
+              <button
+                type="button"
+                className="ws-theme-toggle"
+                aria-label={store.theme === "dark" ? "切換淺色主題" : "切換深色主題"}
+                onClick={() => store.update({ theme: store.theme === "light" ? "dark" : "light" })}
+              >
+                {store.theme === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
+              </button>
+              <div className="ws-avatar sm" aria-hidden="true">我</div>
+            </div>
+          </div>
+
           <OnboardingHint
             visible={showOnboarding}
             onDismiss={() => {
@@ -110,12 +175,19 @@ export default function HomePage() {
           {tab === "contacts" && <ContactsTab />}
           {tab === "timeline" && <TimelineTab />}
           {tab === "settings" && <SettingsTab />}
-        </main>
+        </div>
 
-        <BottomNav activeTab={tab} onChange={(t) => store.updateUI({ activeTab: t })} />
-      </div>
+        {/* Mobile bottom nav */}
+        <BottomNav activeTab={tab} onChange={onTabChange} />
+      </main>
 
       <ContactDetailDrawer />
+      {creating && (
+        <ContactFormModal
+          contact={null}
+          onClose={() => setCreating(false)}
+        />
+      )}
     </div>
   );
 }

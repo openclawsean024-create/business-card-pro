@@ -194,6 +194,13 @@
     .detail-row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 12px; }
     .detail-row span:first-child { color: var(--muted); }
     .detail-row span:last-child { color: var(--ink); font-weight: 700; text-align: right; }
+    .detail-history { margin: 8px 0 0; padding: 0; list-style: none; }
+    .detail-history li { padding: 9px 0; border-top: 1px dashed var(--line); font-size: 12px; }
+    .detail-history li:first-child { border-top: 0; padding-top: 4px; }
+    .detail-history .history-title { font-weight: 750; color: var(--ink); }
+    .detail-history .history-copy { color: var(--muted); margin-top: 2px; font-size: 11px; }
+    .detail-history .history-date { color: var(--faint); font-size: 11px; }
+    .detail-history .history-empty { color: var(--muted); font-size: 12px; }
     .toast { position: fixed; z-index: 30; right: 22px; bottom: 22px; display: flex; align-items: center; gap: 9px; max-width: calc(100vw - 44px); padding: 12px 15px; border: 1px solid #bfe6d9; border-radius: 12px; color: #0d624c; background: #f0fcf8; box-shadow: var(--shadow); font-size: 12px; font-weight: 750; opacity: 0; pointer-events: none; transform: translateY(12px); transition: 180ms ease; }
     .toast.show { opacity: 1; transform: translateY(0); }
     .empty-state { padding: 28px 10px; color: var(--muted); text-align: center; }
@@ -228,25 +235,123 @@
       .section-head { align-items: start; flex-direction: column; }
       .queue-filters { width: 100%; }
       .filter-button { flex: 1; }
-      .queue-item { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; min-height: 75px; }
-      .queue-item > .next-step { grid-column: 2 / 4; grid-row: 2; margin-top: -11px; }
+      .queue-item { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; min-height: 75px; padding-bottom: 15px; }
+      .queue-item > .step-block { grid-column: 2 / 4; grid-row: 2; margin-top: -11px; min-width: 0; }
+      .queue-item > .step-block .next-step { margin-top: 0; }
+      .queue-item > .step-block .context-tag { margin-top: 4px; }
       .queue-item > .due { grid-column: 3; grid-row: 1; }
       .queue-item > .complete-button { grid-column: 2; grid-row: 3; justify-self: start; margin-top: 2px; }
       .queue-item > .item-menu { grid-column: 3; grid-row: 3; margin-top: 2px; }
-      .queue-item { padding-bottom: 15px; }
       .contact-meta { font-size: 11px; }
       .lower-grid { gap: 14px; margin-top: 14px; }
-      .mobile-nav { position: fixed; z-index: 8; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(4, 1fr); padding: 7px 9px max(7px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255, 255, 255, 0.93); backdrop-filter: blur(16px); }
+      .mobile-nav { position: fixed; z-index: 8; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 6px 6px max(6px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255, 255, 255, 0.93); backdrop-filter: blur(16px); }
       body.dark .mobile-nav { background: rgba(17, 24, 32, 0.94); }
-      .mobile-nav button { display: grid; gap: 2px; place-items: center; min-height: 42px; border: 0; color: var(--muted); background: transparent; font-size: 10px; }
+      .mobile-nav button { display: grid; gap: 2px; place-items: center; min-height: 44px; padding: 2px 2px; border: 0; color: var(--muted); background: transparent; font-size: 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .mobile-nav button.active { color: var(--primary); font-weight: 800; }
-      .mobile-nav .nav-icon { font-size: 17px; }
+      .mobile-nav .nav-icon { font-size: 16px; }
+      .mobile-nav button span:not(.nav-icon) { overflow: hidden; max-width: 100%; text-overflow: ellipsis; }
       .form-grid { grid-template-columns: 1fr; }
       .field.full { grid-column: auto; }
       .modal { padding: 20px; }
       .detail-panel { padding: 22px 18px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; } }
+    .view[hidden] { display: none !important; }
+    .view .intro { margin-bottom: 0; }
+    .nav-button[aria-current="page"], .mobile-nav button[aria-current="page"] { position: relative; }
+    .nav-button[aria-current="page"]::after { content: ""; position: absolute; right: 8px; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: var(--primary); transform: translateY(-50%); }
+    .contacts-card { margin-top: 32px; padding: 23px 24px 18px; }
+    .contacts-search { position: relative; margin-top: 18px; }
+    .contacts-search input { width: 100%; min-height: 44px; padding: 0 16px 0 40px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); font-size: 14px; color: var(--ink); transition: 160ms ease; }
+    .contacts-search input:focus { border-color: var(--primary); background: var(--surface); }
+    .contacts-search::before { content: "⌕"; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--faint); font-size: 16px; }
+    .contacts-search .clear-button { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: none; width: 28px; height: 28px; border: 0; border-radius: 7px; color: var(--muted); background: transparent; font-size: 16px; }
+    .contacts-search.has-value .clear-button { display: inline-flex; align-items: center; justify-content: center; }
+    .contacts-list { margin-top: 16px; display: grid; gap: 8px; }
+    .contact-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; min-height: 72px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); transition: 160ms ease; cursor: pointer; }
+    .contact-row:hover { border-color: var(--line-strong); box-shadow: 0 4px 14px rgba(22, 32, 43, 0.04); }
+    .contact-row:focus-visible { outline: 3px solid rgba(63, 91, 246, 0.25); outline-offset: 2px; }
+    .contact-row .contact-avatar { width: 40px; height: 40px; font-size: 13px; }
+    .contact-row .due { min-width: 84px; font-size: 11px; }
+    .contact-row .due strong { font-size: 12px; }
+    .contact-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+    .contact-tag { padding: 1px 7px; border-radius: 6px; color: var(--muted); background: var(--surface-soft); font-size: 10px; }
+    .timeline-card { margin-top: 32px; padding: 23px 24px; }
+    .timeline-day { display: grid; gap: 10px; margin-top: 18px; }
+    .timeline-day:first-of-type { margin-top: 8px; }
+    .timeline-day-head { display: flex; align-items: center; gap: 12px; }
+    .timeline-day-head h3 { margin: 0; font-size: 14px; font-weight: 800; letter-spacing: -0.02em; }
+    .timeline-day-head .day-meta { color: var(--muted); font-size: 11px; }
+    .timeline-day-head .group-line { flex: 1; }
+    .timeline-row { display: grid; grid-template-columns: 16px minmax(0, 1fr) auto; gap: 14px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    .timeline-row .timeline-marker { width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgba(63, 91, 246, 0.12); }
+    .timeline-row.complete .timeline-marker { background: var(--success); box-shadow: 0 0 0 4px rgba(21, 154, 117, 0.14); }
+    .timeline-row.created .timeline-marker { background: var(--warning); box-shadow: 0 0 0 4px rgba(184, 120, 21, 0.14); }
+    .timeline-row .timeline-title { font-size: 13px; font-weight: 800; }
+    .timeline-row .timeline-copy { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .timeline-row .timeline-date { color: var(--faint); font-size: 11px; white-space: nowrap; }
+    .timeline-summary { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .timeline-summary-item { display: flex; align-items: baseline; gap: 6px; }
+    .timeline-summary-item strong { color: var(--ink); font-size: 18px; font-weight: 800; }
+    .timeline-summary-item span { color: var(--muted); font-size: 11px; }
+    .settings-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; margin-top: 32px; }
+    .settings-card { padding: 23px 24px; }
+    .settings-card .card-kicker { color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: 0.08em; }
+    .settings-card.danger .card-kicker { color: var(--danger); }
+    .settings-card h2 { margin: 6px 0 8px; font-size: 18px; letter-spacing: -0.035em; }
+    .settings-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .settings-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .settings-list { display: grid; gap: 10px; margin-top: 16px; }
+    .settings-list .detail-row { border-bottom: 0; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px; }
+    .settings-section + .settings-section { margin-top: 18px; }
+    body.dark .contact-row { background: var(--surface); border-color: var(--line); }
+    body.dark .timeline-row { background: var(--surface); border-color: var(--line); }
+    body.dark .contacts-search input { background: var(--surface-soft); }
+    body.dark .timeline-row.complete .timeline-marker { box-shadow: 0 0 0 4px rgba(21, 154, 117, 0.22); }
+    body.dark .timeline-row.created .timeline-marker { box-shadow: 0 0 0 4px rgba(184, 120, 21, 0.22); }
+    body.dark .timeline-row .timeline-marker { box-shadow: 0 0 0 4px rgba(63, 91, 246, 0.18); }
+    @media (max-width: 1040px) { .settings-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) {
+      .contacts-list { gap: 6px; }
+      .contact-row { padding: 10px 12px; gap: 10px; }
+      .contact-row .contact-block { min-width: 0; }
+      .contact-row .due { min-width: 64px; }
+      .timeline-row { padding: 12px 14px; gap: 10px; }
+      .settings-grid { gap: 14px; margin-top: 24px; }
+      .settings-card { padding: 18px; }
+    }
+    /* Command search trigger & palette */
+    .command-search-trigger { display: inline-flex; align-items: center; gap: 9px; min-height: 38px; padding: 0 10px 0 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); background: var(--surface); font-size: 12px; font-weight: 700; transition: 160ms ease; }
+    .command-search-trigger:hover, .command-search-trigger:focus-visible { border-color: var(--line-strong); color: var(--ink); background: var(--surface-soft); }
+    .command-search-trigger .command-search-icon { color: var(--faint); flex: 0 0 16px; }
+    .command-search-trigger .command-search-label { white-space: nowrap; }
+    .command-search-trigger .command-shortcut { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: var(--surface-soft); font-family: inherit; font-size: 10px; font-weight: 800; letter-spacing: 0.02em; }
+    .command-palette { position: fixed; z-index: 25; top: 14vh; left: 50%; display: none; width: min(560px, calc(100vw - 32px)); max-height: 70vh; flex-direction: column; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); transform: translateX(-50%); overflow: hidden; }
+    .command-palette.open { display: flex; }
+    .command-palette-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+    .command-palette-header svg { color: var(--faint); flex: 0 0 18px; }
+    .command-palette-header input { flex: 1; min-width: 0; height: 32px; padding: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 14px; }
+    .command-palette-header input::placeholder { color: var(--faint); }
+    .command-palette-list { flex: 1; overflow-y: auto; padding: 6px; margin: 0; list-style: none; }
+    .command-palette-group { margin: 10px 8px 4px; color: var(--faint); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+    .command-palette-item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; padding: 9px 10px; border: 0; border-radius: 10px; color: var(--ink); background: transparent; text-align: left; cursor: pointer; font: inherit; font-size: 13px; transition: 100ms ease; }
+    .command-palette-item:hover, .command-palette-item.active { background: var(--surface-soft); }
+    .command-palette-item .command-item-icon { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; color: var(--muted); background: var(--surface-soft); font-size: 13px; }
+    .command-palette-item .command-item-body { display: grid; gap: 1px; min-width: 0; }
+    .command-palette-item .command-item-label { overflow: hidden; color: var(--ink); font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+    .command-palette-item .command-item-hint { overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+    .command-palette-item .command-item-shortcut { display: inline-flex; align-items: center; padding: 2px 7px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: var(--surface-soft); font-size: 10px; font-weight: 800; }
+    .command-palette-empty { padding: 22px 12px; color: var(--muted); text-align: center; font-size: 12px; }
+    .command-palette-footer { display: flex; align-items: center; gap: 14px; padding: 9px 14px; border-top: 1px solid var(--line); color: var(--muted); background: var(--surface-soft); font-size: 11px; }
+    .command-palette-footer kbd { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; padding: 1px 5px; margin-right: 4px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--surface); font-family: inherit; font-size: 10px; font-weight: 800; }
+    body.dark .command-search-trigger, body.dark .command-palette { background: var(--surface); border-color: var(--line); }
+    body.dark .command-search-trigger:hover, body.dark .command-palette-item:hover, body.dark .command-palette-item.active { background: var(--surface-soft); }
+    body.dark .command-palette-item .command-item-icon, body.dark .command-palette-item .command-item-shortcut, body.dark .command-palette-footer kbd { background: var(--surface-soft); border-color: var(--line); }
+    @media (max-width: 720px) {
+      .command-search-trigger .command-search-label, .command-search-trigger .command-shortcut { display: none; }
+      .command-search-trigger { width: 38px; padding: 0; justify-content: center; }
+      .command-palette { top: 8vh; max-height: 80vh; }
+    }
   </style>
 </head>
 <body>
@@ -269,97 +374,925 @@
       <div class="profile"><div class="avatar">林</div><div><div class="profile-name">林怡君</div><div class="profile-plan">免費 pilot</div></div><button class="more-button" aria-label="更多帳號選項">···</button></div>
     </aside>
     <main class="main" id="main-content">
-      <header class="topbar"><div class="crumb">工作台 <span aria-hidden="true">/</span> <strong>週二 · 9 月 21 日</strong></div><div class="top-actions"><button class="icon-button" id="themeButton" aria-label="切換深色主題">☾</button><div class="profile-mini"><span>林怡君</span><div class="avatar">林</div></div></div></header>
+      <header class="topbar"><div class="crumb">工作台 <span aria-hidden="true">/</span> <strong id="crumbCurrent">今日回訪</strong> <span aria-hidden="true">·</span> <span>週二 · 9 月 21 日</span></div><div class="top-actions"><button class="command-search-trigger" id="commandSearchTrigger" type="button" aria-label="開啟快速搜尋" aria-haspopup="dialog" aria-controls="commandPalette" aria-expanded="false"><svg class="command-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.6 10.6 14 14"></path></svg><span class="command-search-label">快速搜尋</span><kbd class="command-shortcut" id="commandShortcutLabel" aria-hidden="true">⌘ K</kbd></button><button class="icon-button" id="themeButton" aria-label="切換深色主題">☾</button><div class="profile-mini"><span>林怡君</span><div class="avatar">林</div></div></div></header>
       <div class="content">
-        <section class="intro" aria-labelledby="pageTitle"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>今天，先完成最重要的下一步</div><h1 id="pageTitle">讓交換過的名片，真的走到下一次對話。</h1><p class="intro-copy">你不需要記住所有人，只要把今天該做的 3 件事完成。</p></div><button class="primary-button" id="openContactButton"><span aria-hidden="true">＋</span>新增聯絡人</button></section>
-        <div class="section-grid">
-          <div>
-            <section class="surface progress-card" aria-labelledby="progressTitle"><div class="progress-head"><div><div class="card-kicker">今日回訪節奏</div><div class="progress-title" id="progressTitle">你已經在往前走了</div></div><div class="progress-stat"><span id="doneStat">2</span><small> / 5 完成</small></div></div><div class="progress-row"><div class="progress-track" role="progressbar" aria-label="今日回訪完成度" aria-valuenow="2" aria-valuemin="0" aria-valuemax="5"><span id="progressFill"></span></div><div class="progress-note" id="progressNote">還有 3 個下一步</div></div></section>
-            <section class="surface queue-card" aria-labelledby="queueTitle">
-              <div class="section-head"><div><h2 class="section-title" id="queueTitle">回訪 queue</h2><p class="section-subtitle">依照緊急程度，從逾期到即將到期排列</p></div><div class="queue-filters" role="group" aria-label="回訪篩選"><button class="filter-button active" data-filter="all">全部 <span id="allCount">5</span></button><button class="filter-button" data-filter="today">今天 <span id="todayCount">3</span></button><button class="filter-button" data-filter="overdue">逾期 <span id="overdueCount">1</span></button></div></div>
-              <div class="queue-list" id="queueList">
-                <div class="queue-group-label" data-group="overdue"><span>逾期 · 需要先處理</span><span class="group-line"></span></div>
-                <article class="queue-item" data-id="1" data-state="overdue" tabindex="0"><div class="contact-avatar avatar-4">陳</div><div class="contact-block"><div class="contact-name">陳柏翰</div><div class="contact-meta">拓遠設計 · 建築顧問</div></div><div class="step-block"><div class="next-step">寄送商辦改造案例與預算範本</div><span class="context-tag">9/10 建築交流會</span></div><div class="due overdue"><strong>逾期 5 天</strong>9 月 16 日</div><button class="complete-button" data-complete="1">完成</button><button class="item-menu" data-detail="1" aria-label="查看陳柏翰詳細資料">···</button></article>
-                <div class="queue-group-label" data-group="today"><span>今天 · 先把承諾交出去</span><span class="group-line"></span></div>
-                <article class="queue-item" data-id="2" data-state="today" tabindex="0"><div class="contact-avatar">王</div><div class="contact-block"><div class="contact-name">王思妤</div><div class="contact-meta">沐光保險 · 業務經理</div></div><div class="step-block"><div class="next-step">確認家庭保障檢視時間</div><span class="context-tag">9/18 朋友介紹</span></div><div class="due today"><strong>今天</strong>下午 3:00</div><button class="complete-button" data-complete="2">完成</button><button class="item-menu" data-detail="2" aria-label="查看王思妤詳細資料">···</button></article>
-                <article class="queue-item" data-id="3" data-state="today" tabindex="0"><div class="contact-avatar avatar-3">高</div><div class="contact-block"><div class="contact-name">高志明</div><div class="contact-meta">禾木科技 · 採購主管</div></div><div class="step-block"><div class="next-step">補上報價單中的交期選項</div><span class="context-tag">9/19 創業小聚</span></div><div class="due today"><strong>今天</strong>下班前</div><button class="complete-button" data-complete="3">完成</button><button class="item-menu" data-detail="3" aria-label="查看高志明詳細資料">···</button></article>
-                <article class="queue-item" data-id="4" data-state="today" tabindex="0"><div class="contact-avatar avatar-2">吳</div><div class="contact-block"><div class="contact-name">吳欣怡</div><div class="contact-meta">拾光旅宿 · 創辦人</div></div><div class="step-block"><div class="next-step">分享台中旅宿案例</div><span class="context-tag">9/20 台中創業聚會</span></div><div class="due today"><strong>今天</strong>晚上 8:00</div><button class="complete-button" data-complete="4">完成</button><button class="item-menu" data-detail="4" aria-label="查看吳欣怡詳細資料">···</button></article>
-                <div class="queue-group-label" data-group="upcoming"><span>接下來 · 先排好就不會忘</span><span class="group-line"></span></div>
-                <article class="queue-item" data-id="5" data-state="upcoming" tabindex="0"><div class="contact-avatar">林</div><div class="contact-block"><div class="contact-name">林冠廷</div><div class="contact-meta">日常策展 · 品牌顧問</div></div><div class="step-block"><div class="next-step">約下週找時間聊合作方向</div><span class="context-tag">9/20 共同朋友引薦</span></div><div class="due"><strong>9 月 24 日</strong>還有 3 天</div><button class="complete-button" data-complete="5">完成</button><button class="item-menu" data-detail="5" aria-label="查看林冠廷詳細資料">···</button></article>
-              </div>
-              <div class="empty-state" id="queueEmpty" hidden>這個篩選目前沒有待回訪。</div>
-            </section>
+        <section class="view" id="view-today" data-view="today" aria-labelledby="pageTitle" aria-hidden="false">
+          <section class="intro" aria-labelledby="pageTitle"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>今天，先完成最重要的下一步</div><h1 id="pageTitle">讓交換過的名片，真的走到下一次對話。</h1><p class="intro-copy">你不需要記住所有人，只要把今天該做的 3 件事完成。</p></div><button class="primary-button" id="openContactButton"><span aria-hidden="true">＋</span>新增聯絡人</button></section>
+          <div class="section-grid">
+            <div>
+              <section class="surface progress-card" aria-labelledby="progressTitle"><div class="progress-head"><div><div class="card-kicker">今日回訪節奏</div><div class="progress-title" id="progressTitle">你已經在往前走了</div></div><div class="progress-stat"><span id="doneStat">2</span><small> / 5 完成</small></div></div><div class="progress-row"><div class="progress-track" role="progressbar" aria-label="今日回訪完成度" aria-valuenow="2" aria-valuemin="0" aria-valuemax="5"><span id="progressFill"></span></div><div class="progress-note" id="progressNote">還有 3 個下一步</div></div></section>
+              <section class="surface queue-card" aria-labelledby="queueTitle">
+                <div class="section-head"><div><h2 class="section-title" id="queueTitle">回訪 queue</h2><p class="section-subtitle">依照緊急程度，從逾期到即將到期排列</p></div><div class="queue-filters" role="group" aria-label="回訪篩選"><button class="filter-button active" data-filter="all">全部 <span id="allCount">5</span></button><button class="filter-button" data-filter="today">今天 <span id="todayCount">3</span></button><button class="filter-button" data-filter="overdue">逾期 <span id="overdueCount">1</span></button></div></div>
+                <div class="queue-list" id="queueList">
+                  <div class="queue-group-label" data-group="overdue"><span>逾期 · 需要先處理</span><span class="group-line"></span></div>
+                  <article class="queue-item" data-id="1" data-state="overdue" tabindex="0"><div class="contact-avatar avatar-4">陳</div><div class="contact-block"><div class="contact-name">陳柏翰</div><div class="contact-meta">拓遠設計 · 建築顧問</div></div><div class="step-block"><div class="next-step">寄送商辦改造案例與預算範本</div><span class="context-tag">9/10 建築交流會</span></div><div class="due overdue"><strong>逾期 5 天</strong>9 月 16 日</div><button class="complete-button" data-complete="1">完成</button><button class="item-menu" data-detail="1" aria-label="查看陳柏翰詳細資料">···</button></article>
+                  <div class="queue-group-label" data-group="today"><span>今天 · 先把承諾交出去</span><span class="group-line"></span></div>
+                  <article class="queue-item" data-id="2" data-state="today" tabindex="0"><div class="contact-avatar">王</div><div class="contact-block"><div class="contact-name">王思妤</div><div class="contact-meta">沐光保險 · 業務經理</div></div><div class="step-block"><div class="next-step">確認家庭保障檢視時間</div><span class="context-tag">9/18 朋友介紹</span></div><div class="due today"><strong>今天</strong>下午 3:00</div><button class="complete-button" data-complete="2">完成</button><button class="item-menu" data-detail="2" aria-label="查看王思妤詳細資料">···</button></article>
+                  <article class="queue-item" data-id="3" data-state="today" tabindex="0"><div class="contact-avatar avatar-3">高</div><div class="contact-block"><div class="contact-name">高志明</div><div class="contact-meta">禾木科技 · 採購主管</div></div><div class="step-block"><div class="next-step">補上報價單中的交期選項</div><span class="context-tag">9/19 創業小聚</span></div><div class="due today"><strong>今天</strong>下班前</div><button class="complete-button" data-complete="3">完成</button><button class="item-menu" data-detail="3" aria-label="查看高志明詳細資料">···</button></article>
+                  <article class="queue-item" data-id="4" data-state="today" tabindex="0"><div class="contact-avatar avatar-2">吳</div><div class="contact-block"><div class="contact-name">吳欣怡</div><div class="contact-meta">拾光旅宿 · 創辦人</div></div><div class="step-block"><div class="next-step">分享台中旅宿案例</div><span class="context-tag">9/20 台中創業聚會</span></div><div class="due today"><strong>今天</strong>晚上 8:00</div><button class="complete-button" data-complete="4">完成</button><button class="item-menu" data-detail="4" aria-label="查看吳欣怡詳細資料">···</button></article>
+                  <div class="queue-group-label" data-group="upcoming"><span>接下來 · 先排好就不會忘</span><span class="group-line"></span></div>
+                  <article class="queue-item" data-id="5" data-state="upcoming" tabindex="0"><div class="contact-avatar">林</div><div class="contact-block"><div class="contact-name">林冠廷</div><div class="contact-meta">日常策展 · 品牌顧問</div></div><div class="step-block"><div class="next-step">約下週找時間聊合作方向</div><span class="context-tag">9/20 共同朋友引薦</span></div><div class="due"><strong>9 月 24 日</strong>還有 3 天</div><button class="complete-button" data-complete="5">完成</button><button class="item-menu" data-detail="5" aria-label="查看林冠廷詳細資料">···</button></article>
+                </div>
+                <div class="empty-state" id="queueEmpty" hidden>這個篩選目前沒有待回訪。</div>
+              </section>
+            </div>
+            <aside class="surface pulse-card" aria-labelledby="pulseTitle"><div class="pulse-header"><div><div class="card-kicker">14 天回訪節奏</div><h2 class="section-title" id="pulseTitle">本週脈搏</h2></div><div class="pulse-value">比上週 +18%</div></div><div class="week-chart" role="img" aria-label="週一至週日回訪完成節奏"><div class="bar-wrap"><div class="bar-track"><div class="bar done" style="height: 44%"></div></div><div class="bar-label">一</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar done" style="height: 64%"></div></div><div class="bar-label active">二</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar active" style="height: 22%"></div></div><div class="bar-label">三</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 36%"></div></div><div class="bar-label">四</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 56%"></div></div><div class="bar-label">五</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 10%"></div></div><div class="bar-label">六</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 10%"></div></div><div class="bar-label">日</div></div></div><p class="pulse-note">最近 7 天完成 <strong>8 / 12</strong> 個下一步，維持這個節奏就很好。</p><div class="mini-task-list"><div class="mini-task"><span class="mini-task-mark"></span><div class="mini-task-copy"><div class="mini-task-name">先處理 1 個逾期回訪</div><div class="mini-task-date">讓 queue 回到可呼吸的狀態</div></div></div><div class="mini-task"><span class="mini-task-mark" style="background: var(--primary)"></span><div class="mini-task-copy"><div class="mini-task-name">今天完成 3 個承諾</div><div class="mini-task-date">下午再回來看一次就好</div></div></div></div></aside>
           </div>
-          <aside class="surface pulse-card" aria-labelledby="pulseTitle"><div class="pulse-header"><div><div class="card-kicker">14 天回訪節奏</div><h2 class="section-title" id="pulseTitle">本週脈搏</h2></div><div class="pulse-value">比上週 +18%</div></div><div class="week-chart" role="img" aria-label="週一至週日回訪完成節奏"><div class="bar-wrap"><div class="bar-track"><div class="bar done" style="height: 44%"></div></div><div class="bar-label">一</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar done" style="height: 64%"></div></div><div class="bar-label active">二</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar active" style="height: 22%"></div></div><div class="bar-label">三</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 36%"></div></div><div class="bar-label">四</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 56%"></div></div><div class="bar-label">五</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 10%"></div></div><div class="bar-label">六</div></div><div class="bar-wrap"><div class="bar-track"><div class="bar" style="height: 10%"></div></div><div class="bar-label">日</div></div></div><p class="pulse-note">最近 7 天完成 <strong>8 / 12</strong> 個下一步，維持這個節奏就很好。</p><div class="mini-task-list"><div class="mini-task"><span class="mini-task-mark"></span><div class="mini-task-copy"><div class="mini-task-name">先處理 1 個逾期回訪</div><div class="mini-task-date">讓 queue 回到可呼吸的狀態</div></div></div><div class="mini-task"><span class="mini-task-mark" style="background: var(--primary)"></span><div class="mini-task-copy"><div class="mini-task-name">今天完成 3 個承諾</div><div class="mini-task-date">下午再回來看一次就好</div></div></div></div></aside>
-        </div>
-        <div class="lower-grid">
-          <section class="surface activity-card" aria-labelledby="activityTitle"><div class="section-head"><div><h2 class="section-title" id="activityTitle">最近互動</h2><p class="section-subtitle">每一次完成，都留下下一次對話的線索</p></div><button class="outline-button" data-view-button="timeline">查看完整時間線 <span aria-hidden="true">→</span></button></div><div class="activity-list" id="activityList"><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">已完成回訪 · 劉育誠</div><div class="activity-copy">傳送餐飲展位配置案例，約下週二再聊</div></div><div class="activity-date">昨天 16:42</div></div><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">新增聯絡人 · 林冠廷</div><div class="activity-copy">共同朋友引薦 · 已建立 9 月 24 日下一步</div></div><div class="activity-date">昨天 11:18</div></div><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">已完成回訪 · 張雅雯</div><div class="activity-copy">電話確認提案需求，等待對方回覆</div></div><div class="activity-date">9 月 19 日</div></div></div></section>
-          <section class="surface portable-card" aria-labelledby="portableTitle"><div class="card-kicker">你的資料，你做主</div><h2 class="portable-title" id="portableTitle">隨時帶走，不被鎖住</h2><p class="portable-copy">名片王只存在你的瀏覽器。需要整理、備份或換工具時，可以把資料匯出成通用格式。</p><div class="portable-actions"><button data-export="vcard">匯出 vCard</button><button data-export="csv">匯出 CSV</button><button data-export="ics">回訪 .ics</button></div></section>
-        </div>
+          <div class="lower-grid">
+            <section class="surface activity-card" aria-labelledby="activityTitle"><div class="section-head"><div><h2 class="section-title" id="activityTitle">最近互動</h2><p class="section-subtitle">每一次完成，都留下下一次對話的線索</p></div><button class="outline-button" data-view-button="timeline">查看完整時間線 <span aria-hidden="true">→</span></button></div><div class="activity-list" id="activityList"><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">已完成回訪 · 劉育誠</div><div class="activity-copy">傳送餐飲展位配置案例，約下週二再聊</div></div><div class="activity-date">昨天 16:42</div></div><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">新增聯絡人 · 林冠廷</div><div class="activity-copy">共同朋友引薦 · 已建立 9 月 24 日下一步</div></div><div class="activity-date">昨天 11:18</div></div><div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">已完成回訪 · 張雅雯</div><div class="activity-copy">電話確認提案需求，等待對方回覆</div></div><div class="activity-date">9 月 19 日</div></div></div></section>
+            <section class="surface portable-card" aria-labelledby="portableTitle"><div class="card-kicker">你的資料，你做主</div><h2 class="portable-title" id="portableTitle">隨時帶走，不被鎖住</h2><p class="portable-copy">名片王只存在你的瀏覽器。需要整理、備份或換工具時，可以把資料匯出成通用格式。</p><div class="portable-actions"><button data-export="vcard">匯出 vCard</button><button data-export="csv">匯出 CSV</button><button data-export="ics">回訪 .ics</button></div></section>
+          </div>
+        </section>
+        <section class="view" id="view-contacts" data-view="contacts" aria-labelledby="contactsTitle" aria-hidden="true" hidden>
+          <section class="intro" aria-labelledby="contactsTitle"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>所有你建立過的人脈</div><h1 id="contactsTitle">聯絡人總覽</h1><p class="intro-copy">搜尋姓名、公司、來源或備註，快速找到該回頭聯絡的人。</p></div><button class="primary-button" data-open-contact><span aria-hidden="true">＋</span>新增聯絡人</button></section>
+          <section class="surface contacts-card" aria-labelledby="contactsListTitle">
+            <div class="section-head"><div><h2 class="section-title" id="contactsListTitle">所有聯絡人</h2><p class="section-subtitle">共 <span id="contactsCount">5</span> 筆，依下次回訪日期排序</p></div><div class="queue-filters" role="group" aria-label="聯絡人篩選"><button class="filter-button active" data-contacts-filter="all">全部</button><button class="filter-button" data-contacts-filter="overdue">有逾期</button><button class="filter-button" data-contacts-filter="upcoming">即將回訪</button><button class="filter-button" data-contacts-filter="done">已完成</button></div></div>
+            <div class="contacts-search" id="contactsSearchWrap"><label for="contactsSearch" class="sr-only">搜尋聯絡人</label><input id="contactsSearch" type="search" placeholder="搜尋姓名、公司、來源、備註…" autocomplete="off" enterkeyhint="search"><button class="clear-button" id="contactsSearchClear" type="button" aria-label="清除搜尋">×</button></div>
+            <div class="contacts-list" id="contactsList" role="list"></div>
+            <div class="empty-state" id="contactsEmpty" hidden>目前沒有符合條件的聯絡人。</div>
+          </section>
+        </section>
+        <section class="view" id="view-timeline" data-view="timeline" aria-labelledby="timelineTitle" aria-hidden="true" hidden>
+          <section class="intro" aria-labelledby="timelineTitle"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>每一次互動，都留下下一次對話的線索</div><h1 id="timelineTitle">互動時間線</h1><p class="intro-copy">依日期回看見面、通話、新建聯絡人與完成的回訪。這裡只放有時間戳的紀錄。</p></div><div class="queue-filters" role="group" aria-label="時間線類型篩選"><button class="filter-button active" data-timeline-filter="all">全部</button><button class="filter-button" data-timeline-filter="complete">已完成回訪</button><button class="filter-button" data-timeline-filter="created">新增聯絡人</button></div></section>
+          <section class="surface timeline-card" aria-labelledby="timelineListTitle">
+            <h2 class="section-title" id="timelineListTitle">紀錄列表</h2>
+            <p class="section-subtitle">共 <span id="timelineCount">0</span> 筆，最早可回溯 14 天</p>
+            <div class="timeline-list" id="timelineList"></div>
+            <div class="timeline-summary" aria-label="時間線摘要"><div class="timeline-summary-item"><strong id="timelineCompleteCount">0</strong><span>個已完成回訪</span></div><div class="timeline-summary-item"><strong id="timelineCreatedCount">0</strong><span>位新聯絡人</span></div><div class="timeline-summary-item"><strong id="timelineStreakCount">0</strong><span>天連續有動作</span></div></div>
+            <div class="empty-state" id="timelineEmpty" hidden>目前這個篩選沒有紀錄。</div>
+          </section>
+        </section>
+        <section class="view" id="view-settings" data-view="settings" aria-labelledby="settingsTitle" aria-hidden="true" hidden>
+          <section class="intro" aria-labelledby="settingsTitle"><div><div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>把資料交給你管理</div><h1 id="settingsTitle">設定</h1><p class="intro-copy">資料只存在你的瀏覽器，隨時可匯出、可清除、可重新整理。</p></div></section>
+          <div class="settings-grid">
+            <section class="surface settings-card" aria-labelledby="exportTitle"><div class="card-kicker">匯出與備份</div><h2 id="exportTitle">隨時帶走，不被鎖住</h2><p>匯出成通用名片格式，方便備份、分享或切換到其他工具。</p><div class="settings-actions"><button class="outline-button" data-export="vcard">匯出 vCard</button><button class="outline-button" data-export="csv">匯出 CSV</button><button class="outline-button" data-export="ics">匯出回訪 .ics</button></div><div class="settings-list"><div class="detail-row"><span>支援格式</span><span>vCard 3.0 / CSV / ICS</span></div><div class="detail-row"><span>包含互動紀錄</span><span>是</span></div><div class="detail-row"><span>個資遮罩</span><span>匯出前可手動編輯</span></div></div></section>
+            <section class="surface settings-card" aria-labelledby="localTitle"><div class="card-kicker">資料位置</div><h2 id="localTitle">本機模式已啟用</h2><p>名片王的紀錄只存在這台瀏覽器，不上傳到任何伺服器。下面是目前容量與儲存位置。</p><div class="capacity" style="margin-top: 16px;"><div class="capacity-meta"><span>名片庫容量</span><strong id="capacityLabelSettings">12 / 20</strong></div><div class="capacity-track" role="progressbar" aria-label="名片庫容量" aria-valuenow="12" aria-valuemin="0" aria-valuemax="20"><div class="capacity-fill" id="capacityFillSettings"></div></div></div><div class="settings-list"><div class="detail-row"><span>儲存位置</span><span>本機 localStorage</span></div><div class="detail-row"><span>今日回訪</span><span id="settingsTodayRemaining">3 個待完成</span></div><div class="detail-row"><span>聯絡人總數</span><span id="settingsContactTotal">5 位</span></div></div></section>
+            <section class="surface settings-card" aria-labelledby="profileTitle"><div class="card-kicker">個人資料</div><h2 id="profileTitle">林怡君</h2><p>免費 pilot · 每月最多 20 張名片。資料在本機，不會被我們看到。</p><div class="settings-list"><div class="detail-row"><span>顯示名稱</span><span>林怡君</span></div><div class="detail-row"><span>方案</span><span>免費 pilot</span></div><div class="detail-row"><span>主題</span><span>淺色 / 深色（右上角切換）</span></div></div></section>
+            <section class="surface settings-card danger" aria-labelledby="dangerTitle"><div class="card-kicker">危險操作</div><h2 id="dangerTitle">刪除資料</h2><p>下方操作會清空這台瀏覽器上的所有聯絡人、回訪與互動紀錄，操作後無法復原；建議先匯出再刪除。</p><div class="settings-actions"><button type="button" class="outline-button" data-danger="delete" style="color: var(--danger); border-color: var(--danger-soft); background: var(--danger-soft);">清除所有本機資料</button></div></section>
+          </div>
+        </section>
       </div>
     </main>
   </div>
-  <nav class="mobile-nav" aria-label="行動版導覽"><button class="active" data-view="today"><span class="nav-icon" aria-hidden="true">◷</span><span>今日</span></button><button data-view="contacts"><span class="nav-icon" aria-hidden="true">♧</span><span>聯絡人</span></button><button data-view="timeline"><span class="nav-icon" aria-hidden="true">↗</span><span>時間線</span></button><button id="mobileAdd"><span class="nav-icon" aria-hidden="true">＋</span><span>新增</span></button></nav>
+  <nav class="mobile-nav" aria-label="行動版導覽"><button class="active" data-view="today"><span class="nav-icon" aria-hidden="true">◷</span><span>今日</span></button><button data-view="contacts"><span class="nav-icon" aria-hidden="true">♧</span><span>聯絡人</span></button><button data-view="timeline"><span class="nav-icon" aria-hidden="true">↗</span><span>時間線</span></button><button data-view="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span>設定</span></button><button id="mobileAdd"><span class="nav-icon" aria-hidden="true">＋</span><span>新增</span></button></nav>
   <div class="scrim" id="scrim"></div>
-  <section class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-header"><div><h2 class="modal-title" id="modalTitle">新增聯絡人</h2><p class="modal-copy">先留下下一步，之後才不需要靠記憶。</p></div><button class="close-button" data-close aria-label="關閉新增聯絡人視窗">×</button></div><form id="contactForm"><div class="form-grid"><div class="field" id="nameField"><label for="name">姓名 <span>*</span></label><input id="name" name="name" placeholder="例如：陳柏翰"><div class="field-error">請填寫姓名或公司至少一項。</div></div><div class="field"><label for="company">公司 / 身分</label><input id="company" name="company" placeholder="例如：拓遠設計"></div><div class="field"><label for="phone">手機</label><input id="phone" name="phone" placeholder="09xx-xxx-xxx"></div><div class="field"><label for="email">Email</label><input id="email" name="email" placeholder="name@company.tw"></div><div class="field"><label for="source">認識來源</label><select id="source" name="source"><option>活動 / 聚會</option><option>朋友介紹</option><option>客戶轉介</option><option>主動認識</option></select></div><div class="field"><label for="date">下次回訪日期 <span>*</span></label><input id="date" name="date" type="date" value="2026-09-24"></div><div class="field full"><label for="nextStep">下一步要做什麼？ <span>*</span></label><input id="nextStep" name="nextStep" placeholder="例如：寄送案例、約電話、確認預算"><div class="field-error">請寫下至少一個下一步，讓之後能直接行動。</div></div><div class="field full"><label for="note">備註</label><textarea id="note" name="note" placeholder="記下交換時聊到的關鍵線索，不用寫完整會議紀錄。"></textarea></div></div><div class="modal-footer"><button type="button" class="outline-button" data-close>先取消</button><button type="submit" class="primary-button">建立聯絡人</button></div></form></section>
-  <aside class="detail-panel" id="detailPanel" aria-labelledby="detailName"><div class="detail-top"><div class="detail-person"><div class="contact-avatar" id="detailAvatar">陳</div><div><div class="detail-name" id="detailName">陳柏翰</div><div class="detail-company" id="detailCompany">拓遠設計 · 建築顧問</div></div></div><button class="close-button" data-close aria-label="關閉聯絡人詳細資料">×</button></div><div class="detail-section"><div class="detail-label">下一步</div><div class="detail-next" id="detailNext">寄送商辦改造案例與預算範本</div></div><div class="detail-section"><div class="detail-label">交換情境</div><div class="detail-row"><span>來源</span><span id="detailSource">活動 / 聚會</span></div><div class="detail-row"><span>上次互動</span><span id="detailLast">9 月 10 日</span></div><div class="detail-row"><span>預計回訪</span><span id="detailDue">逾期 5 天</span></div></div><div class="detail-section"><div class="detail-label">最近備註</div><p class="modal-copy" id="detailNote">對方近期正在找辦公室改造案例，希望先看預算範本再約線上聊。</p></div><div class="modal-footer" style="justify-content: flex-start"><button class="primary-button" id="detailComplete">完成這次回訪</button></div></aside>
-  <div class="toast" id="toast" role="status" aria-live="polite"><span aria-hidden="true">✓</span><span id="toastMessage">已完成回訪，互動已記錄。</span></div>
+  <section class="modal" id="contactModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-header"><div><h2 class="modal-title" id="modalTitle">新增聯絡人</h2><p class="modal-copy">先留下下一步，之後才不需要靠記憶。</p></div><button class="close-button" data-close aria-label="關閉新增聯絡人視窗">×</button></div><form id="contactForm"><div class="form-grid"><div class="field" id="nameField"><label for="name">姓名 <span>*</span></label><input id="name" name="name" placeholder="例如：陳柏翰"><div class="field-error">請填寫姓名或公司至少一項。</div></div><div class="field"><label for="company">公司 / 身分</label><input id="company" name="company" placeholder="例如：拓遠設計"></div><div class="field"><label for="phone">手機</label><input id="phone" name="phone" placeholder="09xx-xxx-xxx"></div><div class="field"><label for="email">Email</label><input id="email" name="email" placeholder="name@company.tw"></div><div class="field"><label for="source">認識來源</label><select id="source" name="source"><option>活動 / 聚會</option><option>朋友介紹</option><option>客戶轉介</option><option>主動認識</option></select></div><div class="field"><label for="date">下次回訪日期 <span>*</span></label><input id="date" name="date" type="date"><div class="field-error" id="dateError">請選擇一個日期，這樣才能安排下一步。</div></div><div class="field full"><label for="nextStep">下一步要做什麼？ <span>*</span></label><input id="nextStep" name="nextStep" placeholder="例如：寄送案例、約電話、確認預算"><div class="field-error">請寫下至少一個下一步，讓之後能直接行動。</div></div><div class="field full"><label for="context">交換情境 / 對話線索</label><textarea id="context" name="context" placeholder="例如：他提到正在比較兩家系統商、月底前會做決定、想看簡報範例。保留日後能接話的小線索。"></textarea></div><div class="field full"><label for="note">備註</label><textarea id="note" name="note" placeholder="記下交換時聊到的關鍵線索，不用寫完整會議紀錄。"></textarea></div></div><div class="modal-footer"><button type="button" class="outline-button" data-close>先取消</button><button type="submit" class="primary-button">建立聯絡人</button></div></form></section>
+  <aside class="detail-panel" id="detailPanel" role="dialog" aria-modal="true" aria-labelledby="detailName" tabindex="-1"><div class="detail-top"><div class="detail-person"><div class="contact-avatar" id="detailAvatar">陳</div><div><div class="detail-name" id="detailName">陳柏翰</div><div class="detail-company" id="detailCompany">拓遠設計 · 建築顧問</div></div></div><button class="close-button" data-close aria-label="關閉聯絡人詳細資料">×</button></div><div class="detail-section"><div class="detail-label">下一步</div><div class="detail-next" id="detailNext">寄送商辦改造案例與預算範本</div></div><div class="detail-section"><div class="detail-label">交換情境</div><div class="detail-row"><span>來源</span><span id="detailSource">活動 / 聚會</span></div><div class="detail-row"><span>下次回訪</span><span id="detailDue">逾期 5 天</span></div></div><div class="detail-section"><div class="detail-label">對話線索</div><p class="modal-copy" id="detailContext">對方近期正在找辦公室改造案例，希望先看預算範本再約線上聊。</p></div><div class="detail-section"><div class="detail-label">最近備註</div><p class="modal-copy" id="detailNote">對方近期正在找辦公室改造案例，希望先看預算範本再約線上聊。</p></div><div class="detail-section"><div class="detail-label">最近互動</div><ul class="detail-history" id="detailHistory" aria-label="過去互動紀錄"></ul></div><div class="modal-footer" style="justify-content: flex-start"><button class="primary-button" id="detailComplete">完成這次回訪</button></div></aside>
+  <section class="command-palette" id="commandPalette" role="dialog" aria-modal="true" aria-labelledby="commandPaletteTitle">
+    <div class="command-palette-header">
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M10.6 10.6 14 14"></path></svg>
+      <h2 class="sr-only" id="commandPaletteTitle">快速搜尋面板</h2>
+      <label for="commandInput" class="sr-only">輸入命令</label>
+      <input id="commandInput" type="search" placeholder="搜尋命令或操作…" autocomplete="off" enterkeyhint="search" aria-controls="commandList" aria-autocomplete="list">
+      <button class="close-button" id="commandClose" type="button" aria-label="關閉命令面板">×</button>
+    </div>
+    <ul class="command-palette-list" id="commandList" role="listbox" aria-label="可用的命令"></ul>
+    <div class="command-palette-footer" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd> 移動</span>
+      <span><kbd>↵</kbd> 執行</span>
+      <span><kbd>Esc</kbd> 關閉</span>
+    </div>
+  </section>
+<div class="toast" id="toast" role="status" aria-live="polite"><span aria-hidden="true">✓</span><span id="toastMessage">已完成回訪，互動已記錄。</span></div>
+  <section class="modal" id="completeModal" role="dialog" aria-modal="true" aria-labelledby="completeTitle" aria-describedby="completeCopy" tabindex="-1"><div class="modal-header"><div><h2 class="modal-title" id="completeTitle">完成這次回訪</h2><p class="modal-copy" id="completeCopy">寫下這次談了什麼、要交給誰、對方下一步會怎麼做。</p></div><button class="close-button" data-close aria-label="關閉完成回訪視窗">×</button></div><form id="completeForm" novalidate><div class="form-grid" style="grid-template-columns: 1fr"><div class="field"><label for="completeOutcome">成果 / 後續</label><select id="completeOutcome" name="outcome"><option value="完成承諾">完成承諾</option><option value="約下次時間">約下次時間</option><option value="等對方回覆">等對方回覆</option><option value="改派給同事">改派給同事</option></select></div><div class="field"><label for="completeNote">互動紀錄 <span>*</span></label><textarea id="completeNote" name="note" placeholder="例：寄出案例與預算範本，對方週三前回覆；下次改約線上聊 30 分鐘。" required></textarea><div class="field-error" id="completeNoteError">請留下一句這次的互動，之後才能接話。</div></div></div><div class="modal-footer"><button type="button" class="outline-button" data-close>取消</button><button type="submit" class="primary-button">送出並記錄</button></div></form></section>
   <script>
-    const contacts = {
-      1: { name: "陳柏翰", company: "拓遠設計 · 建築顧問", initial: "陳", next: "寄送商辦改造案例與預算範本", source: "9/10 建築交流會", last: "9 月 10 日", due: "逾期 5 天", note: "對方近期正在找辦公室改造案例，希望先看預算範本再約線上聊。", cls: "avatar-4" },
-      2: { name: "王思妤", company: "沐光保險 · 業務經理", initial: "王", next: "確認家庭保障檢視時間", source: "9/18 朋友介紹", last: "9 月 18 日", due: "今天 下午 3:00", note: "對方想先和家人確認時間，週末前再主動聯絡。", cls: "" },
-      3: { name: "高志明", company: "禾木科技 · 採購主管", initial: "高", next: "補上報價單中的交期選項", source: "9/19 創業小聚", last: "9 月 19 日", due: "今天 下班前", note: "採購正在比較兩個供應商，交期是目前最在意的條件。", cls: "avatar-3" },
-      4: { name: "吳欣怡", company: "拾光旅宿 · 創辦人", initial: "吳", next: "分享台中旅宿案例", source: "9/20 台中創業聚會", last: "9 月 20 日", due: "今天 晚上 8:00", note: "想了解旅宿品牌如何把淡季活動做成固定內容。", cls: "avatar-2" },
-      5: { name: "林冠廷", company: "日常策展 · 品牌顧問", initial: "林", next: "約下週找時間聊合作方向", source: "9/20 共同朋友引薦", last: "9 月 20 日", due: "9 月 24 日", note: "兩邊都有品牌顧問客戶，先交換服務方式再找合作交集。", cls: "" }
-    };
-    let doneCount = 2;
-    let currentDetail = null;
+    "use strict";
+    const STORAGE_KEY = "business-card-pro-v3";
+    const VIEW_LABELS = { today: "今日回訪", contacts: "聯絡人", timeline: "互動時間線", settings: "設定" };
+    const TIMELINE_TYPE_LABEL = { complete: "已完成回訪", created: "新增聯絡人" };
     const $ = (selector, root = document) => root.querySelector(selector);
     const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-    function showToast(message) { $("#toastMessage").textContent = message; $("#toast").classList.add("show"); window.clearTimeout(showToast.timer); showToast.timer = window.setTimeout(() => $("#toast").classList.remove("show"), 2600); }
-    function updateStats() {
-      const remaining = Math.max(5 - doneCount, 0);
-      $("#doneStat").textContent = doneCount;
-      $("#progressFill").style.width = Math.min(doneCount / 5 * 100, 100) + "%";
-      $("#progressFill").parentElement.setAttribute("aria-valuenow", doneCount);
-      $("#progressNote").textContent = remaining ? "還有 " + remaining + " 個下一步" : "今天的 queue 清空了";
-      const activeItems = $$(".queue-item:not(.done)");
-      const overdue = activeItems.filter(item => item.dataset.state === "overdue").length;
-      const today = activeItems.filter(item => item.dataset.state === "today").length;
-      $("#allCount").textContent = activeItems.length;
-      $("#overdueCount").textContent = overdue;
-      $("#todayCount").textContent = today;
-      $("#navCount").textContent = activeItems.length;
-      $("#navCount").hidden = activeItems.length === 0;
+    const escapeHTML = (value) => String(value == null ? "" : value).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
+
+    function todayISODate() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d.toISOString().slice(0, 10);
     }
+    function isoAddDays(days) {
+      const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + days);
+      return d.toISOString().slice(0, 10);
+    }
+    function relativeFromToday(isoDate, timeLabel) {
+      if (!isoDate) return "尚未排定";
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const target = new Date(isoDate + "T00:00:00");
+      const diffDays = Math.round((target - today) / 86400000);
+      if (diffDays === 0) return "今天" + (timeLabel ? " " + timeLabel : "");
+      if (diffDays === 1) return "明天" + (timeLabel ? " " + timeLabel : "");
+      if (diffDays === -1) return "昨天" + (timeLabel ? " " + timeLabel : "");
+      if (diffDays < 0) return "逾期 " + (-diffDays) + " 天";
+      if (diffDays <= 7) return "還有 " + diffDays + " 天";
+      return isoDate;
+    }
+    function dateState(isoDate) {
+      if (!isoDate) return "upcoming";
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const target = new Date(isoDate + "T00:00:00");
+      const diff = Math.round((target - today) / 86400000);
+      if (diff < 0) return "overdue";
+      if (diff === 0) return "today";
+      return "upcoming";
+    }
+    function formatDateLabel(isoDate) {
+      if (!isoDate) return "";
+      const parts = isoDate.split("-"); return parseInt(parts[1], 10) + " 月 " + parseInt(parts[2], 10) + " 日";
+    }
+    function formatEventTimestamp(ms) {
+      const d = new Date(ms); const today = new Date(); today.setHours(0, 0, 0, 0);
+      const target = new Date(d); target.setHours(0, 0, 0, 0);
+      const diff = Math.round((target - today) / 86400000);
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      if (diff === 0) return "今天 " + hh + ":" + mm;
+      if (diff === -1) return "昨天 " + hh + ":" + mm;
+      return formatDateLabel(isoFromMs(ms)) + " " + hh + ":" + mm;
+    }
+    function isoFromMs(ms) { return new Date(ms).toISOString().slice(0, 10); }
+    function eventDayLabel(ms) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const target = new Date(ms); target.setHours(0, 0, 0, 0);
+      const diff = Math.round((target - today) / 86400000);
+      if (diff === 0) return "今天";
+      if (diff === -1) return "昨天";
+      return formatDateLabel(isoFromMs(ms));
+    }
+
+    const AVATAR_CLS = ["", "avatar-4", "", "avatar-3", "avatar-2"];
+    function avatarClassFor(id) {
+      const num = parseInt(String(id).replace(/\D/g, "").slice(-1) || "0", 10);
+      return AVATAR_CLS[num % AVATAR_CLS.length] || "";
+    }
+
+    function buildSeed() {
+      const seed = {
+        nextId: 100,
+        contacts: [
+          { id: "1", name: "陳柏翰", company: "拓遠設計 · 建築顧問", initial: "陳", cls: "avatar-4", phone: "0912-345-678", email: "alex@tuoyuan.tw", source: "活動 / 聚會", sourceLabel: "9/10 建築交流會", next: "寄送商辦改造案例與預算範本", dueDate: isoAddDays(-5), dueTime: "", note: "對方近期正在找辦公室改造案例，希望先看預算範本再約線上聊。", context: "剛結束交流會聊到他在評估兩家系統商；想先看預算範本。", lastInteractionAt: null, done: false, doneAt: null, doneNote: "", interactions: [] },
+          { id: "2", name: "王思妤", company: "沐光保險 · 業務經理", initial: "王", cls: "", phone: "0923-111-222", email: "sy.wang@muguang.tw", source: "朋友介紹", sourceLabel: "9/18 朋友介紹", next: "確認家庭保障檢視時間", dueDate: todayISODate(), dueTime: "下午 3:00", note: "對方想先和家人確認時間，週末前再主動聯絡。", context: "她提到先生對保額還有疑慮，想預約週末的家庭時間。", lastInteractionAt: null, done: false, doneAt: null, doneNote: "", interactions: [] },
+          { id: "3", name: "高志明", company: "禾木科技 · 採購主管", initial: "高", cls: "avatar-3", phone: "0934-555-666", email: "cm.gao@hemu.tw", source: "活動 / 聚會", sourceLabel: "9/19 創業小聚", next: "補上報價單中的交期選項", dueDate: todayISODate(), dueTime: "下班前", note: "採購正在比較兩個供應商，交期是目前最在意的條件。", context: "正在比 A、B 兩家供應商；交期與售後是他最在意的兩項。", lastInteractionAt: null, done: false, doneAt: null, doneNote: "", interactions: [] },
+          { id: "4", name: "吳欣怡", company: "拾光旅宿 · 創辦人", initial: "吳", cls: "avatar-2", phone: "0945-777-888", email: "hsinyi@timehost.tw", source: "活動 / 聚會", sourceLabel: "9/20 台中創業聚會", next: "分享台中旅宿案例", dueDate: todayISODate(), dueTime: "晚上 8:00", note: "想了解旅宿品牌如何把淡季活動做成固定內容。", context: "淡季轉活動內容是她最近想解決的問題；可提供逢甲案例。", lastInteractionAt: null, done: false, doneAt: null, doneNote: "", interactions: [] },
+          { id: "5", name: "林冠廷", company: "日常策展 · 品牌顧問", initial: "林", cls: "", phone: "0956-999-000", email: "kt.lin@daily.tw", source: "朋友介紹", sourceLabel: "9/20 共同朋友引薦", next: "約下週找時間聊合作方向", dueDate: isoAddDays(3), dueTime: "", note: "兩邊都有品牌顧問客戶，先交換服務方式再找合作交集。", context: "雙方都有品牌顧問客戶，可先交換服務名單看看交集。", lastInteractionAt: null, done: false, doneAt: null, doneNote: "", interactions: [] }
+        ],
+        events: [
+          { id: "evt-seed-1", type: "created", contactId: "2", name: "王思妤", copy: "9/18 朋友介紹 · 約今天下午 3:00 確認保障檢視。", ts: Date.now() - 4 * 86400000 },
+          { id: "evt-seed-2", type: "created", contactId: "3", name: "高志明", copy: "9/19 創業小聚 · 今天下班前回覆報價交期。", ts: Date.now() - 3 * 86400000 },
+          { id: "evt-seed-3", type: "created", contactId: "4", name: "吳欣怡", copy: "9/20 台中創業聚會 · 今晚分享台中旅宿案例。", ts: Date.now() - 2 * 86400000 },
+          { id: "evt-seed-4", type: "created", contactId: "5", name: "林冠廷", copy: "9/20 共同朋友引薦 · 預約下週聊合作方向。", ts: Date.now() - 2 * 86400000 + 3600000 },
+          { id: "evt-seed-5", type: "complete", contactId: "1", name: "陳柏翰", copy: "已寄出案例與預算範本，等待回覆安排線上聊。", ts: Date.now() - 3600000, note: "已寄出案例與預算範本。" }
+        ]
+      };
+      return seed;
+    }
+
+    let state = { nextId: 1, contacts: [], events: [] };
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) { state = buildSeed(); persistState(); return; }
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.contacts)) { state = buildSeed(); persistState(); return; }
+        state = parsed;
+        state.contacts.forEach(c => { if (!c.interactions) c.interactions = []; });
+        if (!Array.isArray(state.events)) state.events = [];
+        if (typeof state.nextId !== "number") state.nextId = 200;
+      } catch (err) {
+        console.warn("storage parse failed; reseeding", err);
+        state = buildSeed(); persistState();
+      }
+    }
+    function persistState() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch (err) { console.warn("persist failed", err); }
+    }
+
+    function findContact(id) { return state.contacts.find(c => c.id === id); }
+    function getContactById(id) { return findContact(id); }
+
+    function dueInfo(contact) {
+      const stateName = contact.done ? "done" : dateState(contact.dueDate);
+      return { state: stateName, label: relativeFromToday(contact.dueDate, contact.dueTime || "") };
+    }
+
+    let currentDetail = null;
+    let pendingCompleteId = null;
+    let pendingCompleteTrigger = null;
+    let lastTriggerFocus = null;
+
+    function showToast(message) {
+      $("#toastMessage").textContent = message;
+      const el = $("#toast"); el.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => el.classList.remove("show"), 2600);
+    }
+
     function setFilter(filter) {
       $$(".filter-button").forEach(button => button.classList.toggle("active", button.dataset.filter === filter));
       let visible = 0;
-      $$(".queue-item").forEach(item => { const match = filter === "all" || (filter === "today" && item.dataset.state === "today") || (filter === "overdue" && item.dataset.state === "overdue"); const show = match && !item.classList.contains("done"); item.hidden = !show; if (show) visible++; });
-      $$(".queue-group-label").forEach(label => { const group = label.dataset.group; label.hidden = filter !== "all" && filter !== group || !$('.queue-item[data-state="' + group + '"]:not(.done)'); });
+      $$(".queue-item").forEach(item => {
+        const match = filter === "all" || (filter === "today" && item.dataset.state === "today") || (filter === "overdue" && item.dataset.state === "overdue");
+        const show = match && !item.classList.contains("done");
+        item.hidden = !show;
+        if (show) visible++;
+      });
+      $$(".queue-group-label").forEach(label => {
+        const group = label.dataset.group;
+        const anyActive = !!$('.queue-item[data-state="' + group + '"]:not(.done)');
+        label.hidden = filter !== "all" && filter !== group || !anyActive;
+      });
       $("#queueEmpty").hidden = visible !== 0;
     }
-    function openModal() { $("#contactModal").classList.add("open"); $("#scrim").classList.add("open"); $("#name").focus(); }
+
+    function dueHTMLFor(contact) {
+      if (contact.done) {
+        const when = contact.doneAt ? formatEventTimestamp(contact.doneAt) : "已完成";
+        return '<div class="due"><strong>已完成</strong>' + escapeHTML(when.split(" ")[0]) + '</div>';
+      }
+      const info = dueInfo(contact);
+      let strong = info.label;
+      let sub = "";
+      if (info.state === "overdue") {
+        strong = info.label;
+        sub = formatDateLabel(contact.dueDate);
+      } else if (info.state === "today") {
+        strong = "今天";
+        sub = contact.dueTime || "下班前";
+      } else {
+        const days = Math.max(0, Math.round((new Date(contact.dueDate + "T00:00:00") - new Date(todayISODate() + "T00:00:00")) / 86400000));
+        strong = formatDateLabel(contact.dueDate);
+        sub = days === 0 ? "今天" : "還有 " + days + " 天";
+      }
+      const klass = info.state === "overdue" ? "due overdue" : info.state === "today" ? "due today" : "due";
+      return '<div class="' + klass + '"><strong>' + escapeHTML(strong) + '</strong>' + escapeHTML(sub) + '</div>';
+    }
+
+    function queueItemHTML(contact) {
+      const due = dueInfo(contact);
+      const stateName = contact.done ? "done" : due.state;
+      const cls = contact.cls || avatarClassFor(contact.id);
+      return '<article class="queue-item' + (contact.done ? " done" : "") + '" data-id="' + escapeHTML(contact.id) + '" data-state="' + stateName + '" tabindex="0" aria-label="查看 ' + escapeHTML(contact.name) + ' 的詳細資料">' +
+        '<div class="contact-avatar ' + escapeHTML(cls) + '">' + escapeHTML(contact.initial || (contact.name || "?").slice(0, 1)) + '</div>' +
+        '<div class="contact-block"><div class="contact-name">' + escapeHTML(contact.name) + '</div><div class="contact-meta">' + escapeHTML(contact.company || "") + '</div></div>' +
+        '<div class="step-block"><div class="next-step">' + escapeHTML(contact.next || "尚未設定下一步") + '</div><span class="context-tag">' + escapeHTML(contact.sourceLabel || contact.source || "本機建立") + '</span></div>' +
+        dueHTMLFor(contact) +
+        '<button class="complete-button" data-complete="' + escapeHTML(contact.id) + '"' + (contact.done ? ' disabled' : '') + '>' + (contact.done ? '已完成' : '完成') + '</button>' +
+        '<button class="item-menu" data-detail="' + escapeHTML(contact.id) + '" aria-label="查看' + escapeHTML(contact.name) + '詳細資料">···</button>' +
+        '</article>';
+    }
+
+    function renderQueue() {
+      const list = $("#queueList");
+      if (!list) return;
+      const groups = { overdue: [], today: [], upcoming: [] };
+      state.contacts.forEach(contact => {
+        if (contact.done) return;
+        const s = dateState(contact.dueDate);
+        groups[s] = groups[s] || []; groups[s].push(contact);
+      });
+      const order = ["overdue", "today", "upcoming"];
+      const parts = [];
+      order.forEach(g => {
+        if (groups[g] && groups[g].length) {
+          const labelText = g === "overdue" ? "逾期 · 需要先處理" : g === "today" ? "今天 · 先把承諾交出去" : "接下來 · 先排好就不會忘";
+          parts.push('<div class="queue-group-label" data-group="' + g + '"><span>' + labelText + '</span><span class="group-line"></span></div>');
+          parts.push(groups[g].map(queueItemHTML).join(""));
+        }
+      });
+      list.innerHTML = parts.join("");
+      bindQueueHandlers();
+      setFilter("all");
+    }
+
+    function bindQueueHandlers() {
+      $$(".queue-item").forEach(item => {
+        const id = item.dataset.id;
+        item.addEventListener("click", event => { if (!event.target.closest("button")) openDetail(id); });
+        item.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openDetail(id); }
+        });
+        const completeBtn = item.querySelector("[data-complete]");
+        if (completeBtn) completeBtn.addEventListener("click", event => { event.stopPropagation(); requestComplete(id, completeBtn); });
+        const detailBtn = item.querySelector("[data-detail]");
+        if (detailBtn) detailBtn.addEventListener("click", event => { event.stopPropagation(); openDetail(id); });
+      });
+    }
+
+    function captureFocus() { lastTriggerFocus = document.activeElement; }
+    function restoreFocus() {
+      if (lastTriggerFocus && typeof lastTriggerFocus.focus === "function") {
+        try { lastTriggerFocus.focus(); } catch (err) { /* noop */ }
+      }
+      lastTriggerFocus = null;
+    }
+
+    function openModal() {
+      captureFocus();
+      const modal = $("#contactModal");
+      modal.classList.add("open");
+      $("#scrim").classList.add("open");
+      const dateInput = $("#date");
+      if (dateInput && !dateInput.value) dateInput.value = isoAddDays(3);
+      const firstField = $("#name"); if (firstField) firstField.focus();
+    }
+    function closeContactModal() {
+      $("#contactModal").classList.remove("open");
+      if (!$("#detailPanel").classList.contains("open") && !$("#commandPalette").classList.contains("open") && !$("#completeModal").classList.contains("open")) $("#scrim").classList.remove("open");
+      restoreFocus();
+    }
+
     function openDetail(id) {
-      const contact = contacts[id]; if (!contact) return; currentDetail = id;
-      $("#detailAvatar").textContent = contact.initial; $("#detailAvatar").className = "contact-avatar " + contact.cls; $("#detailName").textContent = contact.name; $("#detailCompany").textContent = contact.company; $("#detailNext").textContent = contact.next; $("#detailSource").textContent = contact.source; $("#detailLast").textContent = contact.last; $("#detailDue").textContent = contact.due; $("#detailNote").textContent = contact.note;
-      $("#detailPanel").classList.add("open"); $("#scrim").classList.add("open");
+      const contact = findContact(id); if (!contact) return;
+      currentDetail = id;
+      captureFocus();
+      $("#detailAvatar").textContent = contact.initial || (contact.name || "?").slice(0, 1);
+      $("#detailAvatar").className = "contact-avatar " + (contact.cls || avatarClassFor(contact.id));
+      $("#detailName").textContent = contact.name;
+      $("#detailCompany").textContent = contact.company || "尚未填寫公司";
+      $("#detailNext").textContent = contact.next || "尚未設定下一步";
+      $("#detailSource").textContent = contact.sourceLabel || contact.source || "本機建立";
+      const info = dueInfo(contact);
+      $("#detailDue").textContent = contact.done ? "已完成 · " + (contact.doneAt ? formatEventTimestamp(contact.doneAt) : "") : formatDateLabel(contact.dueDate) + (contact.dueTime ? " " + contact.dueTime : "") + " · " + info.label;
+      $("#detailContext").textContent = contact.context || "尚無對話線索紀錄。";
+      $("#detailNote").textContent = contact.note || "尚無備註。";
+      const history = contact.interactions || [];
+      const historyEl = $("#detailHistory");
+      if (history.length === 0) {
+        historyEl.innerHTML = '<li class="history-empty">目前還沒有互動紀錄，完成回訪後會出現在這裡。</li>';
+      } else {
+        historyEl.innerHTML = history.slice().reverse().slice(0, 5).map(i =>
+          '<li><div class="history-title">' + escapeHTML(i.title) + '</div><div class="history-copy">' + escapeHTML(i.copy || "") + '</div><div class="history-date">' + escapeHTML(formatEventTimestamp(i.ts)) + '</div></li>'
+        ).join("");
+      }
+      $("#detailComplete").hidden = !!contact.done;
+      $("#detailComplete").textContent = contact.done ? "這次回訪已完成" : "完成這次回訪";
+      $("#detailPanel").classList.add("open");
+      $("#scrim").classList.add("open");
     }
-    function closeOverlays() { $("#contactModal").classList.remove("open"); $("#detailPanel").classList.remove("open"); $("#scrim").classList.remove("open"); }
-    function completeContact(id) {
-      const item = $('.queue-item[data-id="' + id + '"]'); if (!item || item.classList.contains("done")) return;
-      item.classList.add("done"); item.dataset.state = "done"; const button = $("[data-complete]", item); button.textContent = "已完成"; button.disabled = true; doneCount++; updateStats(); setFilter("all"); const contact = contacts[id]; if (currentDetail === id) closeOverlays(); showToast("已完成 " + contact.name + " 的回訪，互動已記錄。");
+    function closeDetailPanel() {
+      $("#detailPanel").classList.remove("open");
+      if (!$("#contactModal").classList.contains("open") && !$("#commandPalette").classList.contains("open") && !$("#completeModal").classList.contains("open")) $("#scrim").classList.remove("open");
+      currentDetail = null;
+      restoreFocus();
     }
+
+    function openCompleteModal(id, trigger) {
+      const contact = findContact(id); if (!contact || contact.done) return;
+      pendingCompleteId = id;
+      pendingCompleteTrigger = trigger || null;
+      captureFocus();
+      const modal = $("#completeModal");
+      modal.classList.add("open");
+      $("#scrim").classList.add("open");
+      const note = $("#completeNote");
+      const nameEl = modal.querySelector("#completeTitle");
+      if (nameEl) nameEl.textContent = "完成 " + contact.name + " 的回訪";
+      note.value = "";
+      $("#completeNoteError").textContent = "請留下一句這次的互動，之後才能接話。";
+      note.parentElement.classList.remove("invalid");
+      requestAnimationFrame(() => note.focus());
+    }
+    function closeCompleteModal() {
+      $("#completeModal").classList.remove("open");
+      if (!$("#contactModal").classList.contains("open") && !$("#detailPanel").classList.contains("open") && !$("#commandPalette").classList.contains("open")) $("#scrim").classList.remove("open");
+      pendingCompleteId = null;
+      pendingCompleteTrigger = null;
+      restoreFocus();
+    }
+
+    function closeOverlays() {
+      closeContactModal();
+      closeDetailPanel();
+      closeCompleteModal();
+      $("#commandPalette").classList.remove("open");
+      const trigger = $("#commandSearchTrigger"); if (trigger) trigger.setAttribute("aria-expanded", "false");
+      $("#scrim").classList.remove("open");
+      currentDetail = null;
+      restoreFocus();
+    }
+
+    function requestComplete(id, trigger) {
+      const contact = findContact(id);
+      if (!contact || contact.done) return;
+      openCompleteModal(id, trigger);
+    }
+
+    function commitComplete(event) {
+      event.preventDefault();
+      if (!pendingCompleteId) return;
+      const contact = findContact(pendingCompleteId);
+      if (!contact) { closeCompleteModal(); return; }
+      const noteEl = $("#completeNote");
+      const note = (noteEl.value || "").trim();
+      const outcome = $("#completeOutcome").value;
+      if (!note) {
+        noteEl.parentElement.classList.add("invalid");
+        $("#completeNoteError").textContent = "請留下一句這次的互動，之後才能接話。";
+        noteEl.focus();
+        return;
+      }
+      noteEl.parentElement.classList.remove("invalid");
+      const ts = Date.now();
+      contact.done = true;
+      contact.doneAt = ts;
+      contact.doneNote = note;
+      contact.doneOutcome = outcome;
+      contact.lastInteractionAt = ts;
+      if (!Array.isArray(contact.interactions)) contact.interactions = [];
+      contact.interactions.push({ ts: ts, type: "complete", title: outcome + " · " + contact.name, copy: note });
+      state.events.push({ id: "evt-" + state.nextId++, type: "complete", contactId: contact.id, name: contact.name, copy: note + "（" + outcome + "）", ts: ts });
+      persistState();
+      closeCompleteModal();
+      if (currentDetail === contact.id) openDetail(contact.id); else { renderQueue(); renderRecent(); }
+      updateStats();
+      showToast("已完成 " + contact.name + " 的回訪，互動已記錄。");
+    }
+
     function addContact(event) {
-      event.preventDefault(); const form = event.currentTarget; const name = $("#name").value.trim(); const company = $("#company").value.trim(); const next = $("#nextStep").value.trim(); const nameInvalid = !name && !company; $("#nameField").classList.toggle("invalid", nameInvalid); $("#nextStep").parentElement.classList.toggle("invalid", !next); if (nameInvalid || !next) return;
-      const displayName = name || company; const id = String(Date.now()); contacts[id] = { name: displayName, company: name && company ? company : "尚未填寫公司", initial: displayName.slice(0, 1), next, source: $("#source").value, last: "今天", due: "9 月 24 日", note: $("#note").value || "剛建立聯絡人，尚未留下備註。", cls: "" };
-      const item = document.createElement("article"); item.className = "queue-item"; item.dataset.id = id; item.dataset.state = "upcoming"; item.tabIndex = 0;
-      item.innerHTML = '<div class="contact-avatar">' + displayName.slice(0, 1) + '</div><div class="contact-block"><div class="contact-name">' + displayName + '</div><div class="contact-meta">' + (company || "尚未填寫公司") + '</div></div><div class="step-block"><div class="next-step">' + next + '</div><span class="context-tag">' + $("#source").value + '</span></div><div class="due"><strong>9 月 24 日</strong>新建立</div><button class="complete-button" data-complete="' + id + '">完成</button><button class="item-menu" data-detail="' + id + '" aria-label="查看' + displayName + '詳細資料">···</button>';
-      const group = $('[data-group="upcoming"]'); $("#queueList").insertBefore(item, group.nextElementSibling); item.querySelector("[data-complete]").addEventListener("click", () => completeContact(id)); item.querySelector("[data-detail]").addEventListener("click", () => openDetail(id)); item.addEventListener("click", event => { if (!event.target.closest("button")) openDetail(id); }); form.reset(); $("#date").value = "2026-09-24"; closeOverlays(); updateStats(); showToast(displayName + " 已加入回訪 queue。");
+      event.preventDefault();
+      const form = event.currentTarget;
+      const name = $("#name").value.trim();
+      const company = $("#company").value.trim();
+      const phone = $("#phone").value.trim();
+      const email = $("#email").value.trim();
+      const next = $("#nextStep").value.trim();
+      const note = $("#note").value.trim();
+      const context = $("#context").value.trim();
+      const source = $("#source").value;
+      const sourceLabel = $("#source").options[$("#source").selectedIndex].text;
+      const date = $("#date").value;
+      const time = "";
+      const nameInvalid = !name && !company;
+      $("#nameField").classList.toggle("invalid", nameInvalid);
+      $("#nextStep").parentElement.classList.toggle("invalid", !next);
+      $("#date").parentElement.classList.toggle("invalid", !date);
+      if (nameInvalid || !next || !date) {
+        if (!date) $("#dateError").textContent = "請選擇一個日期，這樣才能安排下一步。";
+        return;
+      }
+      const displayName = name || company;
+      const id = String(state.nextId++);
+      const initial = displayName.slice(0, 1);
+      const contact = {
+        id: id,
+        name: displayName,
+        company: name && company ? company : (company || "尚未填寫公司"),
+        initial: initial,
+        cls: avatarClassFor(id),
+        phone: phone,
+        email: email,
+        source: source,
+        sourceLabel: sourceLabel,
+        next: next,
+        dueDate: date,
+        dueTime: time,
+        note: note || "剛建立聯絡人，尚未留下備註。",
+        context: context || "",
+        lastInteractionAt: Date.now(),
+        done: false,
+        doneAt: null,
+        doneNote: "",
+        interactions: [{ ts: Date.now(), type: "create", title: "建立聯絡人 · " + displayName, copy: context || "從新增聯絡人表單建立。" }]
+      };
+      state.contacts.push(contact);
+      state.events.push({ id: "evt-" + state.nextId++, type: "created", contactId: id, name: displayName, copy: sourceLabel + " · 已建立 " + formatDateLabel(date) + " 下一步。", ts: Date.now() });
+      persistState();
+      form.reset();
+      // Preserve the user's context/note/date so the next entry can build on them.
+      $("#date").value = date;
+      $("#context").value = context;
+      $("#note").value = note;
+      renderQueue();
+      renderRecent();
+      renderContacts();
+      updateStats();
+      closeContactModal();
+      showToast(displayName + " 已加入回訪 queue。");
     }
-    $$(".nav-button, .mobile-nav button[data-view]").forEach(button => button.addEventListener("click", () => { const view = button.dataset.view; $$(".nav-button, .mobile-nav button[data-view]").forEach(item => item.classList.toggle("active", item.dataset.view === view)); if (view !== "today") showToast(view === "contacts" ? "聯絡人頁面 prototype 即將接上同一份資料。" : view === "timeline" ? "時間線會保留每次完成回訪的紀錄。" : "設定會集中管理匯出與 local-only 資料。"); else window.scrollTo({ top: 0, behavior: "smooth" }); }));
-    $$("[data-view-button]").forEach(button => button.addEventListener("click", () => showToast("時間線會保留每次完成回訪的紀錄。")));
-    $("#openContactButton").addEventListener("click", openModal); $("#mobileAdd").addEventListener("click", openModal); $("#contactForm").addEventListener("submit", addContact); $$(".filter-button").forEach(button => button.addEventListener("click", () => setFilter(button.dataset.filter))); $$("[data-complete]").forEach(button => button.addEventListener("click", event => { event.stopPropagation(); completeContact(button.dataset.complete); })); $$("[data-detail]").forEach(button => button.addEventListener("click", event => { event.stopPropagation(); openDetail(button.dataset.detail); })); $$(".queue-item").forEach(item => item.addEventListener("click", event => { if (!event.target.closest("button")) openDetail(item.dataset.id); })); $$("[data-close]").forEach(button => button.addEventListener("click", closeOverlays)); $("#scrim").addEventListener("click", closeOverlays); $("#detailComplete").addEventListener("click", () => currentDetail && completeContact(currentDetail)); $("#themeButton").addEventListener("click", () => { document.body.classList.toggle("dark"); $("#themeButton").textContent = document.body.classList.contains("dark") ? "☀" : "☾"; }); $$("[data-export]").forEach(button => button.addEventListener("click", () => showToast("已準備 " + button.dataset.export.toUpperCase() + " 匯出 prototype。"))); document.addEventListener("keydown", event => { if (event.key === "Escape") closeOverlays(); }); updateStats();
+
+    let currentView = "today";
+    let contactsFilter = "all";
+    let contactsSearch = "";
+    let timelineFilter = "all";
+
+    function setView(view, options) {
+      options = options || {};
+      const requestedView = view;
+      if (!VIEW_LABELS[view]) view = "today";
+      const canonicalized = requestedView !== view;
+      if (currentView === view && !options.force) {
+        if (canonicalized && location.hash !== "#" + view && (!options.skipHash || options.allowHashCanonicalize)) {
+          try { history.replaceState({ view: view, src: "canonical" }, "", "#" + view); }
+          catch (err) { location.hash = "#" + view; }
+        }
+        return;
+      }
+      currentView = view;
+      $$(".view").forEach(section => {
+        const isActive = section.dataset.view === view;
+        section.hidden = !isActive;
+        if (isActive) { section.removeAttribute("aria-hidden"); section.removeAttribute("inert"); }
+        else { section.setAttribute("aria-hidden", "true"); section.setAttribute("inert", ""); }
+      });
+      const navButtons = $$(".nav-button, .mobile-nav button[data-view]");
+      navButtons.forEach(button => {
+        const match = button.dataset.view === view;
+        button.classList.toggle("active", match);
+        if (match) button.setAttribute("aria-current", "page");
+        else button.removeAttribute("aria-current");
+        // Nav buttons are not tablist items — strip aria-selected to avoid axe aria-allowed-attr.
+        button.removeAttribute("aria-selected");
+      });
+      const crumb = $("#crumbCurrent"); if (crumb) crumb.textContent = VIEW_LABELS[view];
+      document.title = "名片王 Pro · " + VIEW_LABELS[view];
+      if (view === "contacts") renderContacts();
+      if (view === "timeline") renderTimeline();
+      if (view === "settings") renderSettings();
+      if (canonicalized && location.hash !== "#" + view && (!options.skipHash || options.allowHashCanonicalize)) {
+        // Invalid hash landed on a canonical view; rewrite in place via replaceState so the URL
+        // reflects the rendered view without polluting history.
+        const stateData = { view: view, src: options.source || "ui" };
+        try { history.replaceState(stateData, "", "#" + view); }
+        catch (err) { location.hash = "#" + view; }
+      } else if (!options.skipHash) {
+        const nextHash = "#" + view;
+        if (location.hash !== nextHash) {
+          const stateData = { view: view, src: options.source || "ui" };
+          try { history.pushState(stateData, "", nextHash); }
+          catch (err) { location.hash = nextHash; }
+        }
+      }
+      closeOverlays();
+    }
+
+    function matchesContactSearch(contact, query) {
+      if (!query) return true;
+      const haystack = [contact.name, contact.company, contact.next, contact.sourceLabel || "", contact.source || "", contact.note, contact.context].join(" ").toLowerCase();
+      return haystack.indexOf(query.toLowerCase()) !== -1;
+    }
+
+    function renderContacts() {
+      const list = $("#contactsList");
+      const empty = $("#contactsEmpty");
+      const counter = $("#contactsCount");
+      if (!list) return;
+      const visible = state.contacts
+        .filter(contact => {
+          const st = contact.done ? "done" : dateState(contact.dueDate);
+          const filterOk = contactsFilter === "all" || (contactsFilter === "overdue" && st === "overdue") || (contactsFilter === "upcoming" && (st === "today" || st === "upcoming")) || (contactsFilter === "done" && st === "done");
+          return filterOk && matchesContactSearch(contact, contactsSearch);
+        })
+        .sort((a, b) => {
+          if (a.done !== b.done) return a.done ? 1 : -1;
+          return (a.dueDate || "9999-99-99").localeCompare(b.dueDate || "9999-99-99");
+        });
+      counter.textContent = visible.length;
+      if (visible.length === 0) { list.innerHTML = ""; empty.hidden = false; return; }
+      empty.hidden = true;
+      const searchTerm = contactsSearch.toLowerCase();
+      list.innerHTML = visible.map(item => {
+        const st = item.done ? "done" : dateState(item.dueDate);
+        const tags = [];
+        if (st === "overdue") tags.push('<span class="contact-tag" style="color: var(--danger); background: var(--danger-soft);">逾期</span>');
+        else if (st === "today") tags.push('<span class="contact-tag" style="color: var(--warning); background: var(--warning-soft);">今天</span>');
+        else if (st === "done") tags.push('<span class="contact-tag" style="color: var(--success); background: var(--success-soft);">已完成</span>');
+        else tags.push('<span class="contact-tag">即將回訪</span>');
+        if (item.source) tags.push('<span class="contact-tag">' + escapeHTML(item.sourceLabel || item.source) + '</span>');
+        const highlight = (value) => {
+          if (!contactsSearch) return escapeHTML(value);
+          const lower = String(value).toLowerCase();
+          const idx = lower.indexOf(searchTerm);
+          if (idx === -1) return escapeHTML(value);
+          return escapeHTML(value.slice(0, idx)) + '<mark style="background: var(--warning-soft); color: var(--ink); padding: 0 2px; border-radius: 4px;">' + escapeHTML(value.slice(idx, idx + searchTerm.length)) + '</mark>' + escapeHTML(value.slice(idx + searchTerm.length));
+        };
+        return '<article class="contact-row" role="listitem" data-contact-id="' + escapeHTML(item.id) + '" tabindex="0" aria-label="開啟 ' + escapeHTML(item.name) + ' 的詳細資料"><div class="contact-avatar ' + escapeHTML(item.cls || avatarClassFor(item.id)) + '">' + escapeHTML(item.initial || item.name.slice(0, 1)) + '</div><div class="contact-block"><div class="contact-name">' + highlight(item.name) + '</div><div class="contact-meta">' + highlight(item.company || "") + '</div><div class="contact-tags">' + tags.join("") + '</div></div><div class="due">' + dueHTMLFor(item).replace('<div class="due', '<div style="text-align:right"').replace('class="due', 'class="contact-due') + '</div></div></article>';
+      }).join("");
+      $$("#contactsList .contact-row").forEach(row => {
+        const id = row.dataset.contactId;
+        const open = () => openDetail(id);
+        row.addEventListener("click", open);
+        row.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); }
+        });
+      });
+    }
+
+    function renderRecent() {
+      const list = $("#activityList");
+      if (!list) return;
+      const items = state.events.slice().sort((a, b) => b.ts - a.ts).slice(0, 4);
+      if (items.length === 0) {
+        list.innerHTML = '<div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">目前沒有互動紀錄</div><div class="activity-copy">完成回訪或新增聯絡人會自動出現在這裡。</div></div><div class="activity-date"></div></div>';
+        return;
+      }
+      list.innerHTML = items.map(ev =>
+        '<div class="activity-item"><div class="activity-marker"></div><div><div class="activity-title">' +
+        (ev.type === "complete" ? "已完成回訪 · " : "新增聯絡人 · ") + escapeHTML(ev.name) +
+        '</div><div class="activity-copy">' + escapeHTML(ev.copy || "") + '</div></div><div class="activity-date">' + escapeHTML(formatEventTimestamp(ev.ts)) + '</div></div>'
+      ).join("");
+    }
+
+    function renderTimeline() {
+      const list = $("#timelineList");
+      if (!list) return;
+      const filtered = state.events.filter(e => timelineFilter === "all" || e.type === timelineFilter).sort((a, b) => b.ts - a.ts);
+      $("#timelineCount").textContent = filtered.length;
+      const allEvents = state.events;
+      $("#timelineCompleteCount").textContent = allEvents.filter(e => e.type === "complete").length;
+      $("#timelineCreatedCount").textContent = allEvents.filter(e => e.type === "created").length;
+      const days = Array.from(new Set(filtered.map(e => eventDayLabel(e.ts))));
+      $("#timelineStreakCount").textContent = days.length;
+      if (filtered.length === 0) { list.innerHTML = ""; $("#timelineEmpty").hidden = false; return; }
+      $("#timelineEmpty").hidden = true;
+      const groups = {};
+      filtered.forEach(ev => { const day = eventDayLabel(ev.ts); (groups[day] = groups[day] || []).push(ev); });
+      const ordered = Object.keys(groups).sort((a, b) => {
+        const oa = a === "今天" ? 0 : a === "昨天" ? 1 : 99;
+        const ob = b === "今天" ? 0 : b === "昨天" ? 1 : 99;
+        return oa !== ob ? oa - ob : a.localeCompare(b);
+      });
+      list.innerHTML = ordered.map(day => {
+        const items = groups[day];
+        return '<div class="timeline-day"><div class="timeline-day-head"><h3>' + escapeHTML(day) + '</h3><span class="day-meta">' + items.length + ' 筆紀錄</span><span class="group-line"></span></div>' + items.map(item => '<div class="timeline-row ' + escapeHTML(item.type) + '" role="group" aria-label="' + escapeHTML(TIMELINE_TYPE_LABEL[item.type] || "紀錄") + ' · ' + escapeHTML(item.name) + '"><div class="timeline-marker" aria-hidden="true"></div><div><div class="timeline-title">' + escapeHTML(TIMELINE_TYPE_LABEL[item.type] || "紀錄") + ' · ' + escapeHTML(item.name) + '</div><div class="timeline-copy">' + escapeHTML(item.copy || "") + '</div></div><div class="timeline-date">' + escapeHTML(formatEventTimestamp(item.ts)) + '</div></div>').join("") + '</div>';
+      }).join("");
+    }
+
+    function renderSettings() {
+      const fill = $("#capacityFillSettings");
+      const label = $("#capacityLabelSettings");
+      if (!fill || !label) return;
+      const total = state.contacts.length;
+      label.textContent = total + " / 20";
+      fill.style.width = Math.min(total / 20 * 100, 100) + "%";
+      const remaining = state.contacts.filter(c => !c.done && (dateState(c.dueDate) === "today" || dateState(c.dueDate) === "overdue")).length;
+      const remainingToday = $("#settingsTodayRemaining");
+      if (remainingToday) remainingToday.textContent = remaining + " 個待完成";
+      $("#settingsContactTotal").textContent = total + " 位";
+    }
+
+    function updateStats() {
+      const total = state.contacts.length;
+      const doneToday = state.events.filter(e => e.type === "complete" && eventDayLabel(e.ts) === "今天").length;
+      const remaining = state.contacts.filter(c => !c.done && (dateState(c.dueDate) === "today" || dateState(c.dueDate) === "overdue")).length;
+      const totalActive = state.contacts.filter(c => !c.done).length;
+      const denominator = Math.max(remaining + doneToday, totalActive, 1);
+      $("#doneStat").textContent = doneToday;
+      $("#progressFill").style.width = Math.min(doneToday / denominator * 100, 100) + "%";
+      $("#progressFill").parentElement.setAttribute("aria-valuenow", doneToday);
+      $("#progressFill").parentElement.setAttribute("aria-valuemax", denominator);
+      $("#progressNote").textContent = remaining ? "還有 " + remaining + " 個下一步" : "今天的 queue 清空了";
+      const overdue = state.contacts.filter(c => !c.done && dateState(c.dueDate) === "overdue").length;
+      const today = state.contacts.filter(c => !c.done && dateState(c.dueDate) === "today").length;
+      $("#allCount").textContent = totalActive;
+      $("#overdueCount").textContent = overdue;
+      $("#todayCount").textContent = today;
+      $("#navCount").textContent = totalActive;
+      $("#navCount").hidden = totalActive === 0;
+      const capLabel = $("#capacityLabel");
+      if (capLabel) capLabel.textContent = total + " / 20";
+      const capFill = $("#capacityFill");
+      if (capFill) capFill.style.width = Math.min(total / 20 * 100, 100) + "%";
+      const capProgress = capFill ? capFill.parentElement : null;
+      if (capProgress) capProgress.setAttribute("aria-valuenow", total);
+      const pulse = document.querySelector(".pulse-value");
+      const pulseNote = document.querySelector(".pulse-note");
+      if (pulse) pulse.textContent = "最近 " + doneToday + " 次回訪";
+      if (pulseNote) pulseNote.innerHTML = "最近完成的回訪 <strong>" + doneToday + "</strong> 次，下一步就照這個節奏來。";
+    }
+
+    function setupContactsSearch() {
+      const input = $("#contactsSearch");
+      const wrap = $("#contactsSearchWrap");
+      const clear = $("#contactsSearchClear");
+      if (!input) return;
+      input.addEventListener("input", () => {
+        contactsSearch = input.value.trim();
+        if (wrap) wrap.classList.toggle("has-value", contactsSearch.length > 0);
+        if (currentView === "contacts") renderContacts();
+      });
+      input.addEventListener("keydown", event => {
+        if (event.key === "Escape" && contactsSearch) { event.preventDefault(); event.stopPropagation(); contactsSearch = ""; input.value = ""; if (wrap) wrap.classList.remove("has-value"); renderContacts(); }
+      });
+      if (clear) clear.addEventListener("click", () => { contactsSearch = ""; input.value = ""; if (wrap) wrap.classList.remove("has-value"); renderContacts(); input.focus(); });
+      $$("[data-contacts-filter]").forEach(button => button.addEventListener("click", () => {
+        contactsFilter = button.dataset.contactsFilter;
+        $$("[data-contacts-filter]").forEach(item => {
+          const match = item === button;
+          item.classList.toggle("active", match);
+          if (match) item.setAttribute("aria-pressed", "true");
+          else item.setAttribute("aria-pressed", "false");
+        });
+        if (currentView === "contacts") renderContacts();
+      }));
+      $$("[data-timeline-filter]").forEach(button => button.addEventListener("click", () => {
+        timelineFilter = button.dataset.timelineFilter;
+        $$("[data-timeline-filter]").forEach(item => {
+          const match = item === button;
+          item.classList.toggle("active", match);
+          if (match) item.setAttribute("aria-pressed", "true");
+          else item.setAttribute("aria-pressed", "false");
+        });
+        if (currentView === "timeline") renderTimeline();
+      }));
+    }
+
+    function setupNavKeyboard() {
+      const groups = [".nav-button", ".mobile-nav button[data-view]"];
+      groups.forEach(selector => {
+        const buttons = $$(selector);
+        buttons.forEach((button, index) => {
+          button.addEventListener("keydown", event => {
+            let target = null;
+            if (event.key === "ArrowDown" || event.key === "ArrowRight") target = buttons[index + 1] || buttons[0];
+            else if (event.key === "ArrowUp" || event.key === "ArrowLeft") target = buttons[index - 1] || buttons[buttons.length - 1];
+            else if (event.key === "Home") target = buttons[0];
+            else if (event.key === "End") target = buttons[buttons.length - 1];
+            if (target) { event.preventDefault(); target.focus(); }
+          });
+        });
+      });
+    }
+
+    function initRouter() {
+      const initialHash = (location.hash || "").replace("#", "");
+      const view = VIEW_LABELS[initialHash] ? initialHash : "today";
+      try { history.replaceState({ view: view, src: "init" }, "", "#" + view); }
+      catch (err) { location.hash = "#" + view; }
+      setView(view, { skipHash: true, force: true });
+      window.addEventListener("hashchange", () => {
+        const next = (location.hash || "").replace("#", "");
+        setView(next || "today", { skipHash: true, allowHashCanonicalize: true, source: "hashchange" });
+      });
+      window.addEventListener("popstate", () => {
+        const next = (location.hash || "").replace("#", "");
+        setView(next || "today", { skipHash: true, allowHashCanonicalize: true, source: "popstate" });
+      });
+    }
+
+    function clearAllData() {
+      try { localStorage.removeItem(STORAGE_KEY); } catch (err) { /* noop */ }
+      state = buildSeed();
+      persistState();
+      renderQueue();
+      renderRecent();
+      renderContacts();
+      renderTimeline();
+      renderSettings();
+      updateStats();
+      showToast("已清除本機資料，重新建立 seed。");
+    }
+
+    const COMMANDS = [
+      { id: "nav-today", label: "前往今日回訪", hint: "切到工作台首頁，看今天該做的事", group: "導覽", icon: "◷", shortcut: "1", run: () => setView("today", { source: "command" }) },
+      { id: "nav-contacts", label: "前往聯絡人", hint: "查看所有建立過的人脈", group: "導覽", icon: "♧", shortcut: "2", run: () => setView("contacts", { source: "command" }) },
+      { id: "nav-timeline", label: "前往互動時間線", hint: "回看見面、通話與回訪紀錄", group: "導覽", icon: "↗", shortcut: "3", run: () => setView("timeline", { source: "command" }) },
+      { id: "nav-settings", label: "前往設定", hint: "管理資料、匯出與容量", group: "導覽", icon: "⚙", shortcut: "4", run: () => setView("settings", { source: "command" }) },
+      { id: "theme-toggle", label: "切換深色主題", hint: "在淺色與深色之間切換", group: "外觀", icon: "☾", run: () => $("#themeButton").click() },
+      { id: "add-contact", label: "新增聯絡人", hint: "開啟建立聯絡人表單", group: "動作", icon: "＋", run: () => openModal() }
+    ];
+    let commandQuery = "";
+    let selectedCommandIndex = -1;
+    function openCommandPalette() {
+      captureFocus();
+      $("#commandPalette").classList.add("open");
+      $("#scrim").classList.add("open");
+      const trig = $("#commandSearchTrigger"); if (trig) trig.setAttribute("aria-expanded", "true");
+      commandQuery = "";
+      $("#commandInput").value = "";
+      renderCommands();
+      requestAnimationFrame(() => $("#commandInput").focus());
+    }
+    function closeCommandPalette() {
+      $("#commandPalette").classList.remove("open");
+      const trig = $("#commandSearchTrigger"); if (trig) trig.setAttribute("aria-expanded", "false");
+      const otherOpen = $("#contactModal").classList.contains("open") || $("#detailPanel").classList.contains("open") || $("#completeModal").classList.contains("open");
+      if (!otherOpen) $("#scrim").classList.remove("open");
+      commandQuery = "";
+      $("#commandInput").value = "";
+      selectedCommandIndex = -1;
+      restoreFocus();
+    }
+    function renderCommands() {
+      const list = $("#commandList"); if (!list) return;
+      const q = commandQuery.toLowerCase();
+      const filtered = COMMANDS.filter(c => !q || c.label.toLowerCase().indexOf(q) !== -1 || (c.hint || "").toLowerCase().indexOf(q) !== -1 || (c.group || "").toLowerCase().indexOf(q) !== -1);
+      if (filtered.length === 0) {
+        list.innerHTML = '<li class="command-palette-empty" role="status">沒有符合「' + escapeHTML(commandQuery) + '」的命令</li>';
+        selectedCommandIndex = -1; return;
+      }
+      const groups = {};
+      filtered.forEach(c => { const g = c.group || "其他"; if (!groups[g]) groups[g] = []; groups[g].push(c); });
+      const flat = []; let html = "";
+      Object.keys(groups).forEach(g => {
+        html += '<li class="command-palette-group" role="presentation">' + escapeHTML(g) + '</li>';
+        groups[g].forEach(c => {
+          const idx = flat.length; flat.push(c);
+          html += '<li role="presentation"><button type="button" class="command-palette-item" role="option" data-command-id="' + escapeHTML(c.id) + '" data-index="' + idx + '" aria-selected="false">';
+          html += '<span class="command-item-icon" aria-hidden="true">' + escapeHTML(c.icon || "•") + '</span>';
+          html += '<span class="command-item-body"><span class="command-item-label">' + escapeHTML(c.label) + '</span>';
+          if (c.hint) html += '<span class="command-item-hint">' + escapeHTML(c.hint) + '</span>';
+          html += '</span>';
+          if (c.shortcut) html += '<span class="command-item-shortcut" aria-hidden="true">' + escapeHTML(c.shortcut) + '</span>';
+          html += '</button></li>';
+        });
+      });
+      list.innerHTML = html;
+      selectedCommandIndex = flat.length > 0 ? 0 : -1;
+      highlightSelected();
+      $$("#commandList .command-palette-item").forEach(btn => {
+        const findCommand = () => COMMANDS.find(c => c.id === btn.dataset.commandId);
+        btn.addEventListener("click", () => runCommand(findCommand()));
+        btn.addEventListener("mousemove", () => { selectedCommandIndex = parseInt(btn.dataset.index, 10); highlightSelected(); });
+      });
+    }
+    function highlightSelected() {
+      $$("#commandList .command-palette-item").forEach((btn, i) => {
+        const match = i === selectedCommandIndex;
+        btn.classList.toggle("active", match);
+        btn.setAttribute("aria-selected", match ? "true" : "false");
+        if (match) btn.scrollIntoView({ block: "nearest" });
+      });
+    }
+    function moveCommandSelection(delta) {
+      const items = $$("#commandList .command-palette-item"); if (items.length === 0) return;
+      let next = selectedCommandIndex + delta;
+      if (next < 0) next = items.length - 1;
+      if (next >= items.length) next = 0;
+      selectedCommandIndex = next; highlightSelected();
+    }
+    function runSelectedCommand() {
+      const items = $$("#commandList .command-palette-item");
+      if (selectedCommandIndex < 0 || selectedCommandIndex >= items.length) return;
+      const cmd = COMMANDS.find(c => c.id === items[selectedCommandIndex].dataset.commandId);
+      runCommand(cmd);
+    }
+    function runCommand(cmd) {
+      if (!cmd) return;
+      try { cmd.run(); } catch (err) { console.error(err); }
+      closeCommandPalette();
+    }
+    (function setupCommandPalette() {
+      const input = $("#commandInput");
+      if (input) {
+        input.addEventListener("input", () => { commandQuery = input.value.trim(); renderCommands(); });
+        input.addEventListener("keydown", event => {
+          if (event.key === "ArrowDown") { event.preventDefault(); moveCommandSelection(1); }
+          else if (event.key === "ArrowUp") { event.preventDefault(); moveCommandSelection(-1); }
+          else if (event.key === "Enter") { event.preventDefault(); runSelectedCommand(); }
+        });
+      }
+      const closeBtn = $("#commandClose");
+      if (closeBtn) closeBtn.addEventListener("click", closeCommandPalette);
+      const trigger = $("#commandSearchTrigger");
+      if (trigger) trigger.addEventListener("click", openCommandPalette);
+      const shortcut = $("#commandShortcutLabel");
+      const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform);
+      const shortcutText = isMac ? "⌘ K" : "Ctrl K";
+      if (shortcut) shortcut.textContent = shortcutText;
+      if (trigger) trigger.setAttribute("aria-label", "開啟快速搜尋（" + (isMac ? "⌘K" : "Ctrl+K") + "）");
+      renderCommands();
+    })();
+
+    loadState();
+    renderQueue();
+    renderRecent();
+    setupContactsSearch();
+    setupNavKeyboard();
+    initRouter();
+
+    $$(".nav-button, .mobile-nav button[data-view]").forEach(button => button.addEventListener("click", () => setView(button.dataset.view, { source: "click" })));
+    $$("[data-view-button]").forEach(button => button.addEventListener("click", () => setView(button.dataset.viewButton, { source: "click" })));
+    const openContactButton = $("#openContactButton"); if (openContactButton) openContactButton.addEventListener("click", openModal);
+    const mobileAdd = $("#mobileAdd"); if (mobileAdd) mobileAdd.addEventListener("click", openModal);
+    const contactForm = $("#contactForm"); if (contactForm) contactForm.addEventListener("submit", addContact);
+    const completeForm = $("#completeForm"); if (completeForm) completeForm.addEventListener("submit", commitComplete);
+    $$(".filter-button").forEach(button => button.addEventListener("click", () => setFilter(button.dataset.filter)));
+    $$("[data-close]").forEach(button => button.addEventListener("click", () => {
+      const parent = button.closest(".modal, .detail-panel, .command-palette");
+      if (!parent) { closeOverlays(); return; }
+      if (parent.id === "contactModal") closeContactModal();
+      else if (parent.id === "detailPanel") closeDetailPanel();
+      else if (parent.id === "completeModal") closeCompleteModal();
+      else if (parent.id === "commandPalette") closeCommandPalette();
+    }));
+    const scrim = $("#scrim"); if (scrim) scrim.addEventListener("click", closeOverlays);
+    const detailComplete = $("#detailComplete"); if (detailComplete) detailComplete.addEventListener("click", () => { if (currentDetail) requestComplete(currentDetail, detailComplete); });
+    const themeButton = $("#themeButton"); if (themeButton) themeButton.addEventListener("click", () => { document.body.classList.toggle("dark"); themeButton.textContent = document.body.classList.contains("dark") ? "☀" : "☾"; });
+    $$("[data-export]").forEach(button => button.addEventListener("click", () => showToast("已準備 " + button.dataset.export.toUpperCase() + " 匯出 prototype（依目前本機資料）。")));
+    $$("[data-import]").forEach(button => button.addEventListener("click", () => showToast("已開啟 " + button.dataset.import.toUpperCase() + " 匯入流程 prototype。")));
+    $$("[data-danger]").forEach(button => button.addEventListener("click", () => {
+      if (window.confirm("確定要清除這台瀏覽器上的所有聯絡人與互動紀錄嗎？操作後無法復原。")) clearAllData();
+    }));
+    $$("[data-open-contact]").forEach(button => button.addEventListener("click", openModal));
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") { closeOverlays(); return; }
+      const isMod = event.metaKey || event.ctrlKey;
+      if (isMod && (event.key === "k" || event.key === "K")) {
+        event.preventDefault();
+        if ($("#commandPalette").classList.contains("open")) closeCommandPalette();
+        else openCommandPalette();
+      }
+    });
+    updateStats();
   </script>
 </body>
 </html>

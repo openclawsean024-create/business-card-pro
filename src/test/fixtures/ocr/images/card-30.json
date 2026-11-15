@@ -1,0 +1,22 @@
+{
+  "id": "card-30",
+  "template": "english",
+  "image": "card-30.png",
+  "synthetic": true,
+  "printed": [
+    "Test Gary Hsu",
+    "Account Manager",
+    "Example Marketing Agency",
+    "T: 02-0000-0070",
+    "M: 0900-000-070",
+    "E: sales70@example.com",
+    "8F, No. 70, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Gary Hsu",
+    "company": "Example Marketing Agency",
+    "title": "Account Manager",
+    "phone": "0900-000-070",
+    "email": "sales70@example.com"
+  }
+}

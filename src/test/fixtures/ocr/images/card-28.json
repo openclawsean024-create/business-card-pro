@@ -1,0 +1,22 @@
+{
+  "id": "card-28",
+  "template": "english",
+  "image": "card-28.png",
+  "synthetic": true,
+  "printed": [
+    "Test Ivan Lee",
+    "CEO",
+    "Example Partners",
+    "T: 02-0000-0068",
+    "M: 0900-000-068",
+    "E: ivan.lee@example.com",
+    "6F, No. 68, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Ivan Lee",
+    "company": "Example Partners",
+    "title": "CEO",
+    "phone": "0900-000-068",
+    "email": "ivan.lee@example.com"
+  }
+}

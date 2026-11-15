@@ -1,0 +1,22 @@
+{
+  "id": "card-01",
+  "template": "zh-horizontal",
+  "image": "card-01.png",
+  "synthetic": true,
+  "printed": [
+    "範例咖啡",
+    "測試 楊佩珊",
+    "人資主任",
+    "電話：02-0000-0041",
+    "手機：0900-000-041",
+    "Email：lily_hung@example.com",
+    "100 台北市範例區測試路 41 號 6 樓"
+  ],
+  "truth": {
+    "name": "測試 楊佩珊",
+    "company": "範例咖啡",
+    "title": "人資主任",
+    "phone": "0900-000-041",
+    "email": "lily_hung@example.com"
+  }
+}

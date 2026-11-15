@@ -1,0 +1,22 @@
+{
+  "id": "card-27",
+  "template": "english",
+  "image": "card-27.png",
+  "synthetic": true,
+  "printed": [
+    "Test Bella Wu",
+    "Account Executive",
+    "Example Design Studio",
+    "T: 02-0000-0067",
+    "M: 0900-000-067",
+    "E: sales67@example.com",
+    "5F, No. 67, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Bella Wu",
+    "company": "Example Design Studio",
+    "title": "Account Executive",
+    "phone": "0900-000-067",
+    "email": "sales67@example.com"
+  }
+}

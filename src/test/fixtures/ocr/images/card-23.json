@@ -1,0 +1,22 @@
+{
+  "id": "card-23",
+  "template": "english",
+  "image": "card-23.png",
+  "synthetic": true,
+  "printed": [
+    "Test Fiona Yang",
+    "Product Manager",
+    "Example Construction Co., Ltd.",
+    "T: 02-0000-0063",
+    "M: 0900-000-063",
+    "E: fiona_yang@example.com",
+    "1F, No. 63, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Fiona Yang",
+    "company": "Example Construction Co., Ltd.",
+    "title": "Product Manager",
+    "phone": "0900-000-063",
+    "email": "fiona_yang@example.com"
+  }
+}

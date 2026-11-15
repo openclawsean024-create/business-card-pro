@@ -1,0 +1,22 @@
+{
+  "id": "card-08",
+  "template": "zh-horizontal",
+  "image": "card-08.png",
+  "synthetic": true,
+  "printed": [
+    "範例文創",
+    "測試 許冠宇",
+    "採購專員",
+    "電話：02-0000-0048",
+    "手機：0900-000-048",
+    "Email：sales48@example.com",
+    "100 台北市範例區測試路 48 號 4 樓"
+  ],
+  "truth": {
+    "name": "測試 許冠宇",
+    "company": "範例文創",
+    "title": "採購專員",
+    "phone": "0900-000-048",
+    "email": "sales48@example.com"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "card-17",
+  "template": "mixed",
+  "image": "card-17.png",
+  "synthetic": true,
+  "printed": [
+    "範例咖啡",
+    "Example Coffee",
+    "測試 楊佩珊",
+    "Test Lily Hung",
+    "人資主任",
+    "HR Supervisor",
+    "Tel: 02-0000-0057",
+    "Mobile: 0900-000-057",
+    "Email: lily.hung@example.com"
+  ],
+  "truth": {
+    "name": "測試 楊佩珊",
+    "company": "範例咖啡",
+    "title": "人資主任",
+    "phone": "0900-000-057",
+    "email": "lily.hung@example.com"
+  }
+}

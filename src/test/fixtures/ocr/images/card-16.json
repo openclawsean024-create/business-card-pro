@@ -1,0 +1,24 @@
+{
+  "id": "card-16",
+  "template": "mixed",
+  "image": "card-16.png",
+  "synthetic": true,
+  "printed": [
+    "範例資訊有限公司",
+    "Example Software LLC",
+    "測試 陳志明",
+    "Test Eric Liu",
+    "顧問",
+    "Consultant",
+    "Tel: 02-0000-0056",
+    "Mobile: 0900-000-056",
+    "Email: eric_liu@example.com"
+  ],
+  "truth": {
+    "name": "測試 陳志明",
+    "company": "範例資訊有限公司",
+    "title": "顧問",
+    "phone": "0900-000-056",
+    "email": "eric_liu@example.com"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "card-31",
+  "template": "english",
+  "image": "card-31.png",
+  "synthetic": true,
+  "printed": [
+    "Test Nina Lai",
+    "Sales Manager",
+    "Example Works",
+    "T: 02-0000-0071",
+    "M: 0900-000-071",
+    "E: test71@example.com",
+    "9F, No. 71, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Nina Lai",
+    "company": "Example Works",
+    "title": "Sales Manager",
+    "phone": "0900-000-071",
+    "email": "test71@example.com"
+  }
+}

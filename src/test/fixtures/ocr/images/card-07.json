@@ -1,0 +1,22 @@
+{
+  "id": "card-07",
+  "template": "zh-horizontal",
+  "image": "card-07.png",
+  "synthetic": true,
+  "printed": [
+    "範例建設股份有限公司",
+    "測試 張淑芬",
+    "產品經理",
+    "電話：02-0000-0047",
+    "手機：0900-000-047",
+    "Email：sales47@example.com",
+    "100 台北市範例區測試路 47 號 3 樓"
+  ],
+  "truth": {
+    "name": "測試 張淑芬",
+    "company": "範例建設股份有限公司",
+    "title": "產品經理",
+    "phone": "0900-000-047",
+    "email": "sales47@example.com"
+  }
+}

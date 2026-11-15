@@ -1,0 +1,22 @@
+{
+  "id": "card-06",
+  "template": "zh-horizontal",
+  "image": "card-06.png",
+  "synthetic": true,
+  "printed": [
+    "範例物流股份有限公司",
+    "測試 謝柏翰",
+    "資深工程師",
+    "電話：02-0000-0046",
+    "手機：0900-000-046",
+    "Email：oscar.chen@example.com",
+    "100 台北市範例區測試路 46 號 2 樓"
+  ],
+  "truth": {
+    "name": "測試 謝柏翰",
+    "company": "範例物流股份有限公司",
+    "title": "資深工程師",
+    "phone": "0900-000-046",
+    "email": "oscar.chen@example.com"
+  }
+}

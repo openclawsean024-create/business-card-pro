@@ -1,116 +1,108 @@
-# Sprint Status — business-card-pro
+# Sprint Status — business-card-pro（名片回訪 CRM）
 
-- Project: business-card-pro
-- Spec: PRD/SPEC.md v3.0 (67KB / 1135 行,從 GitHub upstream 同步)
-- Started: 2026-08-08
-- State: ✅ **DEPLOYED & 3-WAY ALIGNED** — 2026-08-08 16:24 UTC
-- Stack: Next.js 16 (App Router, static export) + React 19 + TypeScript strict + Zustand 5 + Tailwind 3 + Vitest 4
+- Project: 名片回訪 CRM（repo 與 UI 舊名：名片王 Pro；改名待 Sean 決定，M1 未改名）
+- Repo: `openclawsean024-create/business-card-pro`（預設分支 `main`）
+- 併入來源: `openclawsean024-create/business-card-manager`（預設分支 `master`，只讀；未 push、未封存）
+- Spec: `PRD/SPEC.md` v4.0
+- Goal: `GOAL.md` — M1
+- Branch: `feat/m1`（基於 `chore/prd-rebuild`；PR #1 尚未合併）
+- State: ✅ **M1 完成，Exit gate 通過**（2026-11-16）：§10 合併清單與 AC-003 門檻（沿用 GOAL 初版）皆由 Sean 覆審通過；PR #2 待合併
+- Stack: Next.js 16（static export）+ React 19 + TypeScript strict + Zustand 5 + Tailwind 3 + Vitest 4 + Tesseract.js 7
 
-## ✅ 完成驗證證據
+## M1 AC 進度（2026-11-16，Node v26.13.1，macOS）
 
-| 步驟 | 結果 |
-|---|---|
-| `npm install --legacy-peer-deps` | ✅ 477 packages, 0 vulnerabilities |
-| `npm run typecheck` (tsc --noEmit) | ✅ 0 errors |
-| `npm run test` (vitest run) | ✅ 31/31 passed (2 files) |
-| `npm run build` (next build) | ✅ 3 static pages generated |
-| dev server smoke | ✅ HTTP 200, title 正確 |
-| `git push origin main` | ✅ pushed |
-| Vercel deployment | ✅ `business-card-jumxn4kcu-...` READY |
-| `bash sync-3way.sh business-card-pro --verify` | ✅ **3-way fully aligned** |
+| AC | 標題 | 狀態 | 驗證指令 → exit | 測試（名稱皆以 AC 編號開頭） |
+|---|---|---|---|---|
+| AC-001 | 合併 OCR 與拍照輸入，不帶伺服器依賴 | ✅ | `npm run build` → 0（產出 `out/index.html`）；GOAL 的 `node -e …` 依賴檢查 → 0；`test ! -d src/app/api` → 0；`grep -rn '"use server"' src` → 無輸出 | `src/test/merge-guard.test.ts`、`src/test/ocr-flow.test.tsx`（adapter 注入） |
+| AC-002 | OCR 只產生預覽，確認後才建立 | ✅ | `npm test` → 0 | `src/test/ocr-flow.test.tsx` (a)(b)(c)(d) |
+| AC-003 | OCR 準確度：合成測試集與門檻 | ✅（GOAL 初版門檻，2026-11-16 Sean 確認沿用） | `npm run eval:ocr` → 0；`npm run eval:ocr:images` → 0；`npm test` → 0 | `src/test/ocr-accuracy.test.ts`、`scripts/eval/*.eval.ts` |
+| AC-004 | Google 聯絡人檔案互通 | ✅（Google CSV 欄位名稱未經官方文件逐欄查證，見下方） | `npm test` → 0 | `src/test/google-contacts-file.test.ts` |
+| AC-005 | mock 同步 adapter，零網路 | ✅ | `npm test` → 0 | `src/test/contact-sync.test.ts`（`fetch` 呼叫次數斷言為 0） |
+| AC-006 | 免費層上限不可被匯入繞過 | ✅ | `npm test` → 0 | `src/test/store.test.ts`「已有 19 筆時匯入 5 筆 → 20 筆、回報 4 筆未匯入」；`contact-sync.test.ts` 同步 pull 版 |
+| AC-007 | OCR 前的個資告知 | ✅ | `npm test` → 0 | `src/test/ocr-flow.test.tsx`、`src/test/a11y-axe.test.tsx`（OCR 入口 axe 0 critical/serious） |
+| AC-008 | 品質門檻與證據 | ✅ 見下方 `quality-gate.sh` 結果 | 見下方 | `src/test/merge-guard.test.ts`（CI 不吞失敗、coverage 依賴、既有測試檔仍在） |
 
-## 🎯 三向對齊 (2026-08-08 16:24:38 UTC)
+### AC-008 證據
 
-```
-🔗 Local HEAD:  0cf4018db5
-🔗 GitHub HEAD: 0cf4018db5   ✅ 已同步
-🚀 Vercel Production: https://business-card-pro.vercel.app (HTTP 200)
-📦 Vercel production SHA: 0cf4018db5 (via meta.githubCommitSha) ✅
-📝 最新 commit: 0cf4018 build(vercel): add vercel.json for production deploy config
-✅ Issues: 無
-```
+| 指令 | Exit | 結果 |
+|---|---:|---|
+| `bash scripts/quality-gate.sh` | 0 | 依序 `npm ci`（512 packages）→ typecheck → test（123 passed）→ build → lint（0 errors）；詳見 SOP.md「M1 驗證結果」 |
+| `npm run typecheck` | 0 | 0 errors |
+| `npm test` | 0 | 14 files、**123 tests** passed（既有 65 + 新增 58） |
+| `npm run build` | 0 | 靜態匯出，`out/index.html` 產出 |
+| `npm run lint` | 0 | 0 errors、1 warning（`eslint.config.mjs` 既有的 `import/no-anonymous-default-export`） |
+| `npm run test:coverage` | 0 | 可執行（已加 `@vitest/coverage-v8`） |
+| `git diff main -- src/test \| grep '^-.*expect('` | 1（無輸出） | 既有測試沒有刪除任何 `expect` 行；既有測試檔只有新增 |
+| `git diff --check origin/main` | 0 | fixtures 的 CRLF 以 `.gitattributes` 標示 |
 
-## 實作範圍
+- CI：`.github/workflows/ci.yml` 的 test 步驟移除 `|| echo`。此檔屬 sensitive path，PR 需 `risk-approved` 標籤與人審。
 
-- **P1-02 Google Calendar 單向提醒**: pending follow-up `.ics` 匯出（不含 OAuth / server sync）
+### AC-003 OCR 準確度（2026-11-16）
 
-- **§3.1 P0 對齊**: 9/10 FR 完整實作 (FR-005 OCR preview 未實作 UI,對齊 §1.5 Non-Goals)
-- **§3.4 AC**: 10/10 AC 有對應測試 (24 條 domain + 7 條 store = 31 條)
-- **§4.3 Domain**: Contact / ExchangeEvent / Followup / Interaction / Consent / PlanQuota / CardImage 全部定義
-- **§5.3 降級**: localStorage try/catch + graceful fallback
+正規化後完全相符（去空白、全形轉半形、電話只比數字、Email 小寫）。
 
-## 部署架構
+| 層 | 筆數 | Email | 電話 | 姓名 | 公司 | 職稱 | 平均 | 門檻（GOAL 初版） |
+|---|---:|---:|---:|---:|---:|---:|---:|---|
+| 文字層（parser，`npm run eval:ocr`，CI 必跑） | 70 | 100% | 100% | 100% | 100% | 100% | 100% | Email 98／電話 95／姓名 90／公司 90／職稱 85／平均 92 |
+| 影像層（Tesseract `eng+chi_tra` 端到端，`npm run eval:ocr:images`，本機） | 33 | 100% | 100% | 90.9% | 97.0% | 97.0% | 97.0% | Email 90／電話 85／姓名 75／平均 80 |
 
-- **Vercel project**: `business-card-pro` (`prj_33wRG6TnXimWfxP2UWqmHwuEcLyG`)
-- **Production alias**: `business-card-pro.vercel.app`
-- **當前 deployment**: `business-card-jumxn4kcu-seans-projects-7dc76219.vercel.app` (READY)
-- **Build**: Next.js 16 via Vercel GitHub App (gitSource trigger from `0cf4018db5`)
-- **ssoProtection**: `all_except_custom_domains` (部署 URL 顯示 Vercel Login,但 production alias 正常)
+- 文字層五類各 14 筆：繁中橫式、繁中直式、中英混排、純英文、含雜訊（多餘空白、全形數字、斷行錯位）。影像層三種固定橫式版型各 11 張（字型：系統 Arial Unicode，字型檔不提交）。
+- **解讀限制**：parser 是對著這組測試集調整的，100% 不代表真實名片的準確率。另以 6 個不同種子產生的 holdout 文字層各 70 筆檢查，平均 99.4%～100%。影像層為乾淨的合成影像，沒有拍攝角度、光線、背景，真實名片的數字應會明顯較低；上市前需另行量測（M2）。
+- 影像層剩餘錯誤皆為 Tesseract 字元辨識錯誤（例：「集團」→「集轉」、大字級姓名漏字）。
+- 加上 Tesseract 參數 `preserve_interword_spaces=1` 後影像層姓名由 66.7% → 90.9%（manager 原本沒有此設定）。
 
-## 部署旅程 (備註給下一個接手者)
+### Tesseract 語言檔放置方式
 
-| 步驟 | 結果 | 原因 |
-|---|---|---|
-| 1. `git push` 後看 Vercel auto-deploy | ❌ 沒 trigger | Vercel project 沒有 GitHub App integration (歷史因素) |
-| 2. Vercel files API 直接 trigger (out/) | ❌ ERROR: missing_pages_app | Vercel 預設跑 `next build`,但 source 沒有 src/app/ |
-| 3. Vercel files API 上傳 source code | ❌ ERROR: 缺 swc linux binaries | package-lock 沒含 linux swc |
-| 4. Vercel gitSource API + commit SHA | ✅ READY | 用 gitSource reference, Vercel 直接從 git fetch source + build |
+- **CDN（沿用預設）**：Tesseract.js 預設從 jsDelivr CDN 下載 worker、WASM 核心與 `eng`、`chi_tra` 語言檔，與 manager 原本行為一致；GOAL.md 與 SPEC §12 未改變此預設，因此沿用。語言檔不放進 repo。
+- 下載內容不含影像；OCR 入口告知已說明「首次使用會從 CDN 下載辨識程式與語言模型（下載內容不含你的影像）」（AC-007）。
+- 本機影像層評估把語言檔快取在 `node_modules/.cache/tesseract`（不提交）；第一次執行需要網路。
 
-最終成功方法: `POST /v13/deployments` with `gitSource.type=github, ref=main, sha=<commit>` + `projectSettings.framework=nextjs`。這方法會把 commit SHA 寫進 deployment metadata,讓 sync-3way SOP 對齊。
+### AC-004 Google CSV 欄位查證狀態
 
-## 故意不做 (對齊 SPEC §1.5 Non-Goals)
+- Google 聯絡人說明頁（2026-11-16 查閱 `support.google.com/contacts/answer/7199294`）只說明可匯出「Google CSV」與 vCard，**未公布欄位清單**。
+- 匯出欄位依已知的 Google CSV 匯出格式撰寫；匯入同時接受舊版標頭（`Name`、`Organization 1 - Name`、`Group Membership` 等）。對照表見 `PRD/SPEC.md` §5.2。
+- **待確認**：尚未以官方欄位文件逐欄查證，也尚未用測試帳號＋假資料實際匯入 Google 聯絡人驗證。
 
-- ❌ OCR / Tesseract(主功能排除,只剩可選 preview 的位置)
-- ❌ 雲端同步 / Supabase(SPEC FR-008 本地優先)
-- ❌ 註冊 / 登入 / Stripe(pilot 階段)
+### 實機檢查（2026-11-16）
 
-## 後續 (Vercel auto-deploy 永久修復)
+以 `python3 -m http.server` 服務 `out/`，在瀏覽器上傳合成名片 `card-01.png`：真實 Tesseract 辨識後預填 5 欄、聯絡人數維持 0；按「確認並儲存」後 1 筆，`ocrConfidence` 0.81、`ocrLowConfidenceFields` = `["company"]`，`cardImages` 為 0、localStorage 無 `data:image/`。
 
-如果想要之後 `git push` 直接觸發 Vercel build,需要到 Vercel dashboard:
-1. Project Settings → Git → Connect Git Repository → 選 `openclawsean024-create/business-card-pro`
-2. Vercel 會自動安裝 GitHub App + 設定 webhook
+## FR 對照（詳見 `PRD/SPEC.md` §5）
 
-目前 deployment 都透過我手動 trigger,但每次 commit SHA 都會綁定,sync-3way 仍 100 0 對齊。
+| FR | 需求 | 優先 | 狀態 | 證據 |
+|---|---|---|---|---|
+| FR-001～FR-003 | 聯絡人、交換情境、回訪 queue | P0 | 已實作 | 既有 |
+| FR-004 | vCard／CSV 匯出、CSV 匯入 | P0 | 已實作（M1 起 vCard 匯入也已實作） | `google-contacts.ts` |
+| FR-005 | OCR 預覽確認 | P0 | **已實作（M1）** | `src/lib/ocr/`、`OcrCapture.tsx`、`ContactFormModal.tsx` |
+| FR-006～FR-009 | 搜尋、時間線、本機模式、刪除 | P0 | 已實作 | 既有；`STORAGE_KEY` 未變 |
+| FR-010 | 免費層上限 | P0 | **已實作（M1：匯入與同步 pull 也受限）** | `contact-import.ts`、`store.importContacts` |
+| FR-011 | `.ics` 回訪提醒匯出 | P1 | 已實作 | 既有 |
+| FR-012 | Google 聯絡人同步 | P0 | **部分（M1：檔案互通 + mock adapter；真實 API 為 M3）** | `google-contacts.ts`、`src/lib/sync/` |
+| FR-013 | OCR 準確度評估 | P0 | **已實作（M1）** | `scripts/gen-ocr-fixtures.mjs`、`eval:ocr`、`eval:ocr:images` |
+| FR-014 | 名片照片附件 | P1 | 部分（只有資料層；M1 刻意不保存影像） | — |
+| FR-015 | 個資告知與同意紀錄 | P0 | 部分（M1：OCR 前告知；隱私頁與同意紀錄 UI 為 M2） | `OcrCapture.tsx` |
+| FR-016～FR-020 | 方案付費、雲端、團隊、CRM、Telegram | P1／P2 | 未變更 | M1 不做 |
 
-## 同步狀態 (最終)
+## M1 刻意未做
 
-- ✅ 本機 HEAD: `0cf4018db52d80d4d2cd56b7d401995471c88e6b`
-- ✅ GitHub HEAD: `0cf4018db52d80d4d2cd56b7d401995471c88e6b`
-- ✅ Vercel production SHA: `0cf4018db52d80d4d2cd56b7d401995471c88e6b`
-- ✅ Vercel production URL: `https://business-card-pro.vercel.app` (HTTP 200)
-- ✅ Content: title `名片王 Pro — 台灣業務的人脈回訪清單`, manifest 已更新
-- ✅ `bash sync-3way.sh business-card-pro --verify` → `3-way fully aligned`
+- 不接真實 Google API／OAuth；mock 同步沒有 UI 入口（`provider.label` 標示「測試模式／未連線 Google」）。
+- 不做登入、金流；未改產品名稱、未改方案價格（免費層仍為 20 張）。
+- 未從 manager 搬入 Prisma、server actions、Auth.js、Stripe、Telegram、`prisma/dev.db` 或任何資料檔。
+- 未 push 到 `main`、未合併任何 PR、未部署、未封存 business-card-manager。
 
-## 🔄 v3.1 — 今日回訪工作台正式 UI (2026-09-20)
+## 風險與發現
 
-- **範圍**: 把 `public/ui-prototype.html` 的設計落到 Next.js/React app,聚焦「今日回訪工作台」。
-- **保留**: 既有 domain/store、`STORAGE_KEY`、`Contact/Followup/Interaction` schema、vCard/CSV/ICS 匯出、localStorage 流程、20 張 pilot 上限、既有 axe a11y 測試。
-- **不做**: OCR、登入、雲端同步、CRM、DB、付費牆;不動 storage key;不嵌入 standalone HTML。
+- **歷史資料庫檔**：`prisma/dev.db` 仍在 manager 與本 repo 舊分支 `origin/master` 的 git 歷史中（未讀取、未搬入）。需 Sean 確認。
+- **OCR 準確度宣稱**：上表為合成資料結果，不得對外宣稱為真實名片準確度。
+- **第三方 CDN**：CDN 無法連線時 OCR 失敗並退回手動輸入（已有測試）。
 
-### 新增 / 重構元件
-- 新增 `Sidebar.tsx`:桌機 md+ 顯示,品牌 / 主導覽 / 本機模式卡 / 名片庫容量條
-- 新增 `PulseCard.tsx`:今日進度條 + 最近 14 天回訪節奏條形圖
-- 新增 `ContactDetailDrawer.tsx`:右上 slide-in drawer,ESC/點 scrim 關閉,內含時間線 + 快速記錄
-- 新增 `QueueGroup.tsx`:`overdue / today / upcoming` 三組 queue renderer,內嵌完成表單
-- 新增 `domain` helper:`getUpcomingQueue`、`getTodayProgress`、`buildRhythm`、新 type `RhythmPoint`
-- 重構 `TodayTab.tsx`:三組 queue + PulseCard + 空狀態 CTA
-- 重構 `ContactsTab.tsx`:點 row 開 drawer,保留搜尋/排序/標籤
-- 重構 `TimelineTab.tsx`:全站互動彙總 + click-to-drawer + 快速記錄 picker
-- 重構 `page.tsx`:Sidebar + content 兩欄 layout,保留 skip link / `main tabIndex=-1` / BottomNav
-- 新增 `src/test/workstation.test.tsx`:domain helpers + sidebar visible + drawer 開關 + 三組 queue 渲染
-- 修 `vitest.config.ts`:Node 26 + vitest 4 必須 CJS 寫法才會掛載 `environment: "jsdom"`(ESM 寫法會被 `configLoader:'native'` 靜默忽略)
-- 修 `src/lib/export.ts` 的 `emptyStateStub.ui` 加 `selectedContactId: null`
+## 部署
 
-### 驗收證據 (2026-09-20)
-| 步驟 | 結果 |
-|---|---|
-| `npm run typecheck` (tsc --noEmit) | ✅ 0 errors |
-| `npm run test` (vitest run) | ✅ 65/65 passed (9 files) |
-| `npm run build` (next build) | ✅ Compiled successfully in 1428ms, 3 static pages |
-| `npm run lint` (eslint) | ✅ 0 errors, 1 pre-existing warning on `eslint.config.mjs` |
+- 未部署；未更新 Notion、未執行 `sync-3way.sh`。
 
-### 剩餘風險
-- `Sidebar.tsx` 中的 nav icon type re-export 為了壓 lint warning 留有 `SIDEBAR_ICON_REFS` 常數,無功能影響。
-- vitest 在 Node 26 會出現 `ExperimentalWarning: localStorage is not available ...` 訊息,屬於 Node 26 內建實驗功能提示,jsdom 已正確運作,可忽略。
-- `app-shell` 是 inline grid 樣式,若日後新增多頁需共用 layout,考慮抽到 `src/app/layout-shell.tsx`。
-- ✅ 2026-09-22 release evidence: v3.1 已 commit `bfbc56c6298ef68d92db6103a7581a5eaa7a8517`、push `main`、Vercel production READY；60 秒 smoke test 12/12 HTTP 200，canonical Notion row 已同步。
+## 下一步（等待 Sean）
+
+1. ~~覆審 M1 scope（`PRD/SPEC.md` §10 合併清單）~~ ✅ 2026-11-16 Sean 覆審通過。
+1. ~~確認 AC-003 門檻~~ ✅ 2026-11-16 Sean 決定沿用 GOAL 初版門檻。
+2. 以測試帳號實際匯入一次 Google CSV，確認欄位名稱。
+3. 為 PR 加上 `risk-approved` 標籤（`ci.yml` 屬 sensitive path）後審查；PR #1（文件）需先或一併處理。

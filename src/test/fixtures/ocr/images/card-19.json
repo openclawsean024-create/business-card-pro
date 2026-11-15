@@ -1,0 +1,24 @@
+{
+  "id": "card-19",
+  "template": "mixed",
+  "image": "card-19.png",
+  "synthetic": true,
+  "printed": [
+    "範例精密工業股份有限公司",
+    "Example Precision Industries Co., Ltd.",
+    "測試 劉美玲",
+    "Test Judy Chang",
+    "業務副理",
+    "Assistant Sales Manager",
+    "Tel: 02-0000-0059",
+    "Mobile: 0900-000-059",
+    "Email: test59@example.com"
+  ],
+  "truth": {
+    "name": "測試 劉美玲",
+    "company": "範例精密工業股份有限公司",
+    "title": "業務副理",
+    "phone": "0900-000-059",
+    "email": "test59@example.com"
+  }
+}

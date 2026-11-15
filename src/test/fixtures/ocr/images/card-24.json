@@ -1,0 +1,22 @@
+{
+  "id": "card-24",
+  "template": "english",
+  "image": "card-24.png",
+  "synthetic": true,
+  "printed": [
+    "Test Mark Tseng",
+    "Procurement Specialist",
+    "Example Creative",
+    "T: 02-0000-0064",
+    "M: 0900-000-064",
+    "E: mark.tseng@example.com",
+    "2F, No. 64, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Mark Tseng",
+    "company": "Example Creative",
+    "title": "Procurement Specialist",
+    "phone": "0900-000-064",
+    "email": "mark.tseng@example.com"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "id": "card-02",
+  "template": "zh-horizontal",
+  "image": "card-02.png",
+  "synthetic": true,
+  "printed": [
+    "範例管理顧問有限公司",
+    "測試 王大華",
+    "總經理",
+    "電話：02-0000-0042",
+    "手機：0900-000-042",
+    "Email：chris.huang@example.com",
+    "100 台北市範例區測試路 42 號 7 樓"
+  ],
+  "truth": {
+    "name": "測試 王大華",
+    "company": "範例管理顧問有限公司",
+    "title": "總經理",
+    "phone": "0900-000-042",
+    "email": "chris.huang@example.com"
+  }
+}

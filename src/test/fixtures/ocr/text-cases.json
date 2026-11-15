@@ -1,0 +1,860 @@
+{
+  "seed": 20261116,
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "zh-horizontal-01",
+      "category": "zh-horizontal",
+      "rawText": "範例生技股份有限公司\n\n測試 林怡君  設計師\n\n電話：02-0000-0001\n手機：0900-000-001\nEmail：test01@example.com\n地址：100 台北市範例區測試路 1 號 2 樓",
+      "truth": {
+        "name": "測試 林怡君",
+        "company": "範例生技股份有限公司",
+        "title": "設計師",
+        "phone": "0900-000-001",
+        "email": "test01@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-02",
+      "category": "zh-horizontal",
+      "rawText": "測試 蔡俊傑\n技術長\n範例數位媒體有限公司\nT 02-0000-0002\nM 0900-000-002\nE kevin.kuo@example.com\n100 台北市範例區測試路 2 號 3 樓",
+      "truth": {
+        "name": "測試 蔡俊傑",
+        "company": "範例數位媒體有限公司",
+        "title": "技術長",
+        "phone": "0900-000-002",
+        "email": "kevin.kuo@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-03",
+      "category": "zh-horizontal",
+      "rawText": "範例設計工作室\n行銷部\n業務專員 測試 曾小明\nTEL: 02-0000-0003\nFAX: 02-0000-0053\nE-mail: bella@example.com\nwww.example.com",
+      "truth": {
+        "name": "測試 曾小明",
+        "company": "範例設計工作室",
+        "title": "業務專員",
+        "phone": "02-0000-0003",
+        "email": "bella@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-04",
+      "category": "zh-horizontal",
+      "rawText": "範例聯合會計師事務所\n測試 吳建宏 執行長\nTEL: 02-0000-0004  FAX: 02-0000-0054\n行動電話: 0900-000-004\nE-mail: test04@example.com\n統編：00000000\nwww.example.com",
+      "truth": {
+        "name": "測試 吳建宏",
+        "company": "範例聯合會計師事務所",
+        "title": "執行長",
+        "phone": "0900-000-004",
+        "email": "test04@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-05",
+      "category": "zh-horizontal",
+      "rawText": "測試 郭宜蓁\n業務部 行銷總監\n範例科技股份有限公司\n100 台北市範例區測試路 5 號 6 樓\n電話 02-0000-0005 #15\n傳真 02-0000-0055\n信箱 penny@example.com",
+      "truth": {
+        "name": "測試 郭宜蓁",
+        "company": "範例科技股份有限公司",
+        "title": "業務部 行銷總監",
+        "phone": "02-0000-0005 #15",
+        "email": "penny@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-06",
+      "category": "zh-horizontal",
+      "rawText": "客戶經理\n測試 李家豪\n\n範例行銷企業社\n100 台北市範例區測試路 6 號 7 樓\n0900-000-006\ngary_hsu@example.com",
+      "truth": {
+        "name": "測試 李家豪",
+        "company": "範例行銷企業社",
+        "title": "客戶經理",
+        "phone": "0900-000-006",
+        "email": "gary_hsu@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-07",
+      "category": "zh-horizontal",
+      "rawText": "範例好物\n\n測試 鄭欣怡  業務經理\n\n電話：02-0000-0007\n手機：0900-000-007\nEmail：nina.lai@example.com\n地址：100 台北市範例區測試路 7 號 8 樓",
+      "truth": {
+        "name": "測試 鄭欣怡",
+        "company": "範例好物",
+        "title": "業務經理",
+        "phone": "0900-000-007",
+        "email": "nina.lai@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-08",
+      "category": "zh-horizontal",
+      "rawText": "測試 陳志明\n顧問\n範例資訊有限公司\nT 02-0000-0008\nM 0900-000-008\nE eric@example.com\n100 台北市範例區測試路 8 號 9 樓",
+      "truth": {
+        "name": "測試 陳志明",
+        "company": "範例資訊有限公司",
+        "title": "顧問",
+        "phone": "0900-000-008",
+        "email": "eric@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-09",
+      "category": "zh-horizontal",
+      "rawText": "範例咖啡\n業務部\n人資主任 測試 楊佩珊\nTEL: 02-0000-0009\nFAX: 02-0000-0059\nE-mail: lily_hung@example.com\nwww.example.com",
+      "truth": {
+        "name": "測試 楊佩珊",
+        "company": "範例咖啡",
+        "title": "人資主任",
+        "phone": "02-0000-0009",
+        "email": "lily_hung@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-10",
+      "category": "zh-horizontal",
+      "rawText": "範例管理顧問有限公司\n測試 王大華 總經理\nTEL: 02-0000-0010  FAX: 02-0000-0060\n行動電話: 0900-000-010\nE-mail: chris_huang@example.com\n統編：00000000\nwww.example.com",
+      "truth": {
+        "name": "測試 王大華",
+        "company": "範例管理顧問有限公司",
+        "title": "總經理",
+        "phone": "0900-000-010",
+        "email": "chris_huang@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-11",
+      "category": "zh-horizontal",
+      "rawText": "測試 劉美玲\n行銷部 業務副理\n範例精密工業股份有限公司\n100 台北市範例區測試路 11 號 3 樓\n電話 02-0000-0011 #21\n傳真 02-0000-0061\n信箱 judy@example.com",
+      "truth": {
+        "name": "測試 劉美玲",
+        "company": "範例精密工業股份有限公司",
+        "title": "行銷部 業務副理",
+        "phone": "02-0000-0011 #21",
+        "email": "judy@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-12",
+      "category": "zh-horizontal",
+      "rawText": "專案經理\n測試 洪承恩\n\n範例國際貿易有限公司\n100 台北市範例區測試路 12 號 4 樓\n0900-000-012\ntest12@example.com",
+      "truth": {
+        "name": "測試 洪承恩",
+        "company": "範例國際貿易有限公司",
+        "title": "專案經理",
+        "phone": "0900-000-012",
+        "email": "test12@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-13",
+      "category": "zh-horizontal",
+      "rawText": "範例餐飲集團\n\n測試 黃雅婷  財務長\n\n電話：02-0000-0013\n手機：0900-000-013\nEmail：test13@example.com\n地址：100 台北市範例區測試路 13 號 5 樓",
+      "truth": {
+        "name": "測試 黃雅婷",
+        "company": "範例餐飲集團",
+        "title": "財務長",
+        "phone": "0900-000-013",
+        "email": "test13@example.com"
+      }
+    },
+    {
+      "id": "zh-horizontal-14",
+      "category": "zh-horizontal",
+      "rawText": "測試 謝柏翰\n資深工程師\n範例物流股份有限公司\nT 02-0000-0014\nM 0900-000-014\nE sales14@example.com\n100 台北市範例區測試路 14 號 6 樓",
+      "truth": {
+        "name": "測試 謝柏翰",
+        "company": "範例物流股份有限公司",
+        "title": "資深工程師",
+        "phone": "0900-000-014",
+        "email": "sales14@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-01",
+      "category": "zh-vertical",
+      "rawText": "範 例 建 設 股 份 有 限 公 司\n產 品 經 理\n測 試 張 淑 芬\n電 話 02-0000-0015\n手 機 0900-000-015\nfiona.yang@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 1 5 號 7 樓",
+      "truth": {
+        "name": "測試 張淑芬",
+        "company": "範例建設股份有限公司",
+        "title": "產品經理",
+        "phone": "0900-000-015",
+        "email": "fiona.yang@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-02",
+      "category": "zh-vertical",
+      "rawText": "範 例 文 創\n\n測\n試\n許\n冠\n宇\n\n採 購 專 員\n\n電話 02-0000-0016\n手機 0900-000-016\nmark.tseng@example.com",
+      "truth": {
+        "name": "測試 許冠宇",
+        "company": "範例文創",
+        "title": "採購專員",
+        "phone": "0900-000-016",
+        "email": "mark.tseng@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-03",
+      "category": "zh-vertical",
+      "rawText": "設 計 師   測 試 林 怡 君\n範 例 生 技 股 份 有 限 公 司\n電話 02-0000-0017\n傳真 02-0000-0067\n電子郵件 dana_tsai@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 1 7 號 9 樓",
+      "truth": {
+        "name": "測試 林怡君",
+        "company": "範例生技股份有限公司",
+        "title": "設計師",
+        "phone": "02-0000-0017",
+        "email": "dana_tsai@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-04",
+      "category": "zh-vertical",
+      "rawText": "手機 0900-000-018\n電話 02-0000-0018\nsales18@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 1 8 號 1 樓\n測 試 蔡 俊 傑\n技 術 長\n範 例 數 位 媒 體 有 限 公 司",
+      "truth": {
+        "name": "測試 蔡俊傑",
+        "company": "範例數位媒體有限公司",
+        "title": "技術長",
+        "phone": "0900-000-018",
+        "email": "sales18@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-05",
+      "category": "zh-vertical",
+      "rawText": "範 例 設 計 工 作 室\n業 務 專 員 測 試 曾 小 明\n行動 0900-000-019\n信箱 bella.wu@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 1 9 號 2 樓",
+      "truth": {
+        "name": "測試 曾小明",
+        "company": "範例設計工作室",
+        "title": "業務專員",
+        "phone": "0900-000-019",
+        "email": "bella.wu@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-06",
+      "category": "zh-vertical",
+      "rawText": "範 例 聯 合 會 計 師 事 務 所\n研 發 處\n測　試　吳　建　宏\n執 行 長\n電話 02-0000-0020\nsales20@example.com",
+      "truth": {
+        "name": "測試 吳建宏",
+        "company": "範例聯合會計師事務所",
+        "title": "執行長",
+        "phone": "02-0000-0020",
+        "email": "sales20@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-07",
+      "category": "zh-vertical",
+      "rawText": "範 例 科 技 股 份 有 限 公 司\n行 銷 總 監\n測 試 郭 宜 蓁\n電 話 02-0000-0021\n手 機 0900-000-021\npenny.lin@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 2 1 號 4 樓",
+      "truth": {
+        "name": "測試 郭宜蓁",
+        "company": "範例科技股份有限公司",
+        "title": "行銷總監",
+        "phone": "0900-000-021",
+        "email": "penny.lin@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-08",
+      "category": "zh-vertical",
+      "rawText": "範 例 行 銷 企 業 社\n\n測\n試\n李\n家\n豪\n\n客 戶 經 理\n\n電話 02-0000-0022\n手機 0900-000-022\ngary_hsu@example.com",
+      "truth": {
+        "name": "測試 李家豪",
+        "company": "範例行銷企業社",
+        "title": "客戶經理",
+        "phone": "0900-000-022",
+        "email": "gary_hsu@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-09",
+      "category": "zh-vertical",
+      "rawText": "業 務 經 理   測 試 鄭 欣 怡\n範 例 好 物\n電話 02-0000-0023\n傳真 02-0000-0073\n電子郵件 nina@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 2 3 號 6 樓",
+      "truth": {
+        "name": "測試 鄭欣怡",
+        "company": "範例好物",
+        "title": "業務經理",
+        "phone": "02-0000-0023",
+        "email": "nina@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-10",
+      "category": "zh-vertical",
+      "rawText": "手機 0900-000-024\n電話 02-0000-0024\ntest24@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 2 4 號 7 樓\n測 試 陳 志 明\n顧 問\n範 例 資 訊 有 限 公 司",
+      "truth": {
+        "name": "測試 陳志明",
+        "company": "範例資訊有限公司",
+        "title": "顧問",
+        "phone": "0900-000-024",
+        "email": "test24@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-11",
+      "category": "zh-vertical",
+      "rawText": "範 例 咖 啡\n人 資 主 任 測 試 楊 佩 珊\n行動 0900-000-025\n信箱 sales25@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 2 5 號 8 樓",
+      "truth": {
+        "name": "測試 楊佩珊",
+        "company": "範例咖啡",
+        "title": "人資主任",
+        "phone": "0900-000-025",
+        "email": "sales25@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-12",
+      "category": "zh-vertical",
+      "rawText": "範 例 管 理 顧 問 有 限 公 司\n專 案 管 理 中 心\n測　試　王　大　華\n總 經 理\n電話 02-0000-0026\nchris@example.com",
+      "truth": {
+        "name": "測試 王大華",
+        "company": "範例管理顧問有限公司",
+        "title": "總經理",
+        "phone": "02-0000-0026",
+        "email": "chris@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-13",
+      "category": "zh-vertical",
+      "rawText": "範 例 精 密 工 業 股 份 有 限 公 司\n業 務 副 理\n測 試 劉 美 玲\n電 話 02-0000-0027\n手 機 0900-000-027\ntest27@example.com\n1 0 0 台 北 市 範 例 區 測 試 路 2 7 號 1 樓",
+      "truth": {
+        "name": "測試 劉美玲",
+        "company": "範例精密工業股份有限公司",
+        "title": "業務副理",
+        "phone": "0900-000-027",
+        "email": "test27@example.com"
+      }
+    },
+    {
+      "id": "zh-vertical-14",
+      "category": "zh-vertical",
+      "rawText": "範 例 國 際 貿 易 有 限 公 司\n\n測\n試\n洪\n承\n恩\n\n專 案 經 理\n\n電話 02-0000-0028\n手機 0900-000-028\ntest28@example.com",
+      "truth": {
+        "name": "測試 洪承恩",
+        "company": "範例國際貿易有限公司",
+        "title": "專案經理",
+        "phone": "0900-000-028",
+        "email": "test28@example.com"
+      }
+    },
+    {
+      "id": "mixed-01",
+      "category": "mixed",
+      "rawText": "範例餐飲集團\nExample Foods Group\n\n測試 黃雅婷  Test Helen Cheng\n財務長 CFO\nTel: 02-0000-0029\nMobile: 0900-000-029\nEmail: helen@example.com",
+      "truth": {
+        "name": "測試 黃雅婷",
+        "company": "範例餐飲集團",
+        "title": "財務長",
+        "phone": "0900-000-029",
+        "email": "helen@example.com"
+      }
+    },
+    {
+      "id": "mixed-02",
+      "category": "mixed",
+      "rawText": "測試 謝柏翰\nTest Oscar Chen\n資深工程師\nSenior Engineer\n範例物流股份有限公司\nExample Logistics Corp.\nT: 02-0000-0030 | M: 0900-000-030\noscar_chen@example.com\nwww.example.com",
+      "truth": {
+        "name": "測試 謝柏翰",
+        "company": "範例物流股份有限公司",
+        "title": "資深工程師",
+        "phone": "0900-000-030",
+        "email": "oscar_chen@example.com"
+      }
+    },
+    {
+      "id": "mixed-03",
+      "category": "mixed",
+      "rawText": "Example Construction Co., Ltd.\n範例建設股份有限公司\n測試 張淑芬 產品經理\nTest Fiona Yang | Product Manager\n電話 Tel 02-0000-0031\n傳真 Fax 02-0000-0081\nE-mail fiona.yang@example.com\n100 台北市範例區測試路 31 號 5 樓\n5F, No. 31, Example Rd., Sample City",
+      "truth": {
+        "name": "測試 張淑芬",
+        "company": "範例建設股份有限公司",
+        "title": "產品經理",
+        "phone": "02-0000-0031",
+        "email": "fiona.yang@example.com"
+      }
+    },
+    {
+      "id": "mixed-04",
+      "category": "mixed",
+      "rawText": "Example Creative\n測試 許冠宇\n採購專員\nM 0900-000-032\nT 02-0000-0032\nmark.tseng@example.com\n6F, No. 32, Example Rd., Sample City",
+      "truth": {
+        "name": "測試 許冠宇",
+        "company": "Example Creative",
+        "title": "採購專員",
+        "phone": "0900-000-032",
+        "email": "mark.tseng@example.com"
+      }
+    },
+    {
+      "id": "mixed-05",
+      "category": "mixed",
+      "rawText": "測試 林怡君 Test Dana Tsai\n設計師\n範例生技股份有限公司\n02-0000-0033\n0900-000-033\nsales33@example.com",
+      "truth": {
+        "name": "測試 林怡君",
+        "company": "範例生技股份有限公司",
+        "title": "設計師",
+        "phone": "0900-000-033",
+        "email": "sales33@example.com"
+      }
+    },
+    {
+      "id": "mixed-06",
+      "category": "mixed",
+      "rawText": "範例數位媒體有限公司\nTest Kevin Kuo\nCTO\nPhone: 02-0000-0034\nEmail: test34@example.com\n100 台北市範例區測試路 34 號 8 樓",
+      "truth": {
+        "name": "Test Kevin Kuo",
+        "company": "範例數位媒體有限公司",
+        "title": "CTO",
+        "phone": "02-0000-0034",
+        "email": "test34@example.com"
+      }
+    },
+    {
+      "id": "mixed-07",
+      "category": "mixed",
+      "rawText": "範例設計工作室\nExample Design Studio\n\n測試 曾小明  Test Bella Wu\n業務專員 Account Executive\nTel: 02-0000-0035\nMobile: 0900-000-035\nEmail: sales35@example.com",
+      "truth": {
+        "name": "測試 曾小明",
+        "company": "範例設計工作室",
+        "title": "業務專員",
+        "phone": "0900-000-035",
+        "email": "sales35@example.com"
+      }
+    },
+    {
+      "id": "mixed-08",
+      "category": "mixed",
+      "rawText": "測試 吳建宏\nTest Ivan Lee\n執行長\nCEO\n範例聯合會計師事務所\nExample Partners\nT: 02-0000-0036 | M: 0900-000-036\nsales36@example.com\nwww.example.com",
+      "truth": {
+        "name": "測試 吳建宏",
+        "company": "範例聯合會計師事務所",
+        "title": "執行長",
+        "phone": "0900-000-036",
+        "email": "sales36@example.com"
+      }
+    },
+    {
+      "id": "mixed-09",
+      "category": "mixed",
+      "rawText": "Example Technology Co., Ltd.\n範例科技股份有限公司\n測試 郭宜蓁 行銷總監\nTest Penny Lin | Marketing Director\n電話 Tel 02-0000-0037\n傳真 Fax 02-0000-0087\nE-mail test37@example.com\n100 台北市範例區測試路 37 號 2 樓\n2F, No. 37, Example Rd., Sample City",
+      "truth": {
+        "name": "測試 郭宜蓁",
+        "company": "範例科技股份有限公司",
+        "title": "行銷總監",
+        "phone": "02-0000-0037",
+        "email": "test37@example.com"
+      }
+    },
+    {
+      "id": "mixed-10",
+      "category": "mixed",
+      "rawText": "Example Marketing Agency\n測試 李家豪\n客戶經理\nM 0900-000-038\nT 02-0000-0038\ngary.hsu@example.com\n3F, No. 38, Example Rd., Sample City",
+      "truth": {
+        "name": "測試 李家豪",
+        "company": "Example Marketing Agency",
+        "title": "客戶經理",
+        "phone": "0900-000-038",
+        "email": "gary.hsu@example.com"
+      }
+    },
+    {
+      "id": "mixed-11",
+      "category": "mixed",
+      "rawText": "測試 鄭欣怡 Test Nina Lai\n業務經理\n範例好物\n02-0000-0039\n0900-000-039\ntest39@example.com",
+      "truth": {
+        "name": "測試 鄭欣怡",
+        "company": "範例好物",
+        "title": "業務經理",
+        "phone": "0900-000-039",
+        "email": "test39@example.com"
+      }
+    },
+    {
+      "id": "mixed-12",
+      "category": "mixed",
+      "rawText": "範例資訊有限公司\nTest Eric Liu\nConsultant\nPhone: 02-0000-0040\nEmail: test40@example.com\n100 台北市範例區測試路 40 號 5 樓",
+      "truth": {
+        "name": "Test Eric Liu",
+        "company": "範例資訊有限公司",
+        "title": "Consultant",
+        "phone": "02-0000-0040",
+        "email": "test40@example.com"
+      }
+    },
+    {
+      "id": "mixed-13",
+      "category": "mixed",
+      "rawText": "範例咖啡\nExample Coffee\n\n測試 楊佩珊  Test Lily Hung\n人資主任 HR Supervisor\nTel: 02-0000-0041\nMobile: 0900-000-041\nEmail: lily_hung@example.com",
+      "truth": {
+        "name": "測試 楊佩珊",
+        "company": "範例咖啡",
+        "title": "人資主任",
+        "phone": "0900-000-041",
+        "email": "lily_hung@example.com"
+      }
+    },
+    {
+      "id": "mixed-14",
+      "category": "mixed",
+      "rawText": "測試 王大華\nTest Chris Huang\n總經理\nGeneral Manager\n範例管理顧問有限公司\nExample Consulting Group\nT: 02-0000-0042 | M: 0900-000-042\nchris.huang@example.com\nwww.example.com",
+      "truth": {
+        "name": "測試 王大華",
+        "company": "範例管理顧問有限公司",
+        "title": "總經理",
+        "phone": "0900-000-042",
+        "email": "chris.huang@example.com"
+      }
+    },
+    {
+      "id": "english-01",
+      "category": "english",
+      "rawText": "Example Precision Industries Co., Ltd.\n\nTest Judy Chang\nAssistant Sales Manager\n\nT: 02-0000-0043\nM: 0900-000-043\nE: sales43@example.com\n8F, No. 43, Example Rd., Sample City\nwww.example.com",
+      "truth": {
+        "name": "Test Judy Chang",
+        "company": "Example Precision Industries Co., Ltd.",
+        "title": "Assistant Sales Manager",
+        "phone": "0900-000-043",
+        "email": "sales43@example.com"
+      }
+    },
+    {
+      "id": "english-02",
+      "category": "english",
+      "rawText": "Test Alex Wang\nProject Manager, Example Trading Inc.\n9F, No. 44, Example Rd., Sample City\nTel 02-0000-0044\nFax 02-0000-0094\ntest44@example.com",
+      "truth": {
+        "name": "Test Alex Wang",
+        "company": "Example Trading Inc.",
+        "title": "Project Manager",
+        "phone": "02-0000-0044",
+        "email": "test44@example.com"
+      }
+    },
+    {
+      "id": "english-03",
+      "category": "english",
+      "rawText": "Test Helen Cheng | CFO\nExample Foods Group\nPhone 02-0000-0045\nCell 0900-000-045\nEmail helen.cheng@example.com\nwww.example.com",
+      "truth": {
+        "name": "Test Helen Cheng",
+        "company": "Example Foods Group",
+        "title": "CFO",
+        "phone": "0900-000-045",
+        "email": "helen.cheng@example.com"
+      }
+    },
+    {
+      "id": "english-04",
+      "category": "english",
+      "rawText": "Example Logistics Corp.\nTest Oscar Chen\nSenior Engineer\n0900-000-046\ntest46@example.com",
+      "truth": {
+        "name": "Test Oscar Chen",
+        "company": "Example Logistics Corp.",
+        "title": "Senior Engineer",
+        "phone": "0900-000-046",
+        "email": "test46@example.com"
+      }
+    },
+    {
+      "id": "english-05",
+      "category": "english",
+      "rawText": "Test Fiona Yang\nProduct Manager\nExample Construction Co., Ltd.\nTel 02-0000-0047 ext. 57\nE-mail: fiona@example.com\n3F, No. 47, Example Rd., Sample City",
+      "truth": {
+        "name": "Test Fiona Yang",
+        "company": "Example Construction Co., Ltd.",
+        "title": "Product Manager",
+        "phone": "02-0000-0047 ext. 57",
+        "email": "fiona@example.com"
+      }
+    },
+    {
+      "id": "english-06",
+      "category": "english",
+      "rawText": "Test Mark Tseng Procurement Specialist\nExample Creative\nOffice: 02-0000-0048\nMobile: 0900-000-048\nsales48@example.com\nwww.example.com",
+      "truth": {
+        "name": "Test Mark Tseng",
+        "company": "Example Creative",
+        "title": "Procurement Specialist",
+        "phone": "0900-000-048",
+        "email": "sales48@example.com"
+      }
+    },
+    {
+      "id": "english-07",
+      "category": "english",
+      "rawText": "Example Biotech Corp.\n\nTest Dana Tsai\nProduct Designer\n\nT: 02-0000-0049\nM: 0900-000-049\nE: dana.tsai@example.com\n5F, No. 49, Example Rd., Sample City\nwww.example.com",
+      "truth": {
+        "name": "Test Dana Tsai",
+        "company": "Example Biotech Corp.",
+        "title": "Product Designer",
+        "phone": "0900-000-049",
+        "email": "dana.tsai@example.com"
+      }
+    },
+    {
+      "id": "english-08",
+      "category": "english",
+      "rawText": "Test Kevin Kuo\nCTO, Example Digital Media Ltd.\n6F, No. 50, Example Rd., Sample City\nTel 02-0000-0050\nFax 02-0000-0001\ntest50@example.com",
+      "truth": {
+        "name": "Test Kevin Kuo",
+        "company": "Example Digital Media Ltd.",
+        "title": "CTO",
+        "phone": "02-0000-0050",
+        "email": "test50@example.com"
+      }
+    },
+    {
+      "id": "english-09",
+      "category": "english",
+      "rawText": "Test Bella Wu | Account Executive\nExample Design Studio\nPhone 02-0000-0051\nCell 0900-000-051\nEmail bella@example.com\nwww.example.com",
+      "truth": {
+        "name": "Test Bella Wu",
+        "company": "Example Design Studio",
+        "title": "Account Executive",
+        "phone": "0900-000-051",
+        "email": "bella@example.com"
+      }
+    },
+    {
+      "id": "english-10",
+      "category": "english",
+      "rawText": "Example Partners\nTest Ivan Lee\nCEO\n0900-000-052\nsales52@example.com",
+      "truth": {
+        "name": "Test Ivan Lee",
+        "company": "Example Partners",
+        "title": "CEO",
+        "phone": "0900-000-052",
+        "email": "sales52@example.com"
+      }
+    },
+    {
+      "id": "english-11",
+      "category": "english",
+      "rawText": "Test Penny Lin\nMarketing Director\nExample Technology Co., Ltd.\nTel 02-0000-0053 ext. 63\nE-mail: test53@example.com\n9F, No. 53, Example Rd., Sample City",
+      "truth": {
+        "name": "Test Penny Lin",
+        "company": "Example Technology Co., Ltd.",
+        "title": "Marketing Director",
+        "phone": "02-0000-0053 ext. 63",
+        "email": "test53@example.com"
+      }
+    },
+    {
+      "id": "english-12",
+      "category": "english",
+      "rawText": "Test Gary Hsu Account Manager\nExample Marketing Agency\nOffice: 02-0000-0054\nMobile: 0900-000-054\ngary_hsu@example.com\nwww.example.com",
+      "truth": {
+        "name": "Test Gary Hsu",
+        "company": "Example Marketing Agency",
+        "title": "Account Manager",
+        "phone": "0900-000-054",
+        "email": "gary_hsu@example.com"
+      }
+    },
+    {
+      "id": "english-13",
+      "category": "english",
+      "rawText": "Example Works\n\nTest Nina Lai\nSales Manager\n\nT: 02-0000-0055\nM: 0900-000-055\nE: nina.lai@example.com\n2F, No. 55, Example Rd., Sample City\nwww.example.com",
+      "truth": {
+        "name": "Test Nina Lai",
+        "company": "Example Works",
+        "title": "Sales Manager",
+        "phone": "0900-000-055",
+        "email": "nina.lai@example.com"
+      }
+    },
+    {
+      "id": "english-14",
+      "category": "english",
+      "rawText": "Test Eric Liu\nConsultant, Example Software LLC\n3F, No. 56, Example Rd., Sample City\nTel 02-0000-0056\nFax 02-0000-0007\nsales56@example.com",
+      "truth": {
+        "name": "Test Eric Liu",
+        "company": "Example Software LLC",
+        "title": "Consultant",
+        "phone": "02-0000-0056",
+        "email": "sales56@example.com"
+      }
+    },
+    {
+      "id": "noisy-01",
+      "category": "noisy",
+      "base": "zh-horizontal",
+      "rawText": "   測試 楊佩珊  \n  人資主任\n 範例咖啡  \n   T  02-0000-0057 \n M ０９００-０００-０５７\n E lily＠example.com  \n １００  台北市範例區測試路  ５７ 號  ４ 樓  ",
+      "truth": {
+        "name": "測試 楊佩珊",
+        "company": "範例咖啡",
+        "title": "人資主任",
+        "phone": "0900-000-057",
+        "email": "lily@example.com"
+      }
+    },
+    {
+      "id": "noisy-02",
+      "category": "noisy",
+      "base": "zh-vertical",
+      "rawText": "範 例 管  理 顧 問  有 限 公  司  \n 總 經 理\n 測  試 王 大 華\n 電 話 02-0000-0058  \n 手 機 0900-000-058  \n  chris@exampl\ne.com  \n   1 0 0  台 北 市 範 例 區 測 試  路  5 8 號 5 樓  ",
+      "truth": {
+        "name": "測試 王大華",
+        "company": "範例管理顧問有限公司",
+        "title": "總經理",
+        "phone": "0900-000-058",
+        "email": "chris@example.com"
+      }
+    },
+    {
+      "id": "noisy-03",
+      "category": "noisy",
+      "base": "mixed",
+      "rawText": "   範例精密工業股份有限公司\nTest Judy  Chang \n\n Assistant Sales Manager  \n  Phone:  ０２-００００-００５９  \nEmail:\njudy.chang@example.com \n１００  台北市範例區測試路 ５９ 號 ６  樓 ",
+      "truth": {
+        "name": "Test Judy Chang",
+        "company": "範例精密工業股份有限公司",
+        "title": "Assistant Sales Manager",
+        "phone": "02-0000-0059",
+        "email": "judy.chang@example.com"
+      }
+    },
+    {
+      "id": "noisy-04",
+      "category": "noisy",
+      "base": "english",
+      "rawText": "Test Alex Wang  \n  Project Manager\n Example Trading Inc.  \n Tel ０２-００００-００６０  ext.  ７０\nE-mail:    alex_wang@exampl\ne.com  \n   ７F, No. ６０, Example  Rd.,  Sample City  ",
+      "truth": {
+        "name": "Test Alex Wang",
+        "company": "Example Trading Inc.",
+        "title": "Project Manager",
+        "phone": "02-0000-0060 ext. 70",
+        "email": "alex_wang@example.com"
+      }
+    },
+    {
+      "id": "noisy-05",
+      "category": "noisy",
+      "base": "zh-horizontal",
+      "rawText": "  範例餐飲集團  \n  測試 黃雅婷 財務長  \n   TEL:  ０２  - ００００  -  ００６１   FAX：   ０２  - ００００ - ００１２\n行動電話：     ０９００ - ０００  － ０６１  \n E－mail： test６１@example．com \n   統編：  ００００００００\n www.example.com",
+      "truth": {
+        "name": "測試 黃雅婷",
+        "company": "範例餐飲集團",
+        "title": "財務長",
+        "phone": "0900-000-061",
+        "email": "test61@example.com"
+      }
+    },
+    {
+      "id": "noisy-06",
+      "category": "noisy",
+      "base": "zh-vertical",
+      "rawText": "   資 深  工 程 師    測 試 謝 柏 翰\n   範 例 物 流 股  份  有  限  公 司  \n  電話 02  -  0000 -  0062\n傳真 02-0000-0013 \n  電子郵件 sales62@example.com  \n 1  0  0  台  北 市  範 例  區 測 試 路  6 2  號 9 樓",
+      "truth": {
+        "name": "測試 謝柏翰",
+        "company": "範例物流股份有限公司",
+        "title": "資深工程師",
+        "phone": "02-0000-0062",
+        "email": "sales62@example.com"
+      }
+    },
+    {
+      "id": "noisy-07",
+      "category": "noisy",
+      "base": "mixed",
+      "rawText": "測試 張淑芬\nTest Fiona Yang\n產品經理\nProduct Manager\n\n範例建設股份有限公司\nExample Construction Co., Ltd.\nT: ０２-００００-００６３ | M: ０９００-０００-０６３\nfiona_yang@example.com\n\nwww.example.com",
+      "truth": {
+        "name": "測試 張淑芬",
+        "company": "範例建設股份有限公司",
+        "title": "產品經理",
+        "phone": "0900-000-063",
+        "email": "fiona_yang@example.com"
+      }
+    },
+    {
+      "id": "noisy-08",
+      "category": "noisy",
+      "base": "english",
+      "rawText": "  Example Creative \n\n Test Mark  Tseng  \n  Procurement  Specialist \n\n T:  ０２  － ００００ - ００６４ \n   M：    ０９００ －  ０００ － ０６４\n  E:  mark．tseng@example.com\n2F, No.  64, Example Rd., Sample City  \n www.example.com  ",
+      "truth": {
+        "name": "Test Mark Tseng",
+        "company": "Example Creative",
+        "title": "Procurement Specialist",
+        "phone": "0900-000-064",
+        "email": "mark.tseng@example.com"
+      }
+    },
+    {
+      "id": "noisy-09",
+      "category": "noisy",
+      "base": "zh-horizontal",
+      "rawText": "設計師\n測試 林怡君\n範例生技\n股份有限公司\n100 台北市範例區測試路 65 號 3 樓\n０９００－０００-０６５\ndana．tsai@example．com",
+      "truth": {
+        "name": "測試 林怡君",
+        "company": "範例生技股份有限公司",
+        "title": "設計師",
+        "phone": "0900-000-065",
+        "email": "dana.tsai@example.com"
+      }
+    },
+    {
+      "id": "noisy-10",
+      "category": "noisy",
+      "base": "zh-vertical",
+      "rawText": "   範  例 數  位 媒 體  有 限 公 司  \n   技  術 長 測 試 蔡  俊 傑\n行動  0900-000-066  \n  信箱  sales66@example.com\n\n   1 0 0 台 北 市 範  例 區 測 試 路  6  6 號  4 樓 ",
+      "truth": {
+        "name": "測試 蔡俊傑",
+        "company": "範例數位媒體有限公司",
+        "title": "技術長",
+        "phone": "0900-000-066",
+        "email": "sales66@example.com"
+      }
+    },
+    {
+      "id": "noisy-11",
+      "category": "noisy",
+      "base": "mixed",
+      "rawText": "   Example  Design  Studio\n測試 曾小明\n  業務專員  \n\nM  0900-000-067 \n   T  02-0000-0067 \n  bella  @  example.com  \n 5F, No. 67, Example Rd.,  Sample City  ",
+      "truth": {
+        "name": "測試 曾小明",
+        "company": "Example Design Studio",
+        "title": "業務專員",
+        "phone": "0900-000-067",
+        "email": "bella@example.com"
+      }
+    },
+    {
+      "id": "noisy-12",
+      "category": "noisy",
+      "base": "english",
+      "rawText": "\nTest Ivan Lee | CEO\nExample Partners\nPhone\n０２－００００－００６８\nCell ０９００-０００－０６８\nEmail test68@example.com\nwww.example.com",
+      "truth": {
+        "name": "Test Ivan Lee",
+        "company": "Example Partners",
+        "title": "CEO",
+        "phone": "0900-000-068",
+        "email": "test68@example.com"
+      }
+    },
+    {
+      "id": "noisy-13",
+      "category": "noisy",
+      "base": "zh-horizontal",
+      "rawText": "測試 郭宜蓁 \n   行銷總監 \n   範例科技股份有限公司  \nT 02-0000-0069\n M ０９００－０００－０６９ \nE penny.lin@example.com  \n   １００ 台北市範例區測試路 ６９ 號 ７  樓  ",
+      "truth": {
+        "name": "測試 郭宜蓁",
+        "company": "範例科技股份有限公司",
+        "title": "行銷總監",
+        "phone": "0900-000-069",
+        "email": "penny.lin@example.com"
+      }
+    },
+    {
+      "id": "noisy-14",
+      "category": "noisy",
+      "base": "zh-vertical",
+      "rawText": "  範  例 行  銷 企 業 社\n客 戶 經 理 \n   測 試 李 家 豪 \n 電 話 02  -  0000 -  0070 \n 手 機 ０９００-０００-０７０ \ngary.hsu@example.com\n 1  0  0 台  北 市 範 例  區  測 試 路 7 0 號  8 樓 ",
+      "truth": {
+        "name": "測試 李家豪",
+        "company": "範例行銷企業社",
+        "title": "客戶經理",
+        "phone": "0900-000-070",
+        "email": "gary.hsu@example.com"
+      }
+    }
+  ]
+}

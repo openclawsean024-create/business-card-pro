@@ -6,7 +6,7 @@
 - Spec: `PRD/SPEC.md` v4.0
 - Goal: `GOAL.md` — M1
 - Branch: `feat/m1`（基於 `chore/prd-rebuild`；PR #1 尚未合併）
-- State: 🧪 **M1 開發完成、待 Sean 覆審** — 2026-11-16（Exit gate 需 Sean 覆審 scope 與 AC-003 門檻）
+- State: 🧪 **M1 開發完成；§10 合併清單已由 Sean 覆審通過（2026-11-16）** — Exit gate 尚待 Sean 確認 AC-003 門檻
 - Stack: Next.js 16（static export）+ React 19 + TypeScript strict + Zustand 5 + Tailwind 3 + Vitest 4 + Tesseract.js 7
 
 ## M1 AC 進度（2026-11-16，Node v26.13.1，macOS）
@@ -102,6 +102,7 @@
 
 ## 下一步（等待 Sean）
 
-1. 覆審 M1 scope 與 AC-003 門檻；確認 Tesseract 語言檔沿用 CDN。
+1. ~~覆審 M1 scope（`PRD/SPEC.md` §10 合併清單）~~ ✅ 2026-11-16 Sean 覆審通過。
+1. 確認 AC-003 門檻（目前用 GOAL 初版）與 Tesseract 語言檔沿用 CDN。
 2. 以測試帳號實際匯入一次 Google CSV，確認欄位名稱。
 3. 為 PR 加上 `risk-approved` 標籤（`ci.yml` 屬 sensitive path）後審查；PR #1（文件）需先或一併處理。

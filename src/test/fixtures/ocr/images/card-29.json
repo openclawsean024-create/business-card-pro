@@ -1,0 +1,22 @@
+{
+  "id": "card-29",
+  "template": "english",
+  "image": "card-29.png",
+  "synthetic": true,
+  "printed": [
+    "Test Penny Lin",
+    "Marketing Director",
+    "Example Technology Co., Ltd.",
+    "T: 02-0000-0069",
+    "M: 0900-000-069",
+    "E: penny@example.com",
+    "7F, No. 69, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Penny Lin",
+    "company": "Example Technology Co., Ltd.",
+    "title": "Marketing Director",
+    "phone": "0900-000-069",
+    "email": "penny@example.com"
+  }
+}

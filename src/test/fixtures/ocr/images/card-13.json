@@ -1,0 +1,24 @@
+{
+  "id": "card-13",
+  "template": "mixed",
+  "image": "card-13.png",
+  "synthetic": true,
+  "printed": [
+    "範例科技股份有限公司",
+    "Example Technology Co., Ltd.",
+    "測試 郭宜蓁",
+    "Test Penny Lin",
+    "行銷總監",
+    "Marketing Director",
+    "Tel: 02-0000-0053",
+    "Mobile: 0900-000-053",
+    "Email: penny.lin@example.com"
+  ],
+  "truth": {
+    "name": "測試 郭宜蓁",
+    "company": "範例科技股份有限公司",
+    "title": "行銷總監",
+    "phone": "0900-000-053",
+    "email": "penny.lin@example.com"
+  }
+}

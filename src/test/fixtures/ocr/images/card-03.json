@@ -1,0 +1,22 @@
+{
+  "id": "card-03",
+  "template": "zh-horizontal",
+  "image": "card-03.png",
+  "synthetic": true,
+  "printed": [
+    "範例精密工業股份有限公司",
+    "測試 劉美玲",
+    "業務副理",
+    "電話：02-0000-0043",
+    "手機：0900-000-043",
+    "Email：judy_chang@example.com",
+    "100 台北市範例區測試路 43 號 8 樓"
+  ],
+  "truth": {
+    "name": "測試 劉美玲",
+    "company": "範例精密工業股份有限公司",
+    "title": "業務副理",
+    "phone": "0900-000-043",
+    "email": "judy_chang@example.com"
+  }
+}

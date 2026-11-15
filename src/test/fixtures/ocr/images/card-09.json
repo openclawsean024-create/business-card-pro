@@ -1,0 +1,22 @@
+{
+  "id": "card-09",
+  "template": "zh-horizontal",
+  "image": "card-09.png",
+  "synthetic": true,
+  "printed": [
+    "範例生技股份有限公司",
+    "測試 林怡君",
+    "設計師",
+    "電話：02-0000-0049",
+    "手機：0900-000-049",
+    "Email：dana.tsai@example.com",
+    "100 台北市範例區測試路 49 號 5 樓"
+  ],
+  "truth": {
+    "name": "測試 林怡君",
+    "company": "範例生技股份有限公司",
+    "title": "設計師",
+    "phone": "0900-000-049",
+    "email": "dana.tsai@example.com"
+  }
+}

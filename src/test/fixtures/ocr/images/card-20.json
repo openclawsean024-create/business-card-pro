@@ -1,0 +1,24 @@
+{
+  "id": "card-20",
+  "template": "mixed",
+  "image": "card-20.png",
+  "synthetic": true,
+  "printed": [
+    "範例國際貿易有限公司",
+    "Example Trading Inc.",
+    "測試 洪承恩",
+    "Test Alex Wang",
+    "專案經理",
+    "Project Manager",
+    "Tel: 02-0000-0060",
+    "Mobile: 0900-000-060",
+    "Email: alex.wang@example.com"
+  ],
+  "truth": {
+    "name": "測試 洪承恩",
+    "company": "範例國際貿易有限公司",
+    "title": "專案經理",
+    "phone": "0900-000-060",
+    "email": "alex.wang@example.com"
+  }
+}

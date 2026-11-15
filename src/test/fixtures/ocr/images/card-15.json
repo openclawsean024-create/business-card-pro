@@ -1,0 +1,24 @@
+{
+  "id": "card-15",
+  "template": "mixed",
+  "image": "card-15.png",
+  "synthetic": true,
+  "printed": [
+    "範例好物",
+    "Example Works",
+    "測試 鄭欣怡",
+    "Test Nina Lai",
+    "業務經理",
+    "Sales Manager",
+    "Tel: 02-0000-0055",
+    "Mobile: 0900-000-055",
+    "Email: nina@example.com"
+  ],
+  "truth": {
+    "name": "測試 鄭欣怡",
+    "company": "範例好物",
+    "title": "業務經理",
+    "phone": "0900-000-055",
+    "email": "nina@example.com"
+  }
+}

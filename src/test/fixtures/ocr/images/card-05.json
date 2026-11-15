@@ -1,0 +1,22 @@
+{
+  "id": "card-05",
+  "template": "zh-horizontal",
+  "image": "card-05.png",
+  "synthetic": true,
+  "printed": [
+    "範例餐飲集團",
+    "測試 黃雅婷",
+    "財務長",
+    "電話：02-0000-0045",
+    "手機：0900-000-045",
+    "Email：helen.cheng@example.com",
+    "100 台北市範例區測試路 45 號 1 樓"
+  ],
+  "truth": {
+    "name": "測試 黃雅婷",
+    "company": "範例餐飲集團",
+    "title": "財務長",
+    "phone": "0900-000-045",
+    "email": "helen.cheng@example.com"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "card-14",
+  "template": "mixed",
+  "image": "card-14.png",
+  "synthetic": true,
+  "printed": [
+    "範例行銷企業社",
+    "Example Marketing Agency",
+    "測試 李家豪",
+    "Test Gary Hsu",
+    "客戶經理",
+    "Account Manager",
+    "Tel: 02-0000-0054",
+    "Mobile: 0900-000-054",
+    "Email: gary.hsu@example.com"
+  ],
+  "truth": {
+    "name": "測試 李家豪",
+    "company": "範例行銷企業社",
+    "title": "客戶經理",
+    "phone": "0900-000-054",
+    "email": "gary.hsu@example.com"
+  }
+}

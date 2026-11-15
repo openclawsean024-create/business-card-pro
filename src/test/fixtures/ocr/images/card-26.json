@@ -1,0 +1,22 @@
+{
+  "id": "card-26",
+  "template": "english",
+  "image": "card-26.png",
+  "synthetic": true,
+  "printed": [
+    "Test Kevin Kuo",
+    "CTO",
+    "Example Digital Media Ltd.",
+    "T: 02-0000-0066",
+    "M: 0900-000-066",
+    "E: kevin@example.com",
+    "4F, No. 66, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Kevin Kuo",
+    "company": "Example Digital Media Ltd.",
+    "title": "CTO",
+    "phone": "0900-000-066",
+    "email": "kevin@example.com"
+  }
+}

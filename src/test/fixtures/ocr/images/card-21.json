@@ -1,0 +1,24 @@
+{
+  "id": "card-21",
+  "template": "mixed",
+  "image": "card-21.png",
+  "synthetic": true,
+  "printed": [
+    "範例餐飲集團",
+    "Example Foods Group",
+    "測試 黃雅婷",
+    "Test Helen Cheng",
+    "財務長",
+    "CFO",
+    "Tel: 02-0000-0061",
+    "Mobile: 0900-000-061",
+    "Email: sales61@example.com"
+  ],
+  "truth": {
+    "name": "測試 黃雅婷",
+    "company": "範例餐飲集團",
+    "title": "財務長",
+    "phone": "0900-000-061",
+    "email": "sales61@example.com"
+  }
+}

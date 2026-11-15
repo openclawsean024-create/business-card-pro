@@ -1,0 +1,22 @@
+{
+  "id": "card-25",
+  "template": "english",
+  "image": "card-25.png",
+  "synthetic": true,
+  "printed": [
+    "Test Dana Tsai",
+    "Product Designer",
+    "Example Biotech Corp.",
+    "T: 02-0000-0065",
+    "M: 0900-000-065",
+    "E: test65@example.com",
+    "3F, No. 65, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Dana Tsai",
+    "company": "Example Biotech Corp.",
+    "title": "Product Designer",
+    "phone": "0900-000-065",
+    "email": "test65@example.com"
+  }
+}

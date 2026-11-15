@@ -1,0 +1,22 @@
+{
+  "id": "card-32",
+  "template": "english",
+  "image": "card-32.png",
+  "synthetic": true,
+  "printed": [
+    "Test Eric Liu",
+    "Consultant",
+    "Example Software LLC",
+    "T: 02-0000-0072",
+    "M: 0900-000-072",
+    "E: eric.liu@example.com",
+    "1F, No. 72, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Eric Liu",
+    "company": "Example Software LLC",
+    "title": "Consultant",
+    "phone": "0900-000-072",
+    "email": "eric.liu@example.com"
+  }
+}

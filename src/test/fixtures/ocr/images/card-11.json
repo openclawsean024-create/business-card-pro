@@ -1,0 +1,22 @@
+{
+  "id": "card-11",
+  "template": "zh-horizontal",
+  "image": "card-11.png",
+  "synthetic": true,
+  "printed": [
+    "範例設計工作室",
+    "測試 曾小明",
+    "業務專員",
+    "電話：02-0000-0051",
+    "手機：0900-000-051",
+    "Email：bella@example.com",
+    "100 台北市範例區測試路 51 號 7 樓"
+  ],
+  "truth": {
+    "name": "測試 曾小明",
+    "company": "範例設計工作室",
+    "title": "業務專員",
+    "phone": "0900-000-051",
+    "email": "bella@example.com"
+  }
+}

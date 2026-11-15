@@ -1,0 +1,22 @@
+{
+  "id": "card-04",
+  "template": "zh-horizontal",
+  "image": "card-04.png",
+  "synthetic": true,
+  "printed": [
+    "範例國際貿易有限公司",
+    "測試 洪承恩",
+    "專案經理",
+    "電話：02-0000-0044",
+    "手機：0900-000-044",
+    "Email：alex.wang@example.com",
+    "100 台北市範例區測試路 44 號 9 樓"
+  ],
+  "truth": {
+    "name": "測試 洪承恩",
+    "company": "範例國際貿易有限公司",
+    "title": "專案經理",
+    "phone": "0900-000-044",
+    "email": "alex.wang@example.com"
+  }
+}

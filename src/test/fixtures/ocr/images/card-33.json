@@ -1,0 +1,22 @@
+{
+  "id": "card-33",
+  "template": "english",
+  "image": "card-33.png",
+  "synthetic": true,
+  "printed": [
+    "Test Lily Hung",
+    "HR Supervisor",
+    "Example Coffee",
+    "T: 02-0000-0073",
+    "M: 0900-000-073",
+    "E: lily.hung@example.com",
+    "2F, No. 73, Example Rd., Sample City"
+  ],
+  "truth": {
+    "name": "Test Lily Hung",
+    "company": "Example Coffee",
+    "title": "HR Supervisor",
+    "phone": "0900-000-073",
+    "email": "lily.hung@example.com"
+  }
+}

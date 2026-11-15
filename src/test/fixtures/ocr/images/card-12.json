@@ -1,0 +1,24 @@
+{
+  "id": "card-12",
+  "template": "mixed",
+  "image": "card-12.png",
+  "synthetic": true,
+  "printed": [
+    "範例聯合會計師事務所",
+    "Example Partners",
+    "測試 吳建宏",
+    "Test Ivan Lee",
+    "執行長",
+    "CEO",
+    "Tel: 02-0000-0052",
+    "Mobile: 0900-000-052",
+    "Email: ivan.lee@example.com"
+  ],
+  "truth": {
+    "name": "測試 吳建宏",
+    "company": "範例聯合會計師事務所",
+    "title": "執行長",
+    "phone": "0900-000-052",
+    "email": "ivan.lee@example.com"
+  }
+}

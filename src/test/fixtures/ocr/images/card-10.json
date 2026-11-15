@@ -1,0 +1,22 @@
+{
+  "id": "card-10",
+  "template": "zh-horizontal",
+  "image": "card-10.png",
+  "synthetic": true,
+  "printed": [
+    "範例數位媒體有限公司",
+    "測試 蔡俊傑",
+    "技術長",
+    "電話：02-0000-0050",
+    "手機：0900-000-050",
+    "Email：kevin@example.com",
+    "100 台北市範例區測試路 50 號 6 樓"
+  ],
+  "truth": {
+    "name": "測試 蔡俊傑",
+    "company": "範例數位媒體有限公司",
+    "title": "技術長",
+    "phone": "0900-000-050",
+    "email": "kevin@example.com"
+  }
+}

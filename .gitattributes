@@ -1,0 +1,3 @@
+# Google 聯絡人匯出檔與 vCard 依規格使用 CRLF 換行；測試資料刻意保留，不視為行尾空白
+src/test/fixtures/google-contacts/*.csv -whitespace -text
+src/test/fixtures/google-contacts/*.vcf -whitespace -text

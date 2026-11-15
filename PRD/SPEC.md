@@ -86,15 +86,15 @@
 | FR-002 | 建立時記錄來源、交換情境、下一步與預計日期 | P0 | 已實作 | 主 repo：`store.addContact(opts)`、`followupFromExchange` |
 | FR-003 | 今日／逾期／接下來（7 天）回訪 queue、一鍵完成並寫入下次承諾、今日進度與 14 天節奏 | P0 | 已實作 | 主 repo：`getTodayQueue`、`getUpcomingQueue`、`getTodayProgress`、`buildRhythm`、`TodayTab.tsx`、`QueueGroup.tsx`、`PulseCard.tsx`；`workstation.test.tsx` |
 | FR-004 | 匯出 vCard 3.0、CSV（含 schema 版本 meta）；匯入 CSV | P0 | 已實作 | 主 repo：`lib/export.ts`、`SettingsTab.tsx`；`domain.test.ts`。**vCard 匯入未實作** |
-| FR-005 | OCR 預覽：拍照或上傳名片 → 辨識 → 預填表單 → 使用者逐欄確認後才建立；低信心欄位標示 | P0 | 部分 | 主 repo：只有 `ContactPayload.ocrConfidence/ocrLowConfidenceFields` 型別，UI 永遠填 `null`。manager：`dashboard/card-list.tsx` 以 CDN 載入 Tesseract.js（`eng+chi_tra`）+ `parseCardHeuristic`，**辨識後直接存檔、無預覽確認、不記錄信心值** |
+| FR-005 | OCR 預覽：拍照或上傳名片 → 辨識 → 預填表單 → 使用者逐欄確認後才建立；低信心欄位標示 | P0 | 已實作（M1，`feat/m1`；以下為 M1 前現況） | 主 repo：只有 `ContactPayload.ocrConfidence/ocrLowConfidenceFields` 型別，UI 永遠填 `null`。manager：`dashboard/card-list.tsx` 以 CDN 載入 Tesseract.js（`eng+chi_tra`）+ `parseCardHeuristic`，**辨識後直接存檔、無預覽確認、不記錄信心值** |
 | FR-006 | 搜尋姓名、公司、職稱、標籤、備註；標籤篩選；四種排序 | P0 | 已實作 | 主 repo：`matchesSearch`、`listContacts`、`sortContacts`、`ContactsTab.tsx` |
 | FR-007 | 互動時間線（8 種互動類型）與快速記錄 | P0 | 已實作 | 主 repo：`getTimeline`、`LogInteractionForm.tsx`、`ContactDetailDrawer.tsx`、`TimelineTab.tsx`；`interactions.test.tsx` |
 | FR-008 | 本機資料模式（localStorage，不需登入） | P0 | 已實作 | 主 repo：`store.ts` persist、`STORAGE_KEY = "business-card-pro-v3"`、`isLocalOnly` |
 | FR-009 | 刪除聯絡人時連帶清除照片、交換、回訪、互動、同意紀錄；全部重置 | P0 | 已實作 | 主 repo：`cascadeDeleteContact`、`store.reset`；`domain.test.ts` |
-| FR-010 | 免費層聯絡人上限 | P0 | 部分 | 主 repo：`addContact` 檢查 `plan.maxContacts`（20）；**`importContacts` 未檢查上限，CSV 匯入可超過** |
+| FR-010 | 免費層聯絡人上限 | P0 | 已實作（M1：匯入與同步 pull 也受限；以下為 M1 前現況） | 主 repo：`addContact` 檢查 `plan.maxContacts`（20）；**`importContacts` 未檢查上限，CSV 匯入可超過** |
 | FR-011 | 回訪提醒匯出為 `.ics`，可匯入 Google Calendar（單向、不連線） | P1 | 已實作 | 主 repo：`exportCalendar`；`calendar.test.ts` |
-| FR-012 | Google 聯絡人同步：匯出／匯入 Google 聯絡人可讀的格式，欄位對照、去重、衝突處理；之後再接真實 API | P0 | 未實作 | 兩個 repo 都沒有程式。manager 的 `auth.ts` 只有被註解掉的 Google OAuth provider |
-| FR-013 | OCR 準確度評估：合成假名片測試集 + 可重跑的評估指令 + 門檻 | P0 | 未實作 | 兩個 repo 都沒有 |
+| FR-012 | Google 聯絡人同步：匯出／匯入 Google 聯絡人可讀的格式，欄位對照、去重、衝突處理；之後再接真實 API | P0 | 部分（M1：檔案互通 + mock adapter，見 §5.2；真實 API 為 M3。以下為 M1 前現況） | 兩個 repo 都沒有程式。manager 的 `auth.ts` 只有被註解掉的 Google OAuth provider |
+| FR-013 | OCR 準確度評估：合成假名片測試集 + 可重跑的評估指令 + 門檻 | P0 | 已實作（M1：`eval:ocr`、`eval:ocr:images`；以下為 M1 前現況） | 兩個 repo 都沒有 |
 | FR-014 | 名片照片附件（可選保存，隨聯絡人刪除） | P1 | 部分 | 主 repo：`CardImage` 型別與 `store.attachCardImage` 存在，**無 UI 呼叫**；manager：`BusinessCard.imageUrl` 欄位存在但未寫入 |
 | FR-015 | 個資告知與同意紀錄（隱私權聲明頁、OCR 前告知、同意紀錄 UI） | P0 | 部分 | 主 repo：`Consent` 型別、`store.grantConsent`，**無 UI**；設定頁有一段本機儲存說明。manager：`/privacy`、`/terms` 頁存在，但內容與程式不符（見 §11） |
 | FR-016 | 方案與付費：方案表單一來源、升級提示、付款（測試模式） | P1 | 部分 | manager：`lib/plans.ts` + 10 條測試、`/pricing`、`/checkout` 佔位頁；Stripe 未接 |
@@ -116,6 +116,27 @@
 - AC-009：刪除聯絡人後照片、互動、回訪、同意紀錄皆清除（FR-009）。
 - AC-010：達 20 張上限時拒絕新增（FR-010，僅限手動新增路徑）。
 - AC-005（OCR 預覽）在 v3.0 未實作；M1 的新 AC 見 `GOAL.md`。
+
+### 5.2 Google 聯絡人 CSV 欄位對照（M1 AC-004）
+
+> 查證狀態（2026-11-16）：Google 聯絡人說明頁（`support.google.com/contacts/answer/7199294`）只說明可匯出「Google CSV」與 vCard，未公布欄位清單。下表依已知的 Google CSV 匯出格式撰寫，**尚未以官方文件逐欄查證、也尚未用測試帳號實際匯入驗證（待確認）**。實作：`src/lib/google-contacts.ts`。
+
+| 本 app 欄位 | Google CSV 匯出欄位 | 匯入也接受（舊版標頭） | 備註 |
+|---|---|---|---|
+| `name` | `First Name` | `Name`；`Given Name`＋`Additional Name`＋`Family Name`；新版 `First/Middle/Last Name` 合併 | 中文姓名合併時不加空白 |
+| `company` | `Organization Name` | `Organization 1 - Name` | — |
+| `title` | `Organization Title` | `Organization 1 - Title` | — |
+| `phone` | `Phone 1 - Value`（`Phone 1 - Label`：手機為 `Mobile`，其他 `Work`） | — | 多值以 ` ::: ` 分隔，取第一個 |
+| `email` | `E-mail 1 - Value`（`E-mail 1 - Label`：`Work`） | — | 多值取第一個 |
+| `address` | `Address 1 - Formatted` | — | — |
+| `website` | `Website 1 - Value` | — | — |
+| `notes` | `Notes` | — | — |
+| `tags` | `Labels`（以 ` ::: ` 分隔，並附 `* myContacts`） | `Group Membership` | 匯入時略過 `*` 開頭的系統標籤 |
+| `ocrConfidence`、`ocrLowConfidenceFields` | 不匯出 | — | OCR 中繼資料只留在本機 |
+
+vCard 3.0 匯入對照：`FN`（無則由 `N` 組合）、`ORG` 第一段、`TITLE`、`TEL`（`CELL` 優先）、`EMAIL`（`PREF` 優先）、`ADR`、`URL`、`NOTE`、`CATEGORIES`（略過 `myContacts`）；支援 `item1.` 群組前綴、行折疊與跳脫字元。
+
+去重（匯入與同步共用）：Email 轉小寫或電話只取數字相同即視為重複，不新增並回報筆數；已刪除的聯絡人不列入去重與上限。
 
 ---
 

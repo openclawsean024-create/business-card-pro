@@ -1,0 +1,28 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:測試 王小明
+N:測試王;小明;;;
+item1.EMAIL;TYPE=INTERNET;TYPE=WORK:test01@example.com
+TEL;TYPE=WORK:02-0000-0001
+TEL;TYPE=CELL:0900-000-001
+ORG:範例科技股份有限公司;業務部
+TITLE:業務經理
+ADR;TYPE=WORK:;;測試路 1 號 2 樓;台北市;;100;台灣
+item2.URL:https\://www.example.com
+item2.X-ABLabel:公司網站
+NOTE:展會認識\, 想看報價\n第二行備註；這一行很長所以會被折疊成兩
+ 行
+CATEGORIES:客戶,展會,myContacts
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Chen;Test Alex;;;
+EMAIL;TYPE=INTERNET:alex.chen@example.com
+TEL;TYPE=WORK:02-0000-0002
+ORG:Example Trading Inc.
+TITLE:Sales Manager
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+NOTE:沒有姓名也沒有公司
+END:VCARD

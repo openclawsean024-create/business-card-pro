@@ -49,6 +49,8 @@ export function buildVCard(contact: Contact, lastTouch: string | null): string {
   if (p.website) lines.push(`URL:${esc(p.website)}`);
   if (p.address) lines.push(`ADR:;;${esc(p.address)};;;;`);
   if (p.notes) lines.push(`NOTE:${esc(p.notes)}`);
+  // M1 AC-004：標籤以 CATEGORIES 輸出，vCard 匯入（本 app 或 Google 聯絡人）可讀回
+  if (p.tags.length > 0) lines.push(`CATEGORIES:${p.tags.map(esc).join(",")}`);
   if (lastTouch) lines.push(`REV:${esc(lastTouch)}`);
   lines.push("END:VCARD");
   return lines.join("\r\n");

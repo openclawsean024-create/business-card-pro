@@ -16,6 +16,7 @@ import {
   type Consent,
   type CardImage,
 } from "./types";
+import { planImport, type ImportResult } from "./contact-import";
 import {
   cascadeDeleteContact,
   followupFromExchange,
@@ -36,7 +37,8 @@ interface Actions {
   completeFollowup: (id: ID, summary: string, nextCommitment: string | null) => void;
   addInteraction: (contactId: ID, kind: Exclude<Interaction["kind"], "followup-done">, summary: string, nextCommitment: string | null) => Interaction;
   grantConsent: (contactId: ID, scope: Consent["scope"]) => Consent;
-  importContacts: (contacts: Contact[]) => void;
+  /** 匯入聯絡人（CSV／vCard／同步 pull 共用）：去重並遵守 plan.maxContacts，回報各類筆數 */
+  importContacts: (contacts: Contact[]) => ImportResult;
   reset: () => void;
 }
 
@@ -255,11 +257,18 @@ export const useStore = create<Store>((set, get) => ({
     return c;
   },
   importContacts: (contacts) => {
-    set((s) => {
-      const existing = new Set(s.contacts.map((c) => c.id));
-      const fresh = contacts.filter((c) => !existing.has(c.id));
-      return { ...s, contacts: [...fresh, ...s.contacts] };
-    });
+    // GOAL.md M1 AC-006：匯入不得繞過免費層上限；AC-004(c)：以 Email／電話去重
+    const state = get();
+    const plan = planImport(state.contacts, contacts, state.plan.maxContacts);
+    if (plan.toAdd.length > 0) {
+      set((s) => ({ ...s, contacts: [...plan.toAdd, ...s.contacts] }));
+    }
+    return {
+      imported: plan.toAdd.length,
+      duplicates: plan.duplicates,
+      notImported: plan.overLimit,
+      limit: state.plan.maxContacts,
+    };
   },
   reset: () => {
     set({ ...initialState });

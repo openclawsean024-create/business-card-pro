@@ -174,3 +174,101 @@ describe("localStorage 持久化", () => {
     expect(parsed.contacts[0]?.payload.name).toBe("persist-test");
   });
 });
+
+// ── GOAL.md M1 AC-006：免費層上限不可被匯入繞過 ──────────────────────────────
+import { parseContactsFile } from "@/lib/google-contacts";
+import { describeImport } from "@/lib/contact-import";
+import type { Contact } from "@/lib/types";
+
+function fakeContact(n: number): Contact {
+  const id = String(n).padStart(2, "0");
+  return {
+    id: `ct-limit-${id}`,
+    ownerId: null,
+    status: "active",
+    version: 1,
+    createdAt: "2026-11-01T00:00:00.000Z",
+    updatedAt: "2026-11-01T00:00:00.000Z",
+    payload: {
+      name: `測試 聯絡人${id}`,
+      company: "範例科技股份有限公司",
+      title: null,
+      phone: `0900-000-0${id}`,
+      email: `test${id}@example.com`,
+      address: null,
+      website: null,
+      notes: null,
+      tags: [],
+      ocrConfidence: null,
+      ocrLowConfidenceFields: [],
+    },
+  };
+}
+
+function seedContacts(count: number) {
+  for (let i = 1; i <= count; i++) {
+    useStore.getState().addContact(fakeContact(i).payload);
+  }
+}
+
+describe("AC-006: 免費層上限不可被匯入繞過 (FR-010)", () => {
+  it("AC-006: 已有 19 筆時匯入 5 筆 → 結果為 20 筆、回報 4 筆未匯入", () => {
+    seedContacts(19);
+    const incoming = [41, 42, 43, 44, 45].map(fakeContact);
+    const result = useStore.getState().importContacts(incoming);
+    expect(result).toEqual({ imported: 1, duplicates: 0, notImported: 4, limit: 20 });
+    const active = useStore.getState().contacts.filter((c) => c.status === "active");
+    expect(active).toHaveLength(20);
+    // 依檔案順序匯入到上限為止
+    expect(active.some((c) => c.payload.email === "test41@example.com")).toBe(true);
+    expect(active.some((c) => c.payload.email === "test42@example.com")).toBe(false);
+    expect(describeImport(result)).toBe("匯入 1 筆；4 筆因超過方案上限 20 張未匯入");
+  });
+
+  it("AC-006: CSV 匯入（本 app 格式與 Google CSV）都不能超過上限", () => {
+    seedContacts(19);
+    const appCsv = [
+      "# business-card-pro export",
+      "# schema-version: 2",
+      "name,company,title,phone,email,address,website,notes,tags,lastInteraction",
+      ...[51, 52, 53, 54, 55].map((n) => `測試 匯入${n},範例貿易有限公司,,0900-000-0${n},import${n}@example.com,,,,,`),
+    ].join("\n");
+    const first = useStore.getState().importContacts(parseContactsFile(appCsv).contacts);
+    expect(first).toEqual({ imported: 1, duplicates: 0, notImported: 4, limit: 20 });
+
+    const googleCsv = [
+      "First Name,Last Name,Organization Name,E-mail 1 - Value,Phone 1 - Value",
+      ...[61, 62, 63].map((n) => `Test Import${n},,Example Trading Inc.,g${n}@example.com,0900-000-0${n}`),
+    ].join("\r\n");
+    const second = useStore.getState().importContacts(parseContactsFile(googleCsv).contacts);
+    expect(second).toEqual({ imported: 0, duplicates: 0, notImported: 3, limit: 20 });
+    expect(useStore.getState().contacts.filter((c) => c.status === "active")).toHaveLength(20);
+  });
+
+  it("AC-006: vCard 匯入也遵守上限", () => {
+    seedContacts(18);
+    const vcf = [71, 72, 73, 74]
+      .map((n) => ["BEGIN:VCARD", "VERSION:3.0", `FN:測試 名片${n}`, "ORG:範例設計工作室", `TEL;TYPE=CELL:0900-000-0${n}`, `EMAIL:v${n}@example.com`, "END:VCARD"].join("\r\n"))
+      .join("\r\n");
+    const result = useStore.getState().importContacts(parseContactsFile(vcf).contacts);
+    expect(result).toEqual({ imported: 2, duplicates: 0, notImported: 2, limit: 20 });
+    expect(useStore.getState().contacts.filter((c) => c.status === "active")).toHaveLength(20);
+  });
+
+  it("AC-006: 重複的資料不佔名額；已刪除的聯絡人不計入上限", () => {
+    seedContacts(20);
+    const victim = useStore.getState().contacts.find((c) => c.payload.email === "test20@example.com")!;
+    useStore.getState().deleteContact(victim.id);
+    // 19 筆 active；匯入 3 筆，其中第 1 筆與既有 test01@ 重複
+    const result = useStore.getState().importContacts([fakeContact(1), fakeContact(81), fakeContact(82)].map((c, i) => ({ ...c, id: `ct-dup-${i}` })));
+    expect(result).toEqual({ imported: 1, duplicates: 1, notImported: 1, limit: 20 });
+    expect(useStore.getState().contacts.filter((c) => c.status === "active")).toHaveLength(20);
+  });
+
+  it("AC-006: 匯入後手動新增仍受上限限制", () => {
+    seedContacts(15);
+    useStore.getState().importContacts([91, 92, 93, 94, 95, 96, 97].map(fakeContact));
+    expect(useStore.getState().contacts.filter((c) => c.status === "active")).toHaveLength(20);
+    expect(() => useStore.getState().addContact(fakeContact(98).payload)).toThrow(/上限/);
+  });
+});

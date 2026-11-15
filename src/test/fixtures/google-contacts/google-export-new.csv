@@ -1,0 +1,6 @@
+First Name,Middle Name,Last Name,Phonetic First Name,Phonetic Middle Name,Phonetic Last Name,Name Prefix,Name Suffix,Nickname,File As,Organization Name,Organization Title,Organization Department,Birthday,Notes,Photo,Labels,E-mail 1 - Label,E-mail 1 - Value,Phone 1 - Label,Phone 1 - Value,Address 1 - Label,Address 1 - Formatted,Address 1 - Street,Address 1 - City,Address 1 - PO Box,Address 1 - Region,Address 1 - Postal Code,Address 1 - Country,Address 1 - Extended Address,Website 1 - Label,Website 1 - Value
+小明,,測試王,,,,,,,,範例科技股份有限公司,業務經理,,,"展會認識, 想看報價
+第二行備註",,客戶 ::: 展會 ::: * myContacts,* Work,test01@example.com ::: test01.alt@example.com,Mobile,0900-000-001,Work,100 台北市範例區測試路 1 號 2 樓,,,,,,,,Work,www.example.com
+Test Alex,,Chen,,,,,,,,Example Trading Inc.,Sales Manager,,,,,* myContacts,Work,Alex.Chen@Example.com,Work,02-0000-0002,,,,,,,,,,,
+,,,,,,,,,,範例設計工作室,,,,,,* myContacts ::: 供應商,,,Work,02-0000-0003,,,,,,,,,,,
+,,,,,,,,,,,,,,沒有姓名也沒有公司的列,,* myContacts,,,,,,,,,,,,,,,

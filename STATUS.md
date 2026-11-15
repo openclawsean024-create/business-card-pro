@@ -6,7 +6,7 @@
 - Spec: `PRD/SPEC.md` v4.0
 - Goal: `GOAL.md` — M1
 - Branch: `feat/m1`（基於 `chore/prd-rebuild`；PR #1 尚未合併）
-- State: 🧪 **M1 開發完成；§10 合併清單已由 Sean 覆審通過（2026-11-16）** — Exit gate 尚待 Sean 確認 AC-003 門檻
+- State: ✅ **M1 完成，Exit gate 通過**（2026-11-16）：§10 合併清單與 AC-003 門檻（沿用 GOAL 初版）皆由 Sean 覆審通過；PR #2 待合併
 - Stack: Next.js 16（static export）+ React 19 + TypeScript strict + Zustand 5 + Tailwind 3 + Vitest 4 + Tesseract.js 7
 
 ## M1 AC 進度（2026-11-16，Node v26.13.1，macOS）
@@ -15,7 +15,7 @@
 |---|---|---|---|---|
 | AC-001 | 合併 OCR 與拍照輸入，不帶伺服器依賴 | ✅ | `npm run build` → 0（產出 `out/index.html`）；GOAL 的 `node -e …` 依賴檢查 → 0；`test ! -d src/app/api` → 0；`grep -rn '"use server"' src` → 無輸出 | `src/test/merge-guard.test.ts`、`src/test/ocr-flow.test.tsx`（adapter 注入） |
 | AC-002 | OCR 只產生預覽，確認後才建立 | ✅ | `npm test` → 0 | `src/test/ocr-flow.test.tsx` (a)(b)(c)(d) |
-| AC-003 | OCR 準確度：合成測試集與門檻 | ✅（門檻為 GOAL 初版，待 Sean 確認） | `npm run eval:ocr` → 0；`npm run eval:ocr:images` → 0；`npm test` → 0 | `src/test/ocr-accuracy.test.ts`、`scripts/eval/*.eval.ts` |
+| AC-003 | OCR 準確度：合成測試集與門檻 | ✅（GOAL 初版門檻，2026-11-16 Sean 確認沿用） | `npm run eval:ocr` → 0；`npm run eval:ocr:images` → 0；`npm test` → 0 | `src/test/ocr-accuracy.test.ts`、`scripts/eval/*.eval.ts` |
 | AC-004 | Google 聯絡人檔案互通 | ✅（Google CSV 欄位名稱未經官方文件逐欄查證，見下方） | `npm test` → 0 | `src/test/google-contacts-file.test.ts` |
 | AC-005 | mock 同步 adapter，零網路 | ✅ | `npm test` → 0 | `src/test/contact-sync.test.ts`（`fetch` 呼叫次數斷言為 0） |
 | AC-006 | 免費層上限不可被匯入繞過 | ✅ | `npm test` → 0 | `src/test/store.test.ts`「已有 19 筆時匯入 5 筆 → 20 筆、回報 4 筆未匯入」；`contact-sync.test.ts` 同步 pull 版 |
@@ -103,6 +103,6 @@
 ## 下一步（等待 Sean）
 
 1. ~~覆審 M1 scope（`PRD/SPEC.md` §10 合併清單）~~ ✅ 2026-11-16 Sean 覆審通過。
-1. 確認 AC-003 門檻（目前用 GOAL 初版）與 Tesseract 語言檔沿用 CDN。
+1. ~~確認 AC-003 門檻~~ ✅ 2026-11-16 Sean 決定沿用 GOAL 初版門檻。
 2. 以測試帳號實際匯入一次 Google CSV，確認欄位名稱。
 3. 為 PR 加上 `risk-approved` 標籤（`ci.yml` 屬 sensitive path）後審查；PR #1（文件）需先或一併處理。

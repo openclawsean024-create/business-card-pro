@@ -43,7 +43,7 @@ jobs:
           node-version: '20'
           cache: 'npm'
       - run: npm ci --legacy-peer-deps || npm install
-      - run: npm test -- --run 2>&1 || echo "no test script"
+      - run: npm test
 
   build:
     name: Build (Next.js Static Export)

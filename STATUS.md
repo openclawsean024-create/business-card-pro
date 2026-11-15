@@ -1,116 +1,99 @@
-# Sprint Status — business-card-pro
+# Sprint Status — business-card-pro（名片回訪 CRM）
 
-- Project: business-card-pro
-- Spec: PRD/SPEC.md v3.0 (67KB / 1135 行,從 GitHub upstream 同步)
-- Started: 2026-08-08
-- State: ✅ **DEPLOYED & 3-WAY ALIGNED** — 2026-08-08 16:24 UTC
-- Stack: Next.js 16 (App Router, static export) + React 19 + TypeScript strict + Zustand 5 + Tailwind 3 + Vitest 4
+- Project: 名片回訪 CRM（repo 與 UI 舊名：名片王 Pro）
+- Repo: `openclawsean024-create/business-card-pro`（預設分支 `main`）
+- 併入來源: `openclawsean024-create/business-card-manager`（預設分支 `master`，只讀）
+- Spec: `PRD/SPEC.md` v4.0（2026-11-16 文件重建）
+- Goal: `GOAL.md` — M1
+- State: 📝 **文件重建完成、M1 尚未開發** — 2026-11-16
+- Stack: Next.js 16（static export）+ React 19 + TypeScript strict + Zustand 5 + Tailwind 3 + Vitest 4
 
-## ✅ 完成驗證證據
+## Notion 商品資料庫對應
 
-| 步驟 | 結果 |
-|---|---|
-| `npm install --legacy-peer-deps` | ✅ 477 packages, 0 vulnerabilities |
-| `npm run typecheck` (tsc --noEmit) | ✅ 0 errors |
-| `npm run test` (vitest run) | ✅ 31/31 passed (2 files) |
-| `npm run build` (next build) | ✅ 3 static pages generated |
-| dev server smoke | ✅ HTTP 200, title 正確 |
-| `git push origin main` | ✅ pushed |
-| Vercel deployment | ✅ `business-card-jumxn4kcu-...` READY |
-| `bash sync-3way.sh business-card-pro --verify` | ✅ **3-way fully aligned** |
-
-## 🎯 三向對齊 (2026-08-08 16:24:38 UTC)
-
-```
-🔗 Local HEAD:  0cf4018db5
-🔗 GitHub HEAD: 0cf4018db5   ✅ 已同步
-🚀 Vercel Production: https://business-card-pro.vercel.app (HTTP 200)
-📦 Vercel production SHA: 0cf4018db5 (via meta.githubCommitSha) ✅
-📝 最新 commit: 0cf4018 build(vercel): add vercel.json for production deploy config
-✅ Issues: 無
-```
-
-## 實作範圍
-
-- **P1-02 Google Calendar 單向提醒**: pending follow-up `.ics` 匯出（不含 OAuth / server sync）
-
-- **§3.1 P0 對齊**: 9/10 FR 完整實作 (FR-005 OCR preview 未實作 UI,對齊 §1.5 Non-Goals)
-- **§3.4 AC**: 10/10 AC 有對應測試 (24 條 domain + 7 條 store = 31 條)
-- **§4.3 Domain**: Contact / ExchangeEvent / Followup / Interaction / Consent / PlanQuota / CardImage 全部定義
-- **§5.3 降級**: localStorage try/catch + graceful fallback
-
-## 部署架構
-
-- **Vercel project**: `business-card-pro` (`prj_33wRG6TnXimWfxP2UWqmHwuEcLyG`)
-- **Production alias**: `business-card-pro.vercel.app`
-- **當前 deployment**: `business-card-jumxn4kcu-seans-projects-7dc76219.vercel.app` (READY)
-- **Build**: Next.js 16 via Vercel GitHub App (gitSource trigger from `0cf4018db5`)
-- **ssoProtection**: `all_except_custom_domains` (部署 URL 顯示 Vercel Login,但 production alias 正常)
-
-## 部署旅程 (備註給下一個接手者)
-
-| 步驟 | 結果 | 原因 |
+| Notion 欄位 | 值 | 本 repo 對應 |
 |---|---|---|
-| 1. `git push` 後看 Vercel auto-deploy | ❌ 沒 trigger | Vercel project 沒有 GitHub App integration (歷史因素) |
-| 2. Vercel files API 直接 trigger (out/) | ❌ ERROR: missing_pages_app | Vercel 預設跑 `next build`,但 source 沒有 src/app/ |
-| 3. Vercel files API 上傳 source code | ❌ ERROR: 缺 swc linux binaries | package-lock 沒含 linux swc |
-| 4. Vercel gitSource API + commit SHA | ✅ READY | 用 gitSource reference, Vercel 直接從 git fetch source + build |
+| 產品名稱 | 名片回訪 CRM | UI／README 仍為「名片王 Pro」，改名待決定 |
+| 優先順序 | P3 | — |
+| 開發順位 | 第 8 個 | — |
+| 主 repo | business-card-pro（main） | 本 repo |
+| 要併入的 repo | business-card-manager | `PRD/SPEC.md` §10 合併清單；M1 AC-001 |
+| 獲利潛力 | 低 | `PRD/SPEC.md` §3 |
+| 獲利模式 | 免費增值 | `PRD/SPEC.md` §3；兩 repo 方案設定矛盾，待決定 |
+| 目標客群 | 台灣 B2B 業務 | `PRD/SPEC.md` §2 |
+| 現況完成度 | 60 | 本次未重新評分；13 項 P0 FR 中 8 項已實作、3 項部分（FR-005、FR-010、FR-015）、2 項未實作（FR-012、FR-013） |
+| 上市前要補 | 合併兩個 repo、OCR 準確度、與 Google 聯絡人同步 | M1：AC-001（合併）、AC-002／AC-003（OCR）、AC-004／AC-005（Google 聯絡人檔案互通 + mock）；真實 Google 同步在 M3 |
+| 主要風險 | 名片全能王等競品強勢 | `PRD/SPEC.md` §4、§8 |
 
-最終成功方法: `POST /v13/deployments` with `gitSource.type=github, ref=main, sha=<commit>` + `projectSettings.framework=nextjs`。這方法會把 commit SHA 寫進 deployment metadata,讓 sync-3way SOP 對齊。
+## 本次增量（2026-11-16）
 
-## 故意不做 (對齊 SPEC §1.5 Non-Goals)
+- 只重建文件：`PRD/SPEC.md`、`GOAL.md`、`AGENTS.md`、`SOP.md`、`STATUS.md`。未修改任何程式、設定或測試。
+- 實際閱讀兩個 repo 的頁面、元件、資料模型、API、測試與 scripts，FR 狀態以程式為準；README 與程式不符處列於 `PRD/SPEC.md` §11。
 
-- ❌ OCR / Tesseract(主功能排除,只剩可選 preview 的位置)
-- ❌ 雲端同步 / Supabase(SPEC FR-008 本地優先)
-- ❌ 註冊 / 登入 / Stripe(pilot 階段)
+## 目前驗證證據（`main@a8b5fe8`，Node v26.13.1，2026-11-16）
 
-## 後續 (Vercel auto-deploy 永久修復)
+| 指令 | Exit | 結果 |
+|---|---:|---|
+| `npm ci --legacy-peer-deps` | 0 | 安裝完成 |
+| `npm run typecheck` | 0 | 0 errors |
+| `npm test` | 0 | 9 files、65 tests passed |
+| `npm run build` | 0 | 靜態匯出，`out/index.html` 產出 |
+| `npm run lint` | 0 | 0 errors、1 warning（既有） |
+| `npm run test:coverage` | — | 缺 `@vitest/coverage-v8`，無法產生覆蓋率 |
 
-如果想要之後 `git push` 直接觸發 Vercel build,需要到 Vercel dashboard:
-1. Project Settings → Git → Connect Git Repository → 選 `openclawsean024-create/business-card-pro`
-2. Vercel 會自動安裝 GitHub App + 設定 webhook
+business-card-manager 的測試（`tests/plans.test.ts`，10 條）本次未安裝依賴執行。
 
-目前 deployment 都透過我手動 trigger,但每次 commit SHA 都會綁定,sync-3way 仍 100 0 對齊。
+## FR 對照（詳見 `PRD/SPEC.md` §5）
 
-## 同步狀態 (最終)
+| FR | 需求 | 優先 | 狀態 | 所在 repo |
+|---|---|---|---|---|
+| FR-001 | 手動建立／編輯聯絡人 | P0 | 已實作 | 主 repo |
+| FR-002 | 來源、情境、下一步、日期 | P0 | 已實作 | 主 repo |
+| FR-003 | 今日／逾期／接下來 queue、一鍵完成 | P0 | 已實作 | 主 repo |
+| FR-004 | vCard／CSV 匯出、CSV 匯入 | P0 | 已實作（vCard 匯入未實作） | 主 repo |
+| FR-005 | OCR 預覽確認 | P0 | 部分 | manager（OCR 但自動存檔、無預覽）；主 repo 只有型別 |
+| FR-006 | 搜尋、標籤、排序 | P0 | 已實作 | 主 repo（manager 有較簡單版本） |
+| FR-007 | 互動時間線 | P0 | 已實作 | 主 repo |
+| FR-008 | 本機資料模式 | P0 | 已實作 | 主 repo |
+| FR-009 | 刪除連帶清除、重置 | P0 | 已實作 | 主 repo（manager 有單筆刪除） |
+| FR-010 | 免費層上限 | P0 | 部分（匯入可繞過） | 主 repo（20 張）；manager（30 張） |
+| FR-011 | `.ics` 回訪提醒匯出 | P1 | 已實作 | 主 repo |
+| FR-012 | Google 聯絡人同步 | P0 | 未實作 | — |
+| FR-013 | OCR 準確度評估 | P0 | 未實作 | — |
+| FR-014 | 名片照片附件 | P1 | 部分（只有資料層） | 主 repo；manager 只有欄位 |
+| FR-015 | 個資告知與同意紀錄 | P0 | 部分 | 主 repo 資料層；manager 隱私／條款頁（內容與程式不符） |
+| FR-016 | 方案與付費 | P1 | 部分 | manager（方案資料 + 佔位結帳頁，無金流） |
+| FR-017 | 帳號與雲端同步 | P2 | 部分 | manager（Auth.js + Prisma SQLite），與主 repo 架構不相容 |
+| FR-018 | 團隊共享 queue | P2 | 未實作 | — |
+| FR-019 | CRM CSV connector | P2 | 未實作 | manager 頁面宣稱但無程式 |
+| FR-020 | Telegram 機器人 | P2（建議刪除） | 未實作 | manager 只有 model |
 
-- ✅ 本機 HEAD: `0cf4018db52d80d4d2cd56b7d401995471c88e6b`
-- ✅ GitHub HEAD: `0cf4018db52d80d4d2cd56b7d401995471c88e6b`
-- ✅ Vercel production SHA: `0cf4018db52d80d4d2cd56b7d401995471c88e6b`
-- ✅ Vercel production URL: `https://business-card-pro.vercel.app` (HTTP 200)
-- ✅ Content: title `名片王 Pro — 台灣業務的人脈回訪清單`, manifest 已更新
-- ✅ `bash sync-3way.sh business-card-pro --verify` → `3-way fully aligned`
+## M1 AC 進度
 
-## 🔄 v3.1 — 今日回訪工作台正式 UI (2026-09-20)
+| AC | 標題 | 狀態 |
+|---|---|---|
+| AC-001 | 合併：OCR 與拍照輸入搬入，不帶伺服器依賴 | 未開始 |
+| AC-002 | OCR 只產生預覽，確認後才建立 | 未開始 |
+| AC-003 | OCR 準確度：合成假名片測試集與門檻 | 未開始（門檻待 Sean 確認） |
+| AC-004 | Google 聯絡人：檔案互通 | 未開始（Google CSV 欄位待查證） |
+| AC-005 | Google 聯絡人：mock 同步 adapter，零網路 | 未開始 |
+| AC-006 | 免費層上限不可被匯入繞過 | 未開始 |
+| AC-007 | OCR 前的個資告知 | 未開始 |
+| AC-008 | 品質門檻與證據 | 未開始 |
 
-- **範圍**: 把 `public/ui-prototype.html` 的設計落到 Next.js/React app,聚焦「今日回訪工作台」。
-- **保留**: 既有 domain/store、`STORAGE_KEY`、`Contact/Followup/Interaction` schema、vCard/CSV/ICS 匯出、localStorage 流程、20 張 pilot 上限、既有 axe a11y 測試。
-- **不做**: OCR、登入、雲端同步、CRM、DB、付費牆;不動 storage key;不嵌入 standalone HTML。
+## 風險與發現
 
-### 新增 / 重構元件
-- 新增 `Sidebar.tsx`:桌機 md+ 顯示,品牌 / 主導覽 / 本機模式卡 / 名片庫容量條
-- 新增 `PulseCard.tsx`:今日進度條 + 最近 14 天回訪節奏條形圖
-- 新增 `ContactDetailDrawer.tsx`:右上 slide-in drawer,ESC/點 scrim 關閉,內含時間線 + 快速記錄
-- 新增 `QueueGroup.tsx`:`overdue / today / upcoming` 三組 queue renderer,內嵌完成表單
-- 新增 `domain` helper:`getUpcomingQueue`、`getTodayProgress`、`buildRhythm`、新 type `RhythmPoint`
-- 重構 `TodayTab.tsx`:三組 queue + PulseCard + 空狀態 CTA
-- 重構 `ContactsTab.tsx`:點 row 開 drawer,保留搜尋/排序/標籤
-- 重構 `TimelineTab.tsx`:全站互動彙總 + click-to-drawer + 快速記錄 picker
-- 重構 `page.tsx`:Sidebar + content 兩欄 layout,保留 skip link / `main tabIndex=-1` / BottomNav
-- 新增 `src/test/workstation.test.tsx`:domain helpers + sidebar visible + drawer 開關 + 三組 queue 渲染
-- 修 `vitest.config.ts`:Node 26 + vitest 4 必須 CJS 寫法才會掛載 `environment: "jsdom"`(ESM 寫法會被 `configLoader:'native'` 靜默忽略)
-- 修 `src/lib/export.ts` 的 `emptyStateStub.ui` 加 `selectedContactId: null`
+- **歷史資料庫檔**：`prisma/dev.db` 曾在 commit `52b83fc` 提交、`c818e6e` 取消追蹤，仍存在於 business-card-manager 的 git 歷史與本 repo 的舊分支 `origin/master` 歷史中；內含 1 筆 User、1 筆 BusinessCard、1 筆 Subscription（本次只計數、未讀內容）。需 Sean 確認是否為測試資料。
+- **CI 假綠燈**：`ci.yml` 的 test 步驟以 `|| echo` 吞掉失敗。
+- **文件與程式不符**：README 測試數與 tab 數過時；types 註解宣稱 Web Crypto 加密但未實作；manager 的隱私頁、首頁、方案頁宣稱多項未實作功能（`PRD/SPEC.md` §11）。
+- **明文憑證欄位**：manager `TelegramLink.botToken`（不搬移）。
+- 本次在兩個 repo 的工作樹與 manager 舊分支掃描常見憑證格式，未發現硬編碼憑證；未發現名片影像檔。
 
-### 驗收證據 (2026-09-20)
-| 步驟 | 結果 |
-|---|---|
-| `npm run typecheck` (tsc --noEmit) | ✅ 0 errors |
-| `npm run test` (vitest run) | ✅ 65/65 passed (9 files) |
-| `npm run build` (next build) | ✅ Compiled successfully in 1428ms, 3 static pages |
-| `npm run lint` (eslint) | ✅ 0 errors, 1 pre-existing warning on `eslint.config.mjs` |
+## 部署（沿用前版紀錄，本次未重新驗證）
 
-### 剩餘風險
-- `Sidebar.tsx` 中的 nav icon type re-export 為了壓 lint warning 留有 `SIDEBAR_ICON_REFS` 常數,無功能影響。
-- vitest 在 Node 26 會出現 `ExperimentalWarning: localStorage is not available ...` 訊息,屬於 Node 26 內建實驗功能提示,jsdom 已正確運作,可忽略。
-- `app-shell` 是 inline grid 樣式,若日後新增多頁需共用 layout,考慮抽到 `src/app/layout-shell.tsx`。
-- ✅ 2026-09-22 release evidence: v3.1 已 commit `bfbc56c6298ef68d92db6103a7581a5eaa7a8517`、push `main`、Vercel production READY；60 秒 smoke test 12/12 HTTP 200，canonical Notion row 已同步。
+- Vercel production alias：`business-card-pro.vercel.app`；前版紀錄 v3.1 於 commit `bfbc56c` 部署 READY。
+- 本次為文件分支，未部署、未更新 Notion、未執行 `sync-3way.sh`。
+
+## 下一步
+
+1. Sean 回覆 `PRD/SPEC.md` §12 待確認事項（至少：OCR 門檻、Google 聯絡人 M1 範圍、方案價格）。
+2. 依 `GOAL.md` 開始 M1，完成後在本檔更新每條 AC 的驗證指令、exit code 與日期。

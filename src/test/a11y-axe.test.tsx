@@ -4,6 +4,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { useStore } from "@/lib/store";
 import { emptyAppState } from "@/lib/types";
 import HomePage from "@/app/page";
@@ -87,6 +88,25 @@ describe("A11y: axe-core audit", () => {
     await new Promise((r) => setTimeout(r, 50));
     const violations = await runAxe(container);
     const blockers = violations.filter((v) => v.impact === "critical" || v.impact === "serious");
+    expect(blockers).toHaveLength(0);
+  });
+
+  // GOAL.md M1 AC-007: OCR 入口（新增聯絡人表單內的「掃描名片」區塊）
+  it("AC-007: OCR 入口(新增聯絡人表單): 個資告知可見, 0 critical/serious violations", async () => {
+    const { container } = render(<HomePage />);
+    await new Promise((r) => setTimeout(r, 50));
+    act(() => {
+      window.dispatchEvent(new Event("bcp:open-create"));
+    });
+    const notice = await screen.findByTestId("ocr-privacy-notice");
+    expect(notice).toBeVisible();
+    expect(screen.getByRole("button", { name: "拍照掃描" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "上傳圖片" })).toBeInTheDocument();
+    const violations = await runAxe(container);
+    const blockers = violations.filter((v) => v.impact === "critical" || v.impact === "serious");
+    if (blockers.length > 0) {
+      console.error("A11y blockers:", JSON.stringify(blockers, null, 2));
+    }
     expect(blockers).toHaveLength(0);
   });
 });
